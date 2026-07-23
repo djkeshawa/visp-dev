@@ -9,7 +9,7 @@
   "packageManager": "pnpm@11.3.0",
   "scripts": {
     "syntax": "node --check src/compatibility-lab.mjs && node --check src/compatibility-matrix.mjs && node --check scripts/run-compatibility-lab.mjs && node --check scripts/run-compatibility-matrix.mjs",
-    "test": "node --test tests/compatibility-lab.test.mjs tests/compatibility-matrix.test.mjs",
+    "test": "node --test tests/compatibility-lab.test.mjs tests/compatibility-matrix.test.mjs tests/documentation.test.mjs",
     "check": "pnpm run syntax && pnpm test",
     "compatibility-lab": "node scripts/run-compatibility-lab.mjs",
     "compatibility-matrix": "node scripts/run-compatibility-matrix.mjs",

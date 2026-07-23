@@ -1,19 +1,21 @@
 # Visp Dev
 
-Visp Dev is the planned thin public integration and product shell for compatible
-Visp Kit, Visp Hyper Agent, and optional Visp Memory releases.
+Visp Dev is the thin public integration and product shell for compatible Visp
+Kit, Visp Hyper Agent, and optional Visp Memory releases.
 
-This repository is dormant and documentation-only during Phase 0. This README
-does not activate product implementation or a later development phase.
+The current implementation is a dependency-free compatibility laboratory. It
+packs exact Kit and Hyper commits twice, installs the tarballs into clean
+offline fixtures with lifecycle scripts disabled, exercises the public
+binaries, and emits deterministic machine evidence.
 
-## Future responsibility
+## Current responsibility
 
-When explicitly activated, Visp Dev may own:
+Visp Dev owns:
 
-- guided setup and `doctor` diagnostics;
 - tested package compatibility, clean fixtures, and version reports;
-- examples, golden paths, and consolidated product documentation;
-- the public evaluation harness and factual reports.
+- the exact packed WorkflowAction compatibility matrix;
+- factual compatibility and migration documentation; and
+- later setup, examples, golden paths, and public evaluations when activated.
 
 It never owns policy, task or workflow state, file scope, evidence authority,
 workflow verification, review, assurance, PR readiness, host orchestration,
@@ -21,11 +23,36 @@ model routing, or Memory storage and lifecycle. Kit, Hyper, and Memory remain
 usable without Visp Dev. Public operation remains local-first, and Visp Dev must
 never require the private Control Plane.
 
-## Activation
+## Compatibility status
 
-Phase 5 owns Visp Dev alpha and productization. Phase 6 owns evaluation, the
-external pilot, release evidence, and promotion decisions. Work requires both
-authorization from the active phase and an explicit human decision.
+The accepted Linux x64 matrix covers five exact historical Kit/Hyper pairs,
+WorkflowAction 2.0 and 3.0 selection boundaries, the final six strict Hyper
+surfaces, and seven deliberately unsupported fail-closed cases. It does not
+claim a package SemVer support window or native Windows/macOS compatibility.
+
+See [the exact compatibility and migration report](docs/compatibility.md).
+
+## Run the laboratory
+
+Requirements are Node, Git, npm `11.12.1`, pnpm `11.3.0`, caller-supplied
+offline pnpm store and npm cache snapshots, and local Kit/Hyper repositories.
+
+```bash
+npm test
+npm run syntax
+
+node scripts/run-compatibility-matrix.mjs \
+  --kit-repository ../visp-kit \
+  --hyper-repository ../visp-hyper-agent \
+  --offline-store <pnpm-store-snapshot> \
+  --offline-cache <npm-cache-snapshot> \
+  --output <new-report-path>
+
+node scripts/run-compatibility-matrix.mjs --verify <report-path>
+```
+
+Use `--row A` through `--row E` only for bounded diagnosis. A selected-row
+debug run is not a complete compatibility report.
 
 ## Workspace development references
 

@@ -1,0 +1,94 @@
+# WorkflowAction Compatibility
+
+## Published evidence
+
+This report publishes exact-pair evidence, not a package-version support
+window.
+
+- Harness implementation baseline:
+  `4ac17a3c9300099e94f01df1d6c9299ca050f70c`
+- Environment: Linux x64, Node `v24.15.0`, npm `11.12.1`, pnpm `11.3.0`,
+  Git `2.34.1`
+- Result: five of five supported exact pairs passed
+- Negative corpus: seven of seven deliberately unsupported cases failed closed
+- Evidence file SHA-256:
+  `8c0f680d93f434d0432a57d0ec04e1cb5c163ae89e32c76f4254c49a6b2efa32`
+- Frozen matrix SHA-256:
+  `0d814c42c24ab434caca1f4ca14fe8de900856465d842daff79c6356cb2d6c15`
+- Canonical report SHA-256:
+  `0c3a7e7a29d4ac3ac9c935218f23d9fe22ff9f93699c840e85d49b7b38119583`
+
+## Protocol behavior
+
+Kit derives WorkflowAction 2.0 and 3.0 from one canonical action. Omitting
+`--protocol` keeps 2.0 as the Kit CLI default. Explicit Kit selection accepts
+only `--protocol 2.0` or `--protocol 3.0` with `--format json`; unsupported
+requests fail and do not downgrade.
+
+Negotiation belongs to Hyper. Hyper `auto` validates the integration-contract
+advertisement and selected schema hash, then prefers 3.0 before 2.0. An
+explicit unsupported request fails without downgrade. The bounded legacy
+exception is an integration contract 2.0 without protocol advertisement:
+selectorless Kit output remains WorkflowAction 2.0 and is labelled
+`legacy_unadvertised`.
+
+For the final pair, configured `run`, `next`, `resume`, checkpoint, `guard`,
+and the MCP canonical-action resource consume the same negotiated canonical
+action. Kit remains the only workflow authority.
+
+## Exact supported pairs
+
+| Row | Kit commit | Hyper commit | Proven behavior |
+|---|---|---|---|
+| A | `0a8026ca129cdb9ec8ba516a2e30aaf135d5d4a0` | `d4444da8f862dc229f6832c6bc89820df466d213` | Selectorless legacy/default WorkflowAction 2.0; no advertisement or negotiation. |
+| B | `c03a2dd0838501f4c4e480a69171848d3f2c0499` | `d4444da8f862dc229f6832c6bc89820df466d213` | Kit supports explicit 3.0, while pre-negotiation Hyper continues to consume selectorless default 2.0. |
+| C | `706c1ec348b9de8a51651d1c8e9587feb1962fd8` | `d4444da8f862dc229f6832c6bc89820df466d213` | Old Hyper tolerates the additive 2.0/3.0 advertisement and continues on selectorless 2.0. |
+| D | `706c1ec348b9de8a51651d1c8e9587feb1962fd8` | `17f01e4295258ec55c4c74cb47dcfdbb66981dce` | Public doctor proves advertised, schema-verified 3.0 negotiation; historical strict `next` remains 2.0 at this commit. |
+| E | `d85adbdac5dac85bea112c857967c067cb1708a9` | `2bf636f58517780256cd91089440fb3b2f501480` | Auto selects 3.0; explicit and legacy 2.0 remain supported; all six configured strict surfaces agree. |
+
+The final duplicate normal npm packs were:
+
+- Kit:
+  `7227c8c02551597b3793c72d5a87414dd8e7619b2b0d1594e5772f64654f83cf`
+- Hyper:
+  `f5e11554e1e75dd4d51f457d87ec077797dcff2e623f27c83ff4d2dd702693cf`
+
+## Deliberately unsupported cases
+
+These are rejection tests, not supported compatibility rows.
+
+| Category | Required result |
+|---|---|
+| `future_protocol` | `workflow_action_no_mutual_protocol` |
+| `malformed_advertisement` | `workflow_action_advertisement_invalid` |
+| `schema_hash_mismatch` | `workflow_action_schema_hash_mismatch` |
+| `malformed_action` | `workflow_action_schema_invalid` |
+| `wrong_returned_protocol` | `workflow_action_protocol_mismatch` |
+| `semantic_contradiction` | `workflow_action_contradiction` |
+| `explicit_unsupported_request` | `UNSUPPORTED_WORKFLOW_ACTION_PROTOCOL` |
+
+The six Hyper cases require an authority-stop frame with the exact reason and
+no canonical action frame. The direct Kit request requires the structured
+unsupported-protocol error.
+
+## Migration guidance
+
+- Existing callers that omit `--protocol` continue receiving WorkflowAction
+  2.0 from Kit.
+- Hyper callers should use `auto` unless they need to test an exact supported
+  wire version.
+- Do not infer compatibility from `visp-kit` or `visp-hyper-agent` package
+  versions. Use a row above or run the matrix for a new exact pair.
+- WorkflowAction 2.0 is not deprecated by this report. Removal requires a later
+  active phase, an ADR, migration documentation, and accepted compatibility
+  evidence through the documented deprecation cycle.
+- `visp-hyper doctor --json` reports the detected Kit version, integration
+  contract version, selected protocol and selection mode, local schema hash and
+  verification state, and authoritative action verdict.
+
+## Limits
+
+The report proves Linux x64 behavior only for the commits and tools named
+above. Windows-style path data tested on Linux is not native Windows evidence.
+No macOS result, native Windows result, generalized SemVer range, release,
+deployment, or hosted compatibility claim is made.

@@ -1,0 +1,16 @@
+{
+  "name": "visp-dev",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.3.0",
+  "scripts": {
+    "syntax": "node --check src/compatibility-lab.mjs && node --check scripts/run-compatibility-lab.mjs",
+    "test": "node --test tests/compatibility-lab.test.mjs",
+    "check": "pnpm run syntax && pnpm test",
+    "compatibility-lab": "node scripts/run-compatibility-lab.mjs"
+  }
+}

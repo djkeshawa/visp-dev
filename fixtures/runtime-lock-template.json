@@ -1,0 +1,36 @@
+{
+  "name": "visp-compatibility-install",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "visp-compatibility-install",
+      "private": true,
+      "dependencies": {
+        "__VISP_LOCAL_NAME__": "file:__VISP_LOCAL_TARBALL__"
+      }
+    },
+    "node_modules/__VISP_LOCAL_NAME__": {
+      "version": "__VISP_LOCAL_VERSION__",
+      "resolved": "file:__VISP_LOCAL_TARBALL__",
+      "integrity": "__VISP_LOCAL_INTEGRITY__",
+      "dependencies": {
+        "commander": "^12.1.0",
+        "zod": "^3.25.76"
+      },
+      "bin": {
+        "__VISP_LOCAL_BIN_NAME__": "__VISP_LOCAL_BIN_PATH__"
+      }
+    },
+    "node_modules/commander": {
+      "version": "12.1.0",
+      "resolved": "https://registry.npmjs.org/commander/-/commander-12.1.0.tgz",
+      "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA=="
+    },
+    "node_modules/zod": {
+      "version": "3.25.76",
+      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz",
+      "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="
+    }
+  }
+}

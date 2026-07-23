@@ -138,7 +138,7 @@ export async function runProcess(command, args, options = {}) {
   assertPlainRecord(options, "options");
   rejectUnknownKeys(
     options,
-    new Set(["cwd", "env", "timeoutMs", "maxOutputBytes", "killGraceMs", "finalizationMs", "forbiddenOutputFragments"]),
+    new Set(["cwd", "env", "timeoutMs", "maxOutputBytes", "killGraceMs", "finalizationMs", "forbiddenOutputFragments", "stdin"]),
     "option",
   );
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
@@ -146,6 +146,7 @@ export async function runProcess(command, args, options = {}) {
   const killGraceMs = options.killGraceMs ?? DEFAULT_KILL_GRACE_MS;
   const finalizationMs = options.finalizationMs ?? DEFAULT_FINALIZATION_MS;
   const forbiddenOutputFragments = options.forbiddenOutputFragments ?? [];
+  const stdin = options.stdin;
   if (!Number.isInteger(timeoutMs) || timeoutMs <= 0) throw new TypeError("timeoutMs must be a positive integer");
   if (!Number.isInteger(maxOutputBytes) || maxOutputBytes < 0) throw new TypeError("maxOutputBytes must be a non-negative integer");
   if (!Number.isInteger(killGraceMs) || killGraceMs < 0) throw new TypeError("killGraceMs must be a non-negative integer");
@@ -153,6 +154,9 @@ export async function runProcess(command, args, options = {}) {
   if (!Array.isArray(forbiddenOutputFragments)
     || forbiddenOutputFragments.some((fragment) => typeof fragment !== "string" || fragment.length === 0)) {
     throw new TypeError("forbiddenOutputFragments must be an array of non-empty strings");
+  }
+  if (stdin !== undefined && typeof stdin !== "string" && !Buffer.isBuffer(stdin)) {
+    throw new TypeError("stdin must be a string or Buffer");
   }
 
   return new Promise((resolve) => {
@@ -206,7 +210,7 @@ export async function runProcess(command, args, options = {}) {
         env: options.env,
         detached: useProcessGroup,
         shell: false,
-        stdio: ["ignore", "pipe", "pipe"],
+        stdio: [stdin === undefined ? "ignore" : "pipe", "pipe", "pipe"],
         windowsHide: true,
       });
     } catch (error) {
@@ -218,6 +222,7 @@ export async function runProcess(command, args, options = {}) {
 
     child.stdout.on("data", (chunk) => stdout.add(chunk));
     child.stderr.on("data", (chunk) => stderr.add(chunk));
+    if (stdin !== undefined) child.stdin.end(stdin);
     child.on("error", (error) => {
       const rawMessage = String(error.message);
       spawnError = { code: error.code ?? "SPAWN_ERROR", messageSha256: sha256Hex(rawMessage) };
@@ -1012,6 +1017,15 @@ async function prepareOfflineInstallLock({ source, target, tarballPath, packageJ
     || localPackage.integrity !== expectedIntegrity) {
     throw new Error("Offline install lock local package identity does not match the packed tarball");
   }
+  let lockedBins;
+  try {
+    lockedBins = normalizeBins({ name: packageJson.name, bin: localPackage.bin });
+  } catch {
+    throw new Error("Offline install lock local package bin metadata is malformed");
+  }
+  if (canonicalStringify(lockedBins) !== canonicalStringify(normalizeBins(packageJson))) {
+    throw new Error("Offline install lock local package bin metadata does not match the packed tarball");
+  }
   for (const groupName of ["dependencies", "optionalDependencies"]) {
     if (canonicalStringify(localPackage[groupName] ?? {}) !== canonicalStringify(packageJson[groupName] ?? {})) {
       throw new Error("Offline install lock does not match packed package dependencies");
@@ -1114,21 +1128,349 @@ function normalizeDependencyTree(name, node) {
   };
 }
 
-async function normalizePnpmDependencyTree(name, node, fixture) {
-  const dependencyGroups = [node.dependencies, node.devDependencies, node.optionalDependencies]
-    .filter((group) => group && typeof group === "object");
-  const dependencyMap = Object.assign({}, ...dependencyGroups);
-  const dependencies = [];
-  for (const [dependencyName, dependency] of Object.entries(dependencyMap).sort(([left], [right]) => compareText(left, right))) {
-    dependencies.push(await normalizePnpmDependencyTree(dependencyName, dependency, fixture));
+function pnpmDependencyMap(node, label) {
+  assertPlainRecord(node, label);
+  const dependencies = new Map();
+  for (const groupName of ["dependencies", "devDependencies", "optionalDependencies"]) {
+    const group = node[groupName];
+    if (group === undefined) continue;
+    assertPlainRecord(group, `${label} ${groupName}`);
+    for (const [name, dependency] of Object.entries(group)) {
+      validatePackageName(name);
+      assertPlainRecord(dependency, `${label} dependency ${name}`);
+      if (dependencies.has(name)) {
+        throw new Error("Prepared dependency inventory contains a duplicate logical edge");
+      }
+      dependencies.set(name, dependency);
+    }
   }
-  let version = typeof node.version === "string" ? node.version : null;
-  if (typeof node.path === "string") {
-    const packageRoot = await realpath(node.path);
-    if (!isWithin(fixture, packageRoot)) throw new Error("Prepared dependency resolves outside its snapshot");
-    const packageJson = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
-    if (typeof packageJson.version !== "string") throw new Error("Prepared dependency is missing an exact package version");
-    version = packageJson.version;
+  return dependencies;
+}
+
+function pnpmNodeVersion(node) {
+  if (typeof node.version !== "string" || node.version.length === 0 || /[\0\r\n]/u.test(node.version)) {
+    throw new Error("Prepared dependency is missing an exact package version");
+  }
+  return node.version;
+}
+
+function validatePnpmNominalPath(nominalPath, fixture) {
+  if (typeof nominalPath !== "string" || !path.isAbsolute(nominalPath) || nominalPath.includes("\0")) {
+    throw new Error("Prepared dependency has an invalid nominal path");
+  }
+  const resolvedNominalPath = path.resolve(nominalPath);
+  if (!isWithin(fixture, resolvedNominalPath)) {
+    throw new Error("Prepared dependency nominal path escapes its snapshot");
+  }
+  return resolvedNominalPath;
+}
+
+async function readPnpmPackageManifest(packageRoot) {
+  const manifestPath = path.join(packageRoot, "package.json");
+  let metadata;
+  try {
+    metadata = await lstat(manifestPath);
+  } catch {
+    throw new Error("Prepared dependency is missing its package manifest");
+  }
+  if (!metadata.isFile() || metadata.size > DEFAULT_MAX_OUTPUT_BYTES) {
+    throw new Error("Prepared dependency package manifest is unsupported");
+  }
+  let manifest;
+  try {
+    manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    assertPlainRecord(manifest, "Prepared dependency package manifest");
+  } catch {
+    throw new Error("Prepared dependency package manifest is malformed");
+  }
+  if (typeof manifest.name !== "string"
+    || typeof manifest.version !== "string"
+    || manifest.name.length === 0
+    || manifest.version.length === 0) {
+    throw new Error("Prepared dependency package manifest has no exact identity");
+  }
+  return manifest;
+}
+
+function manifestDependencyGroup(manifest, groupName) {
+  const group = manifest[groupName];
+  if (group === undefined) return {};
+  assertPlainRecord(group, `Prepared package manifest ${groupName}`);
+  return group;
+}
+
+function parsePnpmAuthoredEdge(dependencyName, authoredSpec) {
+  if (typeof authoredSpec !== "string"
+    || authoredSpec.length === 0
+    || authoredSpec !== authoredSpec.trim()
+    || /[\0\r\n]/u.test(authoredSpec)) {
+    throw new Error("Prepared package manifest contains an unsupported dependency spec");
+  }
+  if (!authoredSpec.startsWith("npm:")) {
+    return { alias: false, authoredSpec, targetName: dependencyName };
+  }
+  const aliasSpec = authoredSpec.slice("npm:".length);
+  const versionSeparator = aliasSpec.lastIndexOf("@");
+  if (versionSeparator <= 0 || versionSeparator === aliasSpec.length - 1) {
+    throw new Error("Prepared package manifest contains a malformed npm alias");
+  }
+  const targetName = aliasSpec.slice(0, versionSeparator);
+  const targetSpec = aliasSpec.slice(versionSeparator + 1);
+  validatePackageName(targetName);
+  parseAuthoredDependencySpec(targetSpec);
+  return { alias: true, authoredSpec: targetSpec, targetName };
+}
+
+function optionalPeerDependency(parentManifest, dependencyName) {
+  const metadata = parentManifest.peerDependenciesMeta;
+  if (metadata === undefined) return false;
+  assertPlainRecord(metadata, "Prepared package manifest peerDependenciesMeta");
+  const entry = metadata[dependencyName];
+  if (entry === undefined) return false;
+  assertPlainRecord(entry, `Prepared package manifest peerDependenciesMeta.${dependencyName}`);
+  if (entry.optional !== undefined && typeof entry.optional !== "boolean") {
+    throw new Error("Prepared package manifest contains invalid optional peer metadata");
+  }
+  return entry.optional === true;
+}
+
+function classifyPnpmEdge(parentManifest, dependencyName, root) {
+  const optional = manifestDependencyGroup(parentManifest, "optionalDependencies");
+  const required = manifestDependencyGroup(parentManifest, "dependencies");
+  const development = root ? manifestDependencyGroup(parentManifest, "devDependencies") : {};
+  const peer = manifestDependencyGroup(parentManifest, "peerDependencies");
+  const inOptional = Object.hasOwn(optional, dependencyName);
+  const inRequired = Object.hasOwn(required, dependencyName);
+  const inDevelopment = Object.hasOwn(development, dependencyName);
+  const inPeer = Object.hasOwn(peer, dependencyName);
+  if (inOptional) {
+    if (inDevelopment
+      || inPeer
+      || (inRequired && required[dependencyName] !== optional[dependencyName])) {
+      throw new Error("Prepared package manifest contains an ambiguous dependency edge");
+    }
+    return { kind: "optional", ...parsePnpmAuthoredEdge(dependencyName, optional[dependencyName]) };
+  }
+  const requiredGroups = Number(inRequired) + Number(inDevelopment) + Number(inPeer);
+  if (requiredGroups > 1) {
+    throw new Error("Prepared package manifest contains an ambiguous dependency edge");
+  }
+  if (inRequired) {
+    return { kind: "required", ...parsePnpmAuthoredEdge(dependencyName, required[dependencyName]) };
+  }
+  if (inDevelopment) {
+    return { kind: "required", ...parsePnpmAuthoredEdge(dependencyName, development[dependencyName]) };
+  }
+  if (inPeer) {
+    return {
+      kind: optionalPeerDependency(parentManifest, dependencyName) ? "optional" : "required",
+      ...parsePnpmAuthoredEdge(dependencyName, peer[dependencyName]),
+    };
+  }
+  throw new Error("Prepared dependency inventory contains an undeclared logical edge");
+}
+
+function parseSkippedPnpmIdentity(identity) {
+  if (typeof identity !== "string" || identity.includes("\0") || /[\r\n]/u.test(identity)) {
+    throw new Error("Prepared modules state contains an invalid skipped identity");
+  }
+  const separator = identity.lastIndexOf("@");
+  if (separator <= 0 || separator === identity.length - 1) {
+    throw new Error("Prepared modules state contains an invalid skipped identity");
+  }
+  const name = identity.slice(0, separator);
+  const version = identity.slice(separator + 1);
+  validatePackageName(name);
+  if (/\s/u.test(version)) throw new Error("Prepared modules state contains an invalid skipped identity");
+  return { identity, name, version };
+}
+
+async function readPnpmModulesState(fixture, storeRoot, pinnedManager) {
+  const modulesPath = path.join(fixture, "node_modules", ".modules.yaml");
+  let metadata;
+  try {
+    metadata = await lstat(modulesPath);
+  } catch {
+    throw new Error("Pinned pnpm preparation is missing its modules state");
+  }
+  if (!metadata.isFile() || metadata.size > DEFAULT_MAX_OUTPUT_BYTES) {
+    throw new Error("Pinned pnpm modules state is unsupported");
+  }
+  let modules;
+  try {
+    modules = JSON.parse(await readFile(modulesPath, "utf8"));
+    assertPlainRecord(modules, "Pinned pnpm modules state");
+  } catch {
+    throw new Error("Pinned pnpm modules state is malformed");
+  }
+  if (modules.packageManager !== pinnedManager) {
+    throw new Error("Pinned pnpm modules state has a package-manager mismatch");
+  }
+  try {
+    assertPlainRecord(modules.included, "Pinned pnpm modules included state");
+  } catch {
+    throw new Error("Pinned pnpm modules included state is malformed");
+  }
+  if (modules.included.dependencies !== true
+    || modules.included.devDependencies !== true
+    || modules.included.optionalDependencies !== true) {
+    throw new Error("Pinned pnpm modules state did not include the complete dependency graph");
+  }
+  if (typeof modules.storeDir !== "string" || !path.isAbsolute(modules.storeDir) || modules.storeDir.includes("\0")) {
+    throw new Error("Pinned pnpm modules state has an invalid store path");
+  }
+  const lexicalStore = path.resolve(modules.storeDir);
+  const confinedStoreRoot = await realpath(storeRoot);
+  if (!isWithin(confinedStoreRoot, lexicalStore)) {
+    throw new Error("Pinned pnpm modules state references a foreign store");
+  }
+  let actualStore;
+  try {
+    actualStore = await realpath(lexicalStore);
+  } catch {
+    throw new Error("Pinned pnpm modules state references an unavailable store");
+  }
+  if (!isWithin(confinedStoreRoot, actualStore) || !(await stat(actualStore)).isDirectory()) {
+    throw new Error("Pinned pnpm modules state references a foreign store");
+  }
+  if (!Array.isArray(modules.skipped)) {
+    throw new Error("Pinned pnpm modules state has an invalid skipped set");
+  }
+  const skipped = new Map();
+  for (const rawIdentity of modules.skipped) {
+    const parsed = parseSkippedPnpmIdentity(rawIdentity);
+    if (skipped.has(parsed.identity)) {
+      throw new Error("Pinned pnpm modules state contains a duplicate skipped identity");
+    }
+    skipped.set(parsed.identity, parsed);
+  }
+  return skipped;
+}
+
+function parsePnpmTree(result, label) {
+  if (result.stdout.truncated || result.stderr.truncated) {
+    throw new Error(`${label} exceeded bounded capture`);
+  }
+  let rawTree;
+  try {
+    rawTree = JSON.parse(result.stdout.text);
+    if (Array.isArray(rawTree)) {
+      if (rawTree.length !== 1) throw new Error("unexpected root count");
+      [rawTree] = rawTree;
+    }
+    assertPlainRecord(rawTree, label);
+  } catch {
+    throw new Error(`${label} returned malformed JSON`);
+  }
+  return rawTree;
+}
+
+function matchingNoOptionalNode(fullNode, noOptionalNode) {
+  if (pnpmNodeVersion(fullNode) !== pnpmNodeVersion(noOptionalNode)
+    || fullNode.path !== noOptionalNode.path
+    || fullNode.from !== noOptionalNode.from) {
+    throw new Error("Full and no-optional dependency inventories contradict");
+  }
+}
+
+async function normalizePnpmDependencyTree({
+  name,
+  node,
+  noOptionalNode,
+  fixture,
+  edge,
+  logicalPath,
+  root,
+  skipped,
+  absences,
+}) {
+  assertPlainRecord(node, `Prepared dependency ${name}`);
+  validatePackageName(name);
+  const version = pnpmNodeVersion(node);
+  const nominalPath = validatePnpmNominalPath(node.path, fixture);
+  if (noOptionalNode !== null) {
+    assertPlainRecord(noOptionalNode, `No-optional dependency ${name}`);
+    matchingNoOptionalNode(node, noOptionalNode);
+  }
+
+  let nominalMetadata;
+  try {
+    nominalMetadata = await lstat(nominalPath);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+    if (root || edge.kind !== "optional") {
+      throw new Error("Required prepared dependency is missing");
+    }
+    if (noOptionalNode !== null) {
+      throw new Error("Missing optional dependency remains in the no-optional inventory");
+    }
+    if (edge.targetName !== name) {
+      throw new Error("Missing optional npm aliases are unsupported");
+    }
+    const identity = `${name}@${version}`;
+    if (!skipped.has(identity)) {
+      throw new Error("Missing optional dependency is absent from pinned pnpm skipped state");
+    }
+    absences.push({
+      name,
+      path: logicalPath,
+      source: "pnpm_skipped",
+      status: "optional_absent",
+      version,
+    });
+    return null;
+  }
+  if (!nominalMetadata.isDirectory() && !nominalMetadata.isSymbolicLink()) {
+    throw new Error("Prepared dependency nominal path is unsupported");
+  }
+
+  let packageRoot;
+  try {
+    packageRoot = await realpath(nominalPath);
+  } catch {
+    throw new Error("Prepared dependency path could not be resolved");
+  }
+  if (!isWithin(fixture, packageRoot)) throw new Error("Prepared dependency resolves outside its snapshot");
+  const manifest = await readPnpmPackageManifest(packageRoot);
+  const expectedName = root ? name : edge.targetName;
+  if ((!root && node.from !== expectedName)
+    || manifest.name !== expectedName
+    || manifest.version !== version) {
+    throw new Error("Prepared dependency inventory identity does not match its installed manifest");
+  }
+  if (!root && edge.alias && !versionSatisfiesSpec(version, edge.authoredSpec)) {
+    throw new Error("Prepared dependency version does not satisfy its authored manifest spec");
+  }
+  const identity = `${expectedName}@${version}`;
+  if (skipped.has(identity)) {
+    throw new Error("Installed prepared dependency is listed as skipped");
+  }
+
+  const dependencyMap = pnpmDependencyMap(node, `Prepared dependency ${name}`);
+  const noOptionalMap = noOptionalNode === null
+    ? null
+    : pnpmDependencyMap(noOptionalNode, `No-optional dependency ${name}`);
+  const dependencies = [];
+  for (const [dependencyName, dependency] of [...dependencyMap].sort(([left], [right]) => compareText(left, right))) {
+    const childEdge = classifyPnpmEdge(manifest, dependencyName, root);
+    const noOptionalDependency = noOptionalMap?.get(dependencyName) ?? null;
+    if (childEdge.kind === "optional" && noOptionalDependency !== null) {
+      throw new Error(
+        `Optional dependency remains in the no-optional inventory: ${logicalPath} -> ${dependencyName}`,
+      );
+    }
+    const normalized = await normalizePnpmDependencyTree({
+      name: dependencyName,
+      node: dependency,
+      noOptionalNode: noOptionalDependency,
+      fixture,
+      edge: childEdge,
+      logicalPath: path.posix.join(logicalPath, "node_modules", dependencyName),
+      root: false,
+      skipped,
+      absences,
+    });
+    if (normalized !== null) dependencies.push(normalized);
   }
   return { dependencies, name, version };
 }
@@ -1150,7 +1492,13 @@ async function installedDependencyTree(npmExecutable, fixture, environment) {
   return { sha256: sha256Hex(canonicalStringify(tree)), tree };
 }
 
-async function preparedDependencyTree(managerExecutable, managerName, fixture, environment) {
+async function preparedDependencyTree(
+  managerExecutable,
+  managerName,
+  fixture,
+  environment,
+  { pinnedManager = null, storeRoot = null } = {},
+) {
   const args = managerName === "pnpm"
     ? ["list", "--depth", "Infinity", "--json"]
     : ["ls", "--all", "--json"];
@@ -1160,20 +1508,52 @@ async function preparedDependencyTree(managerExecutable, managerName, fixture, e
     { cwd: fixture, env: environment },
     "Prepared dependency inventory",
   );
-  let rawTree;
-  try {
-    rawTree = JSON.parse(result.stdout.text);
-    if (Array.isArray(rawTree)) {
-      if (rawTree.length !== 1) throw new Error("unexpected root count");
-      [rawTree] = rawTree;
+  if (managerName !== "pnpm") {
+    let rawTree;
+    try {
+      rawTree = JSON.parse(result.stdout.text);
+      if (Array.isArray(rawTree)) {
+        if (rawTree.length !== 1) throw new Error("unexpected root count");
+        [rawTree] = rawTree;
+      }
+    } catch {
+      throw new Error("Prepared dependency inventory returned malformed JSON");
     }
-  } catch {
-    throw new Error("Prepared dependency inventory returned malformed JSON");
+    const tree = normalizeDependencyTree(rawTree.name ?? "prepared-package", rawTree);
+    return { sha256: sha256Hex(canonicalStringify(tree)), tree };
   }
-  const tree = managerName === "pnpm"
-    ? await normalizePnpmDependencyTree(rawTree.name ?? "prepared-package", rawTree, fixture)
-    : normalizeDependencyTree(rawTree.name ?? "prepared-package", rawTree);
-  return { sha256: sha256Hex(canonicalStringify(tree)), tree };
+
+  const rawTree = parsePnpmTree(result, "Prepared dependency inventory");
+  const noOptionalResult = await runChecked(
+    managerExecutable,
+    [...args, "--no-optional"],
+    { cwd: fixture, env: environment },
+    "Prepared no-optional dependency inventory",
+  );
+  const noOptionalTree = parsePnpmTree(noOptionalResult, "Prepared no-optional dependency inventory");
+  if (typeof rawTree.name !== "string" || typeof noOptionalTree.name !== "string" || rawTree.name !== noOptionalTree.name) {
+    throw new Error("Full and no-optional dependency inventory roots contradict");
+  }
+  const skipped = await readPnpmModulesState(fixture, storeRoot, pinnedManager);
+  const absences = [];
+  const tree = await normalizePnpmDependencyTree({
+    name: rawTree.name,
+    node: rawTree,
+    noOptionalNode: noOptionalTree,
+    fixture,
+    edge: null,
+    logicalPath: ".",
+    root: true,
+    skipped,
+    absences,
+  });
+  absences.sort((left, right) => compareText(canonicalStringify(left), canonicalStringify(right)));
+  return {
+    absenceSha256: sha256Hex(canonicalStringify(absences)),
+    absences,
+    sha256: sha256Hex(canonicalStringify(tree)),
+    tree,
+  };
 }
 
 function parsePackageManager(packageManager) {
@@ -1218,7 +1598,10 @@ async function preparePackageSnapshot({
   const versionResult = await runChecked(managerExecutable, ["--version"], { env: environment }, "Pinned package-manager version");
   const actualVersion = trimLine(versionResult.stdout);
   if (actualVersion !== declaration.version) {
-    throw new Error(`Pinned package manager mismatch: expected ${declaration.pinned}`);
+    throw new Error(
+      `Pinned package manager mismatch: expected ${declaration.pinned}, received stdout ${JSON.stringify(actualVersion)} `
+      + `and stderr ${JSON.stringify(trimLine(versionResult.stderr))}`,
+    );
   }
   const lockfileName = declaration.name === "pnpm" ? "pnpm-lock.yaml" : "package-lock.json";
   const lockfilePath = path.join(snapshotRoot, lockfileName);
@@ -1248,7 +1631,10 @@ async function preparePackageSnapshot({
     "Offline lockfile preparation",
   );
   const record = {
-    dependencyTree: await preparedDependencyTree(managerExecutable, declaration.name, snapshotRoot, environment),
+    dependencyTree: await preparedDependencyTree(managerExecutable, declaration.name, snapshotRoot, environment, {
+      pinnedManager: declaration.pinned,
+      storeRoot: storePath,
+    }),
     lifecycleScriptsDisabled: true,
     lockfile: { path: lockfileName, sha256: sha256Hex(lockfileBytes) },
     offline: true,

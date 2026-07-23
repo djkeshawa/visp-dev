@@ -120,7 +120,8 @@ async function directoryDigest(root) {
   return sha256Hex(canonicalStringify(records));
 }
 
-async function makePreparedToyPackage(t) {
+async function makePreparedToyPackage(t, { dependencyGroup = "devDependencies" } = {}) {
+  assert.ok(["devDependencies", "optionalDependencies"].includes(dependencyGroup));
   const root = await mkdtemp(path.join(tmpdir(), "visp prepared source "));
   const seedRoot = await mkdtemp(path.join(tmpdir(), "visp pnpm seed "));
   const storeSource = path.join(seedRoot, "caller-store");
@@ -176,15 +177,476 @@ async function makePreparedToyPackage(t) {
     packageManager: "pnpm@11.3.0",
     bin: { "prepared-toy": "bin/prepared-toy.mjs" },
     scripts: { prepack: "toy-builder" },
-    devDependencies: { "visp-toy-builder-offline": "1.0.0" },
+    [dependencyGroup]: { "visp-toy-builder-offline": "1.0.0" },
   }, null, 2)}\n`);
   await writeFile(path.join(root, "bin", "prepared-toy.mjs"), "#!/usr/bin/env node\nprocess.stdout.write('prepared\\n');\n", { mode: 0o755 });
-  await writeFile(path.join(root, "pnpm-lock.yaml"), `lockfileVersion: '9.0'\n\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\n\nimporters:\n\n  .:\n    devDependencies:\n      visp-toy-builder-offline:\n        specifier: 1.0.0\n        version: 1.0.0\n\npackages:\n\n  visp-toy-builder-offline@1.0.0:\n    resolution: {integrity: ${builder.integrity}}\n    hasBin: true\n\nsnapshots:\n\n  visp-toy-builder-offline@1.0.0: {}\n`);
+  await writeFile(path.join(root, "pnpm-lock.yaml"), `lockfileVersion: '9.0'\n\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\n\nimporters:\n\n  .:\n    ${dependencyGroup}:\n      visp-toy-builder-offline:\n        specifier: 1.0.0\n        version: 1.0.0\n\npackages:\n\n  visp-toy-builder-offline@1.0.0:\n    resolution: {integrity: ${builder.integrity}}\n    hasBin: true\n\nsnapshots:\n\n  visp-toy-builder-offline@1.0.0: {}\n`);
   await git(root, ["add", "package.json", "pnpm-lock.yaml", "bin"]);
   await git(root, ["commit", "--quiet", "-m", "prepared toy package"]);
   const { stdout: commit } = await git(root, ["rev-parse", "HEAD"]);
   const { stdout: tree } = await git(root, ["show", "-s", "--format=%T", "HEAD"]);
   return { root, storeSource, commit: commit.trim(), tree: tree.trim() };
+}
+
+async function makeOptionalPreparedToyPackage(t) {
+  assert.equal(process.platform, "linux", "the pinned-pnpm optional fixture is calibrated for the Linux compatibility lane");
+  const root = await mkdtemp(path.join(tmpdir(), "visp optional prepared source "));
+  const seedRoot = await mkdtemp(path.join(tmpdir(), "visp optional pnpm seed "));
+  const storeSource = path.join(seedRoot, "caller-store");
+  const seedConsumer = path.join(seedRoot, "consumer");
+  t.after(() => rm(root, { recursive: true, force: true }));
+  t.after(() => rm(seedRoot, { recursive: true, force: true }));
+
+  const incompatibleOs = process.platform === "darwin" ? "linux" : "darwin";
+  const incompatibleCpu = process.arch === "arm64" ? "x64" : "arm64";
+  const runtimeReport = process.report?.getReport?.();
+  const incompatibleLibc = runtimeReport?.header?.glibcVersionRuntime ? "musl" : "glibc";
+  const definitions = [
+    {
+      name: "visp-optional-applicable",
+      fields: {},
+    },
+    {
+      name: "visp-optional-cpu-incompatible",
+      fields: { cpu: [incompatibleCpu] },
+    },
+    {
+      name: "visp-optional-libc-incompatible",
+      fields: { libc: [incompatibleLibc], os: ["linux"] },
+    },
+    {
+      name: "visp-optional-os-incompatible",
+      fields: { os: [incompatibleOs] },
+    },
+  ];
+  const builder = await makeRegistryArtifact(
+    t,
+    "visp-optional-toy-builder",
+    "1.0.0",
+    "optional-toy-builder",
+    "#!/usr/bin/env node\nimport { writeFileSync } from 'node:fs';\nwriteFileSync('generated-by-optional-builder.txt', 'prepared offline\\n');\n",
+  );
+  const artifacts = new Map();
+  for (const definition of definitions) {
+    artifacts.set(
+      definition.name,
+      await makeRegistryArtifact(t, definition.name, "1.0.0", null, null, definition.fields),
+    );
+  }
+
+  await mkdir(seedConsumer);
+  const allArtifacts = [
+    { name: "visp-optional-toy-builder", artifact: builder, fields: { hasBin: true } },
+    ...definitions.map((definition) => ({
+      name: definition.name,
+      artifact: artifacts.get(definition.name),
+      fields: definition.fields,
+    })),
+  ];
+  for (const { name, artifact } of allArtifacts) {
+    await writeFile(path.join(seedRoot, `${name}.tgz`), await readFile(artifact.tarball));
+  }
+  const dependencyEntries = Object.fromEntries(allArtifacts.map(({ name }) => [name, "1.0.0"]));
+  await writeFile(path.join(seedConsumer, "package.json"), `${JSON.stringify({
+    name: "pnpm-optional-offline-store-seed",
+    version: "1.0.0",
+    private: true,
+    dependencies: dependencyEntries,
+  }, null, 2)}\n`);
+  const seedImporter = allArtifacts
+    .map(({ name }) => `      ${name}:\n        specifier: 1.0.0\n        version: 1.0.0`)
+    .join("\n");
+  const seedPackages = allArtifacts
+    .map(({ name, artifact, fields }) => {
+      const metadata = Object.entries(fields)
+        .map(([key, value]) => `    ${key}: ${Array.isArray(value) ? `[${value.join(", ")}]` : value}`)
+        .join("\n");
+      return `  ${name}@1.0.0:\n    resolution: {integrity: ${artifact.integrity}, tarball: file:../${name}.tgz}${metadata ? `\n${metadata}` : ""}`;
+    })
+    .join("\n\n");
+  const seedSnapshots = allArtifacts.map(({ name }) => `  ${name}@1.0.0: {}`).join("\n\n");
+  await writeFile(path.join(seedConsumer, "pnpm-lock.yaml"), `lockfileVersion: '9.0'\n\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\n\nimporters:\n\n  .:\n    dependencies:\n${seedImporter}\n\npackages:\n\n${seedPackages}\n\nsnapshots:\n\n${seedSnapshots}\n`);
+  await execFileAsync("pnpm", [
+    "install",
+    "--force",
+    "--offline",
+    "--frozen-lockfile",
+    "--trust-lockfile",
+    "--ignore-scripts",
+    "--package-import-method",
+    "copy",
+    "--store-dir",
+    storeSource,
+    "--virtual-store-dir",
+    path.join(seedConsumer, "node_modules", ".pnpm"),
+  ], {
+    cwd: seedConsumer,
+    encoding: "utf8",
+    maxBuffer: 2 * 1024 * 1024,
+  });
+  await rm(path.join(seedConsumer, "node_modules"), { recursive: true, force: true });
+  for (const { name } of allArtifacts) await rm(path.join(seedRoot, `${name}.tgz`));
+  await rm(path.join(storeSource, "v11", "projects"), { recursive: true, force: true });
+
+  await git(root, ["init", "--quiet"]);
+  await git(root, ["config", "user.name", "Visp Test"]);
+  await git(root, ["config", "user.email", "visp-test@example.invalid"]);
+  await mkdir(path.join(root, "bin"));
+  const optionalDependencies = Object.fromEntries(definitions.map(({ name }) => [name, "1.0.0"]));
+  await writeFile(path.join(root, "package.json"), `${JSON.stringify({
+    name: "prepared-optional-toy",
+    version: "1.0.0",
+    private: true,
+    type: "module",
+    packageManager: "pnpm@11.3.0",
+    bin: { "prepared-optional-toy": "bin/prepared-optional-toy.mjs" },
+    scripts: { prepack: "optional-toy-builder" },
+    devDependencies: { "visp-optional-toy-builder": "1.0.0" },
+    optionalDependencies,
+  }, null, 2)}\n`);
+  await writeFile(
+    path.join(root, "bin", "prepared-optional-toy.mjs"),
+    "#!/usr/bin/env node\nprocess.stdout.write('prepared optional\\n');\n",
+    { mode: 0o755 },
+  );
+  const sourceDevImporter = "      visp-optional-toy-builder:\n        specifier: 1.0.0\n        version: 1.0.0";
+  const sourceOptionalImporter = definitions
+    .map(({ name }) => `      ${name}:\n        specifier: 1.0.0\n        version: 1.0.0`)
+    .join("\n");
+  const sourcePackages = allArtifacts
+    .map(({ name, artifact, fields }) => {
+      const metadata = Object.entries(fields)
+        .map(([key, value]) => `    ${key}: ${Array.isArray(value) ? `[${value.join(", ")}]` : value}`)
+        .join("\n");
+      return `  ${name}@1.0.0:\n    resolution: {integrity: ${artifact.integrity}}${metadata ? `\n${metadata}` : ""}`;
+    })
+    .join("\n\n");
+  const sourceSnapshots = allArtifacts
+    .map(({ name }) => name === "visp-optional-toy-builder"
+      ? `  ${name}@1.0.0: {}`
+      : `  ${name}@1.0.0:\n    optional: true`)
+    .join("\n\n");
+  await writeFile(path.join(root, "pnpm-lock.yaml"), `lockfileVersion: '9.0'\n\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\n\nimporters:\n\n  .:\n    devDependencies:\n${sourceDevImporter}\n    optionalDependencies:\n${sourceOptionalImporter}\n\npackages:\n\n${sourcePackages}\n\nsnapshots:\n\n${sourceSnapshots}\n`);
+  await git(root, ["add", "package.json", "pnpm-lock.yaml", "bin"]);
+  await git(root, ["commit", "--quiet", "-m", "optional prepared toy package"]);
+  const { stdout: commit } = await git(root, ["rev-parse", "HEAD"]);
+  const { stdout: tree } = await git(root, ["show", "-s", "--format=%T", "HEAD"]);
+  return {
+    root,
+    storeSource,
+    commit: commit.trim(),
+    tree: tree.trim(),
+    skippedNames: definitions.filter(({ fields }) => Object.keys(fields).length > 0).map(({ name }) => name).sort(),
+  };
+}
+
+async function makePreparedAliasToyPackage(
+  t,
+  {
+    aliasSpec = "npm:strip-ansi@6.0.1",
+    logicalName = "strip-ansi-cjs",
+    targetName = "strip-ansi",
+    version = "6.0.1",
+  } = {},
+) {
+  const root = await mkdtemp(path.join(tmpdir(), "visp alias prepared source "));
+  const seedRoot = await mkdtemp(path.join(tmpdir(), "visp alias pnpm seed "));
+  const storeSource = path.join(seedRoot, "caller-store");
+  const seedConsumer = path.join(seedRoot, "consumer");
+  t.after(() => rm(root, { recursive: true, force: true }));
+  t.after(() => rm(seedRoot, { recursive: true, force: true }));
+
+  const target = await makeRegistryArtifact(t, targetName, version, null, null);
+  await mkdir(seedConsumer);
+  const seedTarball = path.join(seedRoot, "artifact.tgz");
+  await writeFile(seedTarball, await readFile(target.tarball));
+  await writeFile(path.join(seedConsumer, "package.json"), `${JSON.stringify({
+    name: "pnpm-alias-offline-store-seed",
+    version: "1.0.0",
+    private: true,
+    dependencies: { [targetName]: version },
+  }, null, 2)}\n`);
+  await writeFile(path.join(seedConsumer, "pnpm-lock.yaml"), `lockfileVersion: '9.0'\n\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\n\nimporters:\n\n  .:\n    dependencies:\n      ${targetName}:\n        specifier: ${version}\n        version: ${version}\n\npackages:\n\n  ${targetName}@${version}:\n    resolution: {integrity: ${target.integrity}, tarball: file:../artifact.tgz}\n\nsnapshots:\n\n  ${targetName}@${version}: {}\n`);
+  await execFileAsync("pnpm", [
+    "install",
+    "--offline",
+    "--frozen-lockfile",
+    "--trust-lockfile",
+    "--ignore-scripts",
+    "--package-import-method",
+    "copy",
+    "--store-dir",
+    storeSource,
+    "--virtual-store-dir",
+    path.join(seedConsumer, "node_modules", ".pnpm"),
+  ], {
+    cwd: seedConsumer,
+    encoding: "utf8",
+    maxBuffer: 2 * 1024 * 1024,
+  });
+  await rm(path.join(seedConsumer, "node_modules"), { recursive: true, force: true });
+  await rm(seedTarball);
+  await rm(path.join(storeSource, "v11", "projects"), { recursive: true, force: true });
+
+  await git(root, ["init", "--quiet"]);
+  await git(root, ["config", "user.name", "Visp Test"]);
+  await git(root, ["config", "user.email", "visp-test@example.invalid"]);
+  await writeFile(path.join(root, "package.json"), `${JSON.stringify({
+    name: "prepared-alias-toy",
+    version: "1.0.0",
+    private: true,
+    packageManager: "pnpm@11.3.0",
+    devDependencies: { [logicalName]: aliasSpec },
+  }, null, 2)}\n`);
+  await writeFile(path.join(root, "pnpm-lock.yaml"), `lockfileVersion: '9.0'\n\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\n\nimporters:\n\n  .:\n    devDependencies:\n      ${logicalName}:\n        specifier: ${aliasSpec}\n        version: ${targetName}@${version}\n\npackages:\n\n  ${targetName}@${version}:\n    resolution: {integrity: ${target.integrity}}\n\nsnapshots:\n\n  ${targetName}@${version}: {}\n`);
+  await git(root, ["add", "package.json", "pnpm-lock.yaml"]);
+  await git(root, ["commit", "--quiet", "-m", "prepared alias toy package"]);
+  const { stdout: commit } = await git(root, ["rev-parse", "HEAD"]);
+  const { stdout: tree } = await git(root, ["show", "-s", "--format=%T", "HEAD"]);
+  return {
+    aliasSpec,
+    commit: commit.trim(),
+    logicalName,
+    root,
+    storeSource,
+    targetName,
+    tree: tree.trim(),
+    version,
+  };
+}
+
+async function pathExecutable(name) {
+  for (const directory of (process.env.PATH ?? "").split(path.delimiter)) {
+    if (!directory) continue;
+    const candidate = path.join(directory, name);
+    try {
+      const metadata = await stat(candidate);
+      if (metadata.isFile()) return candidate;
+    } catch {
+      // Continue through the caller's explicit PATH.
+    }
+  }
+  throw new Error(`Required test executable unavailable: ${name}`);
+}
+
+async function makePnpmScenarioManager(t, scenario) {
+  const root = await mkdtemp(path.join(tmpdir(), "visp pnpm scenario "));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const executable = path.join(root, "pnpm-scenario.mjs");
+  const realPnpm = await pathExecutable("pnpm");
+  await writeFile(executable, `#!/usr/bin/env node
+import { spawnSync } from "node:child_process";
+import { readFileSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+const scenario = ${JSON.stringify(scenario)};
+const args = process.argv.slice(2);
+const noOptional = args.includes("--no-optional");
+const cachePath = (suffix) => path.join(process.cwd(), "..", \`\${path.basename(process.cwd())}-\${suffix}.json\`);
+const spawnPnpm = (pnpmArgs) => spawnSync(${JSON.stringify(realPnpm)}, pnpmArgs, {
+    cwd: process.cwd(),
+    env: process.env,
+    encoding: "utf8",
+    maxBuffer: 2 * 1024 * 1024,
+  });
+const result = args[0] === "list"
+  ? {
+      status: 0,
+      stderr: "",
+      stdout: readFileSync(
+        cachePath(scenario === "full_no_optional_contradiction" ? "full" : noOptional ? "no-optional" : "full"),
+        "utf8",
+      ),
+    }
+  : spawnPnpm(args);
+if (result.status !== 0) {
+  process.stdout.write(result.stdout ?? "");
+  process.stderr.write(result.stderr ?? "");
+  process.exit(result.status ?? 1);
+}
+
+const moduleState = path.join(process.cwd(), "node_modules", ".modules.yaml");
+const identity = "visp-toy-builder-offline@1.0.0";
+const putSkipped = (values) => {
+  const source = readFileSync(moduleState, "utf8");
+  const start = source.indexOf("\\nskipped:");
+  const end = source.indexOf("\\nstoreDir:", start);
+  if (start < 0 || end < 0) throw new Error("unexpected pnpm skipped fixture");
+  writeFileSync(
+    moduleState,
+    \`\${source.slice(0, start)}\\nskipped:\\n\${values.map((value) => \`  - \${value}\`).join("\\n")}\${source.slice(end)}\`,
+  );
+};
+if (args[0] === "install") {
+  const full = spawnPnpm(["list", "--depth", "Infinity", "--json"]);
+  const noOptionalTree = spawnPnpm(["list", "--depth", "Infinity", "--json", "--no-optional"]);
+  if (full.status !== 0 || noOptionalTree.status !== 0) throw new Error("could not cache pnpm tree fixtures");
+  writeFileSync(cachePath("full"), full.stdout);
+  writeFileSync(cachePath("no-optional"), noOptionalTree.stdout);
+  if (scenario === "required_missing_skipped" || scenario === "present_skipped") putSkipped([identity]);
+  if (scenario === "duplicate_skipped") putSkipped([identity, identity]);
+  if (scenario === "malformed_modules") writeFileSync(moduleState, "skipped: [unterminated\\n");
+  if (scenario === "wrong_manager") {
+    const source = readFileSync(moduleState, "utf8");
+    const updated = source.replace(/^packageManager:.*$/mu, "packageManager: pnpm@11.2.0");
+    if (updated === source) throw new Error("unexpected pnpm package-manager fixture");
+    writeFileSync(moduleState, updated);
+  }
+  if (scenario === "wrong_store") {
+    const source = readFileSync(moduleState, "utf8");
+    const updated = source.replace(/^storeDir:.*$/mu, "storeDir: /tmp/visp-foreign-pnpm-store");
+    if (updated === source) throw new Error("unexpected pnpm store fixture");
+    writeFileSync(moduleState, updated);
+  }
+  if (scenario === "escaping_nominal_path") {
+    const escape = path.join(process.cwd(), "..", "pnpm-nominal-escape");
+    try { unlinkSync(escape); } catch (error) { if (error.code !== "ENOENT") throw error; }
+    symlinkSync(path.join(process.cwd(), "node_modules", "visp-toy-builder-offline"), escape, "dir");
+  }
+  if (scenario === "required_child_below_optional") {
+    const manifestPath = path.join(process.cwd(), "node_modules", "visp-toy-builder-offline", "package.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    manifest.dependencies = { "visp-required-child": "1.0.0" };
+    writeFileSync(manifestPath, \`\${JSON.stringify(manifest, null, 2)}\\n\`);
+  }
+  if (scenario.startsWith("ordinary_spec:") || [
+    "present_peer_edge",
+    "optional_peer_edge",
+    "malformed_optional_peer_meta",
+    "undeclared_edge",
+    "ambiguous_peer_edge",
+    "peer_identity_mismatch",
+  ].includes(scenario)) {
+    const rootManifestPath = path.join(process.cwd(), "package.json");
+    const rootManifest = JSON.parse(readFileSync(rootManifestPath, "utf8"));
+    if (scenario.startsWith("ordinary_spec:")) {
+      rootManifest.devDependencies[identity.slice(0, identity.lastIndexOf("@"))] = scenario.slice("ordinary_spec:".length);
+    }
+    if (["present_peer_edge", "optional_peer_edge", "malformed_optional_peer_meta", "peer_identity_mismatch"].includes(scenario)) {
+      delete rootManifest.devDependencies["visp-toy-builder-offline"];
+      rootManifest.peerDependencies = { "visp-toy-builder-offline": "~1.0.0" };
+    }
+    if (scenario === "optional_peer_edge") {
+      rootManifest.peerDependenciesMeta = { "visp-toy-builder-offline": { optional: true } };
+    }
+    if (scenario === "malformed_optional_peer_meta") {
+      rootManifest.peerDependenciesMeta = { "visp-toy-builder-offline": { optional: "yes" } };
+    }
+    if (scenario === "undeclared_edge") delete rootManifest.devDependencies["visp-toy-builder-offline"];
+    if (scenario === "ambiguous_peer_edge") {
+      rootManifest.peerDependencies = { "visp-toy-builder-offline": ">=1" };
+    }
+    writeFileSync(rootManifestPath, \`\${JSON.stringify(rootManifest, null, 2)}\\n\`);
+  }
+}
+
+if (args[0] === "list") {
+  const tree = JSON.parse(result.stdout);
+  const root = Array.isArray(tree) ? tree[0] : tree;
+  const groups = [root.dependencies, root.devDependencies, root.optionalDependencies].filter(Boolean);
+  if (scenario === "optional_peer_edge" && noOptional) {
+    for (const group of groups) delete group["visp-toy-builder-offline"];
+  }
+  const builder = groups.map((group) => group["visp-toy-builder-offline"]).find(Boolean);
+  if (builder) {
+    if (scenario === "required_missing_skipped" || scenario === "optional_missing_not_skipped") {
+      builder.path = path.join(process.cwd(), "node_modules", "visp-missing-builder");
+    }
+    if (scenario === "escaping_nominal_path") {
+      builder.path = path.join(process.cwd(), "..", "pnpm-nominal-escape");
+    }
+    if (scenario === "identity_mismatch") builder.version = "9.9.9";
+    if (scenario === "peer_identity_mismatch") builder.from = "visp-peer-impostor";
+    if (scenario === "required_child_below_optional") {
+      builder.dependencies = {
+        "visp-required-child": {
+          path: path.join(process.cwd(), "node_modules", "visp-toy-builder-offline", "node_modules", "visp-required-child"),
+          version: "1.0.0",
+        },
+      };
+    }
+  }
+  process.stdout.write(JSON.stringify(tree));
+} else {
+  process.stdout.write(result.stdout ?? "");
+}
+process.stderr.write(result.stderr ?? "");
+`, { mode: 0o755 });
+  return executable;
+}
+
+async function makeAliasScenarioManager(t, scenario, alias) {
+  const root = await mkdtemp(path.join(tmpdir(), "visp pnpm alias scenario "));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const executable = path.join(root, "pnpm-alias-scenario.mjs");
+  const realPnpm = await pathExecutable("pnpm");
+  await writeFile(executable, `#!/usr/bin/env node
+import { spawnSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+const scenario = ${JSON.stringify(scenario)};
+const logicalName = ${JSON.stringify(alias.logicalName)};
+const targetName = ${JSON.stringify(alias.targetName)};
+const args = process.argv.slice(2);
+const noOptional = args.includes("--no-optional");
+const cachePath = (suffix) => path.join(process.cwd(), "..", \`\${path.basename(process.cwd())}-alias-\${suffix}.json\`);
+const spawnPnpm = (pnpmArgs) => spawnSync(${JSON.stringify(realPnpm)}, pnpmArgs, {
+  cwd: process.cwd(),
+  env: process.env,
+  encoding: "utf8",
+  maxBuffer: 2 * 1024 * 1024,
+});
+const result = args[0] === "list"
+  ? {
+      status: 0,
+      stderr: "",
+      stdout: readFileSync(cachePath(noOptional ? "no-optional" : "full"), "utf8"),
+    }
+  : spawnPnpm(args);
+if (result.status !== 0) {
+  process.stdout.write(result.stdout ?? "");
+  process.stderr.write(result.stderr ?? "");
+  process.exit(result.status ?? 1);
+}
+
+if (args[0] === "install") {
+  const full = spawnPnpm(["list", "--depth", "Infinity", "--json"]);
+  const noOptionalTree = spawnPnpm(["list", "--depth", "Infinity", "--json", "--no-optional"]);
+  if (full.status !== 0 || noOptionalTree.status !== 0) throw new Error("could not cache pnpm alias trees");
+  writeFileSync(cachePath("full"), full.stdout);
+  writeFileSync(cachePath("no-optional"), noOptionalTree.stdout);
+
+  const rootManifestPath = path.join(process.cwd(), "package.json");
+  const rootManifest = JSON.parse(readFileSync(rootManifestPath, "utf8"));
+  if (scenario === "undeclared_alias") delete rootManifest.devDependencies[logicalName];
+  if (scenario === "unsupported_alias_spec") rootManifest.devDependencies[logicalName] = \`npm:\${targetName}@~6.0.0\`;
+  if (scenario === "malformed_alias_spec") rootManifest.devDependencies[logicalName] = \`npm:\${targetName}\`;
+  if (scenario === "out_of_range_alias") rootManifest.devDependencies[logicalName] = \`npm:\${targetName}@^7.0.0\`;
+  writeFileSync(rootManifestPath, \`\${JSON.stringify(rootManifest, null, 2)}\\n\`);
+
+  if (scenario === "manifest_mismatch") {
+    const targetManifestPath = path.join(process.cwd(), "node_modules", logicalName, "package.json");
+    const targetManifest = JSON.parse(readFileSync(targetManifestPath, "utf8"));
+    targetManifest.name = \`\${targetName}-impostor\`;
+    writeFileSync(targetManifestPath, \`\${JSON.stringify(targetManifest, null, 2)}\\n\`);
+  }
+}
+
+if (args[0] === "list") {
+  const tree = JSON.parse(result.stdout);
+  const treeRoot = Array.isArray(tree) ? tree[0] : tree;
+  const groups = [treeRoot.dependencies, treeRoot.devDependencies, treeRoot.optionalDependencies].filter(Boolean);
+  const dependency = groups.map((group) => group[logicalName]).find(Boolean);
+  if (!dependency) throw new Error("expected pnpm alias node is unavailable");
+  if (scenario === "target_mismatch") dependency.from = \`\${targetName}-other\`;
+  process.stdout.write(JSON.stringify(tree));
+} else {
+  process.stdout.write(result.stdout ?? "");
+}
+process.stderr.write(result.stderr ?? "");
+`, { mode: 0o755 });
+  return executable;
 }
 
 test("validates a full commit and snapshots only committed content without mutating source", async (t) => {
@@ -299,6 +761,14 @@ test("process runner records success, failure, spawn error, timeout, and bounded
   assert.equal(success.stderr.text, "note");
   assert.equal(success.stdout.sha256, sha256Hex("ok"));
 
+  const standardInput = await runProcess(
+    process.execPath,
+    ["-e", "process.stdin.pipe(process.stdout)"],
+    { stdin: "newline-delimited request\n" },
+  );
+  assert.equal(standardInput.exitCode, 0);
+  assert.equal(standardInput.stdout.text, "newline-delimited request\n");
+
   const nonzero = await runProcess(process.execPath, ["-e", "process.stderr.write('bad'); process.exit(7)"]);
   assert.equal(nonzero.exitCode, 7);
   assert.equal(nonzero.stderr.text, "bad");
@@ -410,6 +880,296 @@ test("pack preparation is pinned, offline, ambient-config resistant, and repeate
     else process.env.npm_config_ignore_scripts = previousIgnoreScripts;
     if (previousToken === undefined) delete process.env.NPM_TOKEN;
     else process.env.NPM_TOKEN = previousToken;
+  }
+});
+
+test("pinned pnpm records deterministic optional absences from a real offline toy graph", async (t) => {
+  const toy = await makeOptionalPreparedToyPackage(t);
+  const sourceBefore = await sourceState(toy.root);
+  const storeBefore = await directoryDigest(toy.storeSource);
+  const owned = await createOwnedRoot();
+  t.after(() => cleanupOwnedRoot({ root: owned.root }));
+
+  const packed = await packPackageTwice({
+    repositoryRoot: toy.root,
+    commit: toy.commit,
+    ownedRoot: owned.root,
+    offlineStoreSource: toy.storeSource,
+    packageManagerCommand: "pnpm",
+  });
+
+  const first = packed.preparations.first.dependencyTree;
+  const second = packed.preparations.second.dependencyTree;
+  assert.equal(first.sha256, second.sha256);
+  assert.equal(first.absenceSha256, second.absenceSha256);
+  assert.match(first.absenceSha256, /^[0-9a-f]{64}$/u);
+  assert.deepEqual(first.absences, second.absences);
+  assert.equal(first.absenceSha256, sha256Hex(canonicalStringify(first.absences)));
+  assert.deepEqual(
+    first.tree.dependencies.map(({ name, version }) => ({ name, version })),
+    [
+      { name: "visp-optional-applicable", version: "1.0.0" },
+      { name: "visp-optional-toy-builder", version: "1.0.0" },
+    ],
+  );
+  assert.deepEqual(
+    first.absences.map(({ name, source, status, version }) => ({ name, source, status, version })),
+    toy.skippedNames.map((name) => ({
+      name,
+      source: "pnpm_skipped",
+      status: "optional_absent",
+      version: "1.0.0",
+    })),
+  );
+  for (const absence of first.absences) {
+    assert.equal(typeof absence.path, "string");
+    assert.ok(absence.path.length > 0);
+  }
+  assert.deepEqual(
+    first.absences,
+    [...first.absences].sort((left, right) => {
+      const leftRecord = canonicalStringify(left);
+      const rightRecord = canonicalStringify(right);
+      return leftRecord < rightRecord ? -1 : leftRecord > rightRecord ? 1 : 0;
+    }),
+  );
+
+  const evidence = canonicalStringify(packed.preparations);
+  for (const forbiddenPath of [owned.root, toy.root, toy.storeSource]) {
+    assert.doesNotMatch(evidence, new RegExp(forbiddenPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"));
+  }
+  assert.doesNotMatch(evidence, /"(?:prunedAt|storeDir|timestamp)"\s*:/iu);
+  assert.doesNotMatch(evidence, /platform[_ -]?(?:incompatible|unsupported)|unsupported[_ -]?platform/iu);
+  assert.doesNotMatch(evidence, /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/u);
+  assert.deepEqual(await sourceState(toy.root), sourceBefore);
+  assert.equal(await directoryDigest(toy.storeSource), storeBefore);
+});
+
+test("pinned pnpm optional classification and modules state fail closed without mutating inputs", async (t) => {
+  const requiredToy = await makePreparedToyPackage(t);
+  const optionalToy = await makePreparedToyPackage(t, { dependencyGroup: "optionalDependencies" });
+  const cases = [
+    {
+      name: "required missing identity rejects even when forged as skipped",
+      scenario: "required_missing_skipped",
+      toy: requiredToy,
+    },
+    {
+      name: "required child below an installed optional parent rejects",
+      scenario: "required_child_below_optional",
+      toy: optionalToy,
+    },
+    {
+      name: "optional missing identity rejects when not recorded as skipped",
+      scenario: "optional_missing_not_skipped",
+      toy: optionalToy,
+    },
+    {
+      name: "present identity rejects when recorded as skipped",
+      scenario: "present_skipped",
+      toy: optionalToy,
+    },
+    {
+      name: "lexically escaping nominal path rejects even when its real target is confined",
+      scenario: "escaping_nominal_path",
+      toy: requiredToy,
+    },
+    {
+      name: "tree and installed-manifest identity mismatch rejects",
+      scenario: "identity_mismatch",
+      toy: requiredToy,
+    },
+    {
+      name: "malformed modules state rejects",
+      scenario: "malformed_modules",
+      toy: requiredToy,
+    },
+    {
+      name: "duplicate skipped identity rejects",
+      scenario: "duplicate_skipped",
+      toy: requiredToy,
+    },
+    {
+      name: "wrong package manager in modules state rejects",
+      scenario: "wrong_manager",
+      toy: requiredToy,
+    },
+    {
+      name: "store outside the copied preparation store rejects",
+      scenario: "wrong_store",
+      toy: requiredToy,
+    },
+    {
+      name: "full and no-optional tree contradiction rejects",
+      scenario: "full_no_optional_contradiction",
+      toy: optionalToy,
+    },
+  ];
+
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (subtest) => {
+      const sourceBefore = await sourceState(fixture.toy.root);
+      const storeBefore = await directoryDigest(fixture.toy.storeSource);
+      const manager = await makePnpmScenarioManager(subtest, fixture.scenario);
+      const owned = await createOwnedRoot();
+      subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
+      try {
+        await assert.rejects(
+          () => packPackageTwice({
+            repositoryRoot: fixture.toy.root,
+            commit: fixture.toy.commit,
+            ownedRoot: owned.root,
+            offlineStoreSource: fixture.toy.storeSource,
+            packageManagerCommand: manager,
+          }),
+          undefined,
+          fixture.name,
+        );
+      } finally {
+        assert.deepEqual(await sourceState(fixture.toy.root), sourceBefore);
+        assert.equal(await directoryDigest(fixture.toy.storeSource), storeBefore);
+      }
+    });
+  }
+});
+
+test("pinned pnpm accepts closed present aliases and preserves logical tree identity", async (t) => {
+  const cases = [
+    { name: "exact alias spec", aliasSpec: "npm:strip-ansi@6.0.1" },
+    { name: "caret alias spec", aliasSpec: "npm:strip-ansi@^6.0.0" },
+  ];
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (subtest) => {
+      const alias = await makePreparedAliasToyPackage(subtest, { aliasSpec: fixture.aliasSpec });
+      const sourceBefore = await sourceState(alias.root);
+      const storeBefore = await directoryDigest(alias.storeSource);
+      const owned = await createOwnedRoot();
+      subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
+
+      const packed = await packPackageTwice({
+        repositoryRoot: alias.root,
+        commit: alias.commit,
+        ownedRoot: owned.root,
+        offlineStoreSource: alias.storeSource,
+        packageManagerCommand: "pnpm",
+      });
+
+      const expectedTree = {
+        dependencies: [
+          {
+            dependencies: [],
+            name: alias.logicalName,
+            version: alias.version,
+          },
+        ],
+        name: "prepared-alias-toy",
+        version: "1.0.0",
+      };
+      assert.deepEqual(packed.preparations.first.dependencyTree.tree, expectedTree);
+      assert.deepEqual(packed.preparations.second.dependencyTree.tree, expectedTree);
+      assert.equal(
+        packed.preparations.first.dependencyTree.sha256,
+        sha256Hex(canonicalStringify(expectedTree)),
+      );
+      assert.equal(
+        packed.preparations.second.dependencyTree.sha256,
+        sha256Hex(canonicalStringify(expectedTree)),
+      );
+      assert.deepEqual(await sourceState(alias.root), sourceBefore);
+      assert.equal(await directoryDigest(alias.storeSource), storeBefore);
+    });
+  }
+});
+
+test("pinned pnpm aliases fail closed on edge, target, manifest, spec, and version contradictions", async (t) => {
+  const alias = await makePreparedAliasToyPackage(t);
+  const cases = [
+    { name: "undeclared logical alias rejects", scenario: "undeclared_alias" },
+    { name: "raw pnpm alias target mismatch rejects", scenario: "target_mismatch" },
+    { name: "installed alias manifest mismatch rejects", scenario: "manifest_mismatch" },
+    { name: "unsupported alias range syntax rejects", scenario: "unsupported_alias_spec" },
+    { name: "malformed alias spec rejects", scenario: "malformed_alias_spec" },
+    { name: "resolved alias version outside authored range rejects", scenario: "out_of_range_alias" },
+  ];
+
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (subtest) => {
+      const sourceBefore = await sourceState(alias.root);
+      const storeBefore = await directoryDigest(alias.storeSource);
+      const manager = await makeAliasScenarioManager(subtest, fixture.scenario, alias);
+      const owned = await createOwnedRoot();
+      subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
+      try {
+        await assert.rejects(
+          () => packPackageTwice({
+            repositoryRoot: alias.root,
+            commit: alias.commit,
+            ownedRoot: owned.root,
+            offlineStoreSource: alias.storeSource,
+            packageManagerCommand: manager,
+          }),
+          undefined,
+          fixture.name,
+        );
+      } finally {
+        assert.deepEqual(await sourceState(alias.root), sourceBefore);
+        assert.equal(await directoryDigest(alias.storeSource), storeBefore);
+      }
+    });
+  }
+});
+
+test("pinned pnpm accepts representative ordinary specs and present peer edges", async (t) => {
+  const toy = await makePreparedToyPackage(t);
+  const cases = [
+    { name: "tilde", scenario: "ordinary_spec:~1.0.0" },
+    { name: "union", scenario: "ordinary_spec:^1.0.0 || ^2.0.0" },
+    { name: "wildcard", scenario: "ordinary_spec:*" },
+    { name: "comparator range", scenario: "ordinary_spec:>=1 <2" },
+    { name: "present peer edge", scenario: "present_peer_edge" },
+    { name: "present optional peer edge omitted by no-optional view", scenario: "optional_peer_edge" },
+  ];
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (subtest) => {
+      const manager = await makePnpmScenarioManager(subtest, fixture.scenario);
+      const owned = await createOwnedRoot();
+      subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
+      const packed = await packPackageTwice({
+        repositoryRoot: toy.root,
+        commit: toy.commit,
+        ownedRoot: owned.root,
+        offlineStoreSource: toy.storeSource,
+        packageManagerCommand: manager,
+      });
+      assert.deepEqual(
+        packed.preparations.first.dependencyTree.tree.dependencies.map(({ name, version }) => ({ name, version })),
+        [{ name: "visp-toy-builder-offline", version: "1.0.0" }],
+      );
+    });
+  }
+});
+
+test("pinned pnpm ordinary and peer edges reject undeclared, ambiguous, or mismatched identity", async (t) => {
+  const toy = await makePreparedToyPackage(t);
+  const cases = [
+    { name: "undeclared edge", scenario: "undeclared_edge" },
+    { name: "ambiguous peer edge", scenario: "ambiguous_peer_edge" },
+    { name: "peer target mismatch", scenario: "peer_identity_mismatch" },
+    { name: "malformed optional peer metadata", scenario: "malformed_optional_peer_meta" },
+  ];
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (subtest) => {
+      const manager = await makePnpmScenarioManager(subtest, fixture.scenario);
+      const owned = await createOwnedRoot();
+      subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
+      await assert.rejects(() => packPackageTwice({
+        repositoryRoot: toy.root,
+        commit: toy.commit,
+        ownedRoot: owned.root,
+        offlineStoreSource: toy.storeSource,
+        packageManagerCommand: manager,
+      }));
+    });
   }
 });
 
@@ -806,6 +1566,14 @@ test("caller npm cache hydrates only a closed reachable registry lock graph offl
   await rejectLock("rejects an installed artifact with a mismatched manifest identity", (lock) => {
     childEntry(lock).integrity = impostor.integrity;
   }, /installed package identity/i);
+  await rejectLock("rejects omitted local package bins", (lock) => {
+    delete lock.packages["node_modules/cache-hydration-package"].bin;
+  }, /local package bin metadata/i);
+  await rejectLock("rejects rewritten local package bins", (lock) => {
+    lock.packages["node_modules/cache-hydration-package"].bin = {
+      "different-command": "bin/toy-command.mjs",
+    };
+  }, /local package bin metadata/i);
   const emptyCache = await mkdtemp(path.join(tmpdir(), "visp empty npm cache "));
   t.after(() => rm(emptyCache, { recursive: true, force: true }));
   await assert.rejects(

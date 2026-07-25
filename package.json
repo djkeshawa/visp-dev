@@ -1,8 +1,25 @@
 {
   "name": "visp-dev",
   "version": "0.0.0",
+  "description": "Thin public integration shell and deterministic compatibility laboratory for the Visp toolchain.",
   "private": true,
   "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djkeshawa/visp-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/djkeshawa/visp-dev/issues"
+  },
+  "homepage": "https://github.com/djkeshawa/visp-dev#readme",
+  "keywords": [
+    "ai",
+    "compatibility",
+    "developer-tools",
+    "local-first",
+    "visp"
+  ],
   "engines": {
     "node": ">=22"
   },

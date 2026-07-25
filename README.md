@@ -74,13 +74,12 @@ node scripts/run-phase-3-compatibility.mjs --verify <phase-3-report-path>
 Use `--row A` through `--row E` only for bounded diagnosis. A selected-row
 debug run is not a complete compatibility report.
 
-## Workspace development references
+## Contributing and security
 
-These links point to the parent workspace's development controls. They are not
-package or standalone public documentation:
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow. Report
+security vulnerabilities through the private process in
+[SECURITY.md](SECURITY.md), not through a public issue.
 
-- [current phase](../planning/current-phase.md)
-- [canonical product boundary](../planning/architecture-boundary.md)
-- [product and repository map](../planning/product-map.md)
-- [product and engineering roadmap](../planning/visp-dev-roadmap.md)
-- [repository plan](../planning/repository-plan.md)
+## License
+
+Licensed under the [Apache License 2.0](LICENSE).

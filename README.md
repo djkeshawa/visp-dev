@@ -6,7 +6,8 @@ Kit, Visp Hyper Agent, and optional Visp Memory releases.
 The current implementation is a dependency-free compatibility laboratory. It
 packs exact Kit and Hyper commits twice, installs the tarballs into clean
 offline fixtures with lifecycle scripts disabled, exercises the public
-binaries, and emits deterministic machine evidence.
+binaries, and emits deterministic machine evidence for protocol compatibility,
+evidence profiles, and golden assurance-review flows.
 
 ## Current responsibility
 
@@ -14,6 +15,8 @@ Visp Dev owns:
 
 - tested package compatibility, clean fixtures, and version reports;
 - the exact packed WorkflowAction compatibility matrix;
+- packed golden review examples that record Kit-authored assurance facts across
+  Hyper CLI and MCP surfaces;
 - factual compatibility and migration documentation; and
 - later setup, examples, golden paths, and public evaluations when activated.
 
@@ -29,6 +32,12 @@ The accepted Linux x64 matrix covers five exact historical Kit/Hyper pairs,
 WorkflowAction 2.0 and 3.0 selection boundaries, the final six strict Hyper
 surfaces, and seven deliberately unsupported fail-closed cases. It does not
 claim a package SemVer support window or native Windows/macOS compatibility.
+
+The Phase 3 extension pins WorkflowAction 3.2 and four deterministic golden
+flows: routine accepted, behavioral rejected, critical stale, and critical
+inconclusive. It also exercises the additive 3.1 boundary with the prior Kit
+and Hyper producers. Visp Dev records and compares Kit-authored facts; it does
+not calculate acceptance, decision freshness, or PR readiness.
 
 See [the exact compatibility and migration report](docs/compatibility.md).
 
@@ -49,6 +58,17 @@ node scripts/run-compatibility-matrix.mjs \
   --output <new-report-path>
 
 node scripts/run-compatibility-matrix.mjs --verify <report-path>
+
+node scripts/run-phase-3-compatibility.mjs \
+  --kit-repository ../visp-kit \
+  --hyper-repository ../visp-hyper-agent \
+  --offline-store <pnpm-store-snapshot> \
+  --offline-cache <npm-cache-snapshot> \
+  --package-manager "$(command -v pnpm)" \
+  --npm "$(command -v npm)" \
+  --output <new-phase-3-report-path>
+
+node scripts/run-phase-3-compatibility.mjs --verify <phase-3-report-path>
 ```
 
 Use `--row A` through `--row E` only for bounded diagnosis. A selected-row

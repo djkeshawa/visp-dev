@@ -311,7 +311,7 @@ function publicPack(pack) {
   };
 }
 
-async function packAndInstall({
+export async function packAndInstall({
   definition,
   kind,
   offlineCacheSource,
@@ -403,7 +403,7 @@ async function packAndInstall({
   };
 }
 
-async function toolVersion(command) {
+export async function toolVersion(command) {
   const result = await runProcess(command, ["--version"], { timeoutMs: 30_000 });
   if (result.spawnError || result.timedOut || result.exitCode !== 0) {
     throw new Error(`Cannot determine ${command} version`);
@@ -411,7 +411,7 @@ async function toolVersion(command) {
   return result.stdout.text.trim();
 }
 
-async function pathCommand(name) {
+export async function pathCommand(name) {
   for (const directory of (process.env.PATH ?? "").split(path.delimiter)) {
     if (!directory) continue;
     const candidate = path.join(directory, name);
@@ -425,7 +425,7 @@ async function pathCommand(name) {
   throw new Error(`Required Phase 2 executable unavailable: ${name}`);
 }
 
-function executionEnvironment(kit, hyper, gitExecutable) {
+export function executionEnvironment(kit, hyper, gitExecutable) {
   return {
     CI: "1",
     FORCE_COLOR: "0",
@@ -442,7 +442,7 @@ function executionEnvironment(kit, hyper, gitExecutable) {
   };
 }
 
-async function runExact(command, args, { cwd, env, stdin } = {}) {
+export async function runExact(command, args, { cwd, env, stdin } = {}) {
   return runProcess(command, args, {
     cwd,
     env,
@@ -451,7 +451,7 @@ async function runExact(command, args, { cwd, env, stdin } = {}) {
   });
 }
 
-function requireZero(result, label) {
+export function requireZero(result, label) {
   if (result.spawnError || result.timedOut || result.exitCode !== 0) {
     const error = new Error(`${label} failed`);
     error.observation = result;
@@ -460,7 +460,7 @@ function requireZero(result, label) {
   return result;
 }
 
-function parseJson(result, label) {
+export function parseJson(result, label) {
   try {
     return JSON.parse(result.stdout.text);
   } catch {
@@ -468,7 +468,7 @@ function parseJson(result, label) {
   }
 }
 
-function parseFrame(result, begin, end, label) {
+export function parseFrame(result, begin, end, label) {
   const pattern = new RegExp(`${begin}\\n([\\s\\S]*?)\\n${end}`, "gu");
   const matches = [...result.stdout.text.matchAll(pattern)];
   if (matches.length !== 1) throw new Error(`${label} did not emit exactly one canonical frame`);
@@ -536,7 +536,7 @@ function normalizeCandidateView(action, definition, label) {
   };
 }
 
-async function readArtifactBinding(project, relativePath) {
+export async function readArtifactBinding(project, relativePath) {
   const bytes = await readFile(path.join(project, relativePath));
   return { path: relativePath, sha256: `sha256:${sha256Hex(bytes)}` };
 }
@@ -547,7 +547,7 @@ async function updateJson(filePath, update) {
   await writeFile(filePath, canonicalStringify(value));
 }
 
-async function createRealProject({ definition, hyper, kit, root }) {
+export async function createRealProject({ definition, hyper, kit, root }) {
   const project = path.join(root, "project");
   await mkdir(project);
   const git = await pathCommand("git");
@@ -762,7 +762,7 @@ async function createRealProject({ definition, hyper, kit, root }) {
   return { env, featureRelativePath, project, runGit, runHyper, runKit };
 }
 
-function requireCompleted(result, label) {
+export function requireCompleted(result, label) {
   if (result.spawnError || result.timedOut || !Number.isInteger(result.exitCode)) {
     const error = new Error(`${label} did not complete`);
     error.observation = result;

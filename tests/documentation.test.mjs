@@ -6,6 +6,7 @@ import {
   COMPATIBILITY_MATRIX_ROWS,
   DELIBERATELY_UNSUPPORTED_CASES,
 } from "../src/compatibility-matrix.mjs";
+import { PHASE_3_COMPATIBILITY_DEFINITION } from "../src/phase-3-compatibility.mjs";
 
 test("public compatibility documentation matches the frozen exact-pair matrix", async () => {
   const [readme, report] = await Promise.all([
@@ -30,5 +31,9 @@ test("public compatibility documentation matches the frozen exact-pair matrix", 
   assert.match(report, /run`, `next`, `resume`, checkpoint, `guard`,\s+and the MCP/u);
   assert.match(report, /does not establish a package-version support window|not a package-version support\s+window/u);
   assert.match(readme, /exact compatibility and migration report/u);
+  assert.match(readme, /run-phase-3-compatibility\.mjs/u);
+  assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.packages.kitNew.commit, "u"));
+  assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.packages.hyperNew.commit, "u"));
+  assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.schemaHash, "u"));
   assert.doesNotMatch(readme, /dormant and documentation-only during Phase 0/u);
 });

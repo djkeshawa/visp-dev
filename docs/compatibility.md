@@ -92,3 +92,57 @@ The report proves Linux x64 behavior only for the commits and tools named
 above. Windows-style path data tested on Linux is not native Windows evidence.
 No macOS result, native Windows result, generalized SemVer range, release,
 deployment, or hosted compatibility claim is made.
+
+## Phase 3 assurance-review extension
+
+The dependency-free Phase 3 runner preserves all Phase 2 definitions and adds
+a separate closed evidence report for WorkflowAction 3.2. Its frozen producers
+are:
+
+- Kit `d92364e8b3fd9d38771bcfe1df18fb9434a8ad4e`, tree
+  `6aa999a59ad7bd3b77f6b85bc07fabd6575d9f95`;
+- Hyper `cda0c6ce43abc6a69f4a436026d482e95ed74a2c`, tree
+  `9694a2d7e36215ee95336ade735f1a5426698187`;
+- WorkflowAction 3.2 schema
+  `sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9`.
+
+The golden corpus covers routine accepted, behavioral rejected, critical stale,
+and critical inconclusive cases. Each case records the authoritative Kit
+assurance summary, case hash, verdict, review-decision state, mandatory
+hotspots, action verdict, and exact next command. Installed Hyper must expose
+the exact same normalized view through `run`, `next`, `resume`, checkpoint,
+`guard`, and the MCP canonical-action resource.
+
+The accepted Linux x64 run used Node `v24.15.0`, npm `11.12.1`, pnpm `11.3.0`,
+and Git `2.34.1`. It passed all three additive compatibility rows, all four
+golden scenarios, and all 24 golden Hyper surfaces. Its canonical report
+SHA-256 is
+`29f027f0ee1efdf0147a90fff4ed25ae763a6ccd65cba409f5afb3a4fd67dd83`;
+the frozen Phase 3 definition SHA-256 is
+`f32179c0e49657c841c3d2cc0bf91029b6fb6e1a9a1ac44b46f3326ba2efe577`.
+The duplicate normal npm pack SHA-256 values were:
+
+- new Kit:
+  `6ab0a137018095685088d688dea889147a763bd4d2b8601ada2f9e29b6bc1f8d`;
+- prior Kit:
+  `5be534dad6fc6e76ca803bf3dcd7316bd6ebe3cd91053e4b3993c6bf2b0798a5`;
+- new Hyper:
+  `5a917a5111e0178c9e712655a366e7536bc5f5873c3c6800c261423e3829d43d`;
+- prior Hyper:
+  `95e91eac9b3bab510cf801d67815ddd961022d008176dd4780e490843349701a`.
+
+All four authoritative assurance-case verdicts were `inconclusive` because
+exact oracle-result mapping remained incomplete. Human acceptance or rejection
+records accountable review state; it does not manufacture a `passed`
+assurance verdict. The routine case reported `current` with a non-null decision
+hash, the behavioral case `rejected` with a non-null hash, the drifted critical
+case `stale` with its prior non-null hash, and the missing-candidate critical
+case remained distinct as `missing` with a null decision hash.
+
+The additive boundary is tested as three installed six-surface journeys:
+new Kit with prior Hyper `98b65d05a10766cb66b1caa9cb7ae3c5c589137d`
+negotiates 3.1; prior Kit
+`3dbc9184e8ee4bb7d1599aa825bfd2ed57b384d8` with new Hyper negotiates
+3.1; and the new pair negotiates 3.2. These are exact-pair observations, not a
+SemVer support window. Visp Dev compares producer facts and never decides
+acceptance, review requirements, currentness, or PR readiness.

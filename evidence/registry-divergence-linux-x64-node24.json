@@ -1,0 +1,70 @@
+{
+  "environment": {
+    "architecture": "x64",
+    "node": "v24.15.0",
+    "operatingSystem": "linux"
+  },
+  "note": "A version string is not an identity. This report measures how a published version differs from the local package that declares the same version.",
+  "packages": [
+    {
+      "comparison": {
+        "differing": [
+          "LICENSE",
+          "README.md",
+          "dist/index.js",
+          "dist/index.js.map",
+          "package.json",
+          "templates/claude-code/agents/coordinator.md",
+          "templates/claude-code/agents/implementer.md",
+          "templates/claude-code/agents/scout.md",
+          "templates/claude-code/commands/hyper-checkpoint.md",
+          "templates/claude-code/commands/hyper-fanout.md",
+          "templates/claude-code/commands/hyper-next.md",
+          "templates/claude-code/commands/hyper-remember.md",
+          "templates/claude-code/commands/hyper-review.md",
+          "templates/claude-code/commands/hyper-run.md",
+          "templates/claude-code/model-map.json",
+          "templates/codex/.agents/skills/visp-hyper/SKILL.md",
+          "templates/codex/AGENTS.visp-hyper.md",
+          "templates/copilot/.github/instructions/visp-hyper.instructions.md",
+          "templates/generic/visp-hyper-instructions.md",
+          "templates/opencode/visp-hyper-instructions.md"
+        ],
+        "identical": 1,
+        "onlyLocal": [
+          "NOTICE",
+          "SECURITY.md",
+          "TRADEMARKS.md",
+          "templates/claude-code/capabilities.json",
+          "templates/claude-code/skills/visp-hyper/SKILL.md",
+          "templates/codex/capabilities.json",
+          "templates/copilot/capabilities.json",
+          "templates/generic/capabilities.json",
+          "templates/opencode/.agents/skills/visp-hyper/SKILL.md",
+          "templates/opencode/capabilities.json"
+        ],
+        "onlyPublished": []
+      },
+      "local": {
+        "fileCount": 31,
+        "sha256": "b3759407227582aa7f7a2f52ebb313289d0873e53183c17726e0adf335e2efb5"
+      },
+      "localCommit": "10ffecf0abb4110d395384fab5eede4e506f4a17",
+      "packageName": "visp-hyper-agent",
+      "published": {
+        "fileCount": 21,
+        "sha256": "b26cebc53edb65ebf78e8b6083e6fffdd34cf4684147a5b7a2ae3ba848d5a790"
+      },
+      "status": "diverged",
+      "version": "0.3.0"
+    }
+  ],
+  "reportSha256": "04112dc6ed2c637e093d843bb59100c06e1eb57d10bdadb320e7fb3ba65d5d45",
+  "schemaVersion": "visp.registry-divergence.v1",
+  "summary": {
+    "diverged": 1,
+    "identical": 0,
+    "measured": 1,
+    "unavailable": 0
+  }
+}

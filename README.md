@@ -107,3 +107,13 @@ security vulnerabilities through the private process in
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE).
+
+## Phase 4 exact-pair compatibility
+
+`scripts/run-phase-4-compatibility.mjs` produces the exact compatibility and
+migration report for the corrected-Kit pair. Committed evidence lives under
+`evidence/` and re-verifies offline:
+
+```bash
+pnpm compatibility:phase-4:verify evidence/phase-4-pair-linux-x64-node24.json
+```

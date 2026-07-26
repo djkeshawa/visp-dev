@@ -146,3 +146,54 @@ negotiates 3.1; prior Kit
 3.1; and the new pair negotiates 3.2. These are exact-pair observations, not a
 SemVer support window. Visp Dev compares producer facts and never decides
 acceptance, review requirements, currentness, or PR readiness.
+
+## Phase 4 — corrected Kit enforcement against Hyper adoption
+
+Kit advanced past the Phase 3 baseline with four enforcement-hole fixes and
+local review-decision signature verification (Kit ADR 0003). Those commits
+change gate, policy, validator, and diff behavior, so the Phase 3 evidence no
+longer describes the shipped pair. Phase 4 pins the current pair and publishes
+Kit `0.2.0`.
+
+- New Kit: `3a8901b9b9fe788a0be98f247c75f9715db24723`
+- Prior Kit: `d92364e8b3fd9d38771bcfe1df18fb9434a8ad4e`
+- New Hyper: `61858199d90bffafb062bde61453f5def6357efa`
+- Prior Hyper: `cda0c6ce43abc6a69f4a436026d482e95ed74a2c`
+- Canonical report SHA-256:
+  `593f49385b22e3775a328cd83e87f159595cde6174c07006de9f43414ded3252`
+- Frozen Phase 4 definition SHA-256:
+  `baf25fc778628095d0baa91d18fbba723aa2c927a49923eda06d1e230b537a5e`
+
+Result: three of three exact pairs passed across four golden scenarios and 24
+surfaces. **All three rows negotiated 3.2 against the unchanged schema hash**
+`sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9`,
+which is the Phase 4 claim: the enforcement corrections are additive at the
+wire contract and do not break a Hyper that predates them.
+
+Every assurance semantic was preserved. All four scenario verdicts, next
+commands, and mandatory hotspot sets are byte-identical to the Phase 3
+observation; the drifted critical case remained `inconclusive` and was never
+laundered into a pass. The canonical action identity did move, because policy
+defaults changed — that is a content change, not a contract change.
+
+The duplicate normal npm pack SHA-256 values were:
+
+- new Kit:
+  `d8df0c8c468ac98375c78c8f12d4df35846cfcf3e6dabf505051c6a5d2df49f9`;
+- prior Kit:
+  `6ab0a137018095685088d688dea889147a763bd4d2b8601ada2f9e29b6bc1f8d`;
+- new Hyper:
+  `0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55`;
+- prior Hyper:
+  `5a917a5111e0178c9e712655a366e7536bc5f5873c3c6800c261423e3829d43d`.
+
+The prior Kit and prior Hyper hashes are byte-identical to the values Phase 3
+published for the same commits, which is this harness's determinism check.
+
+Reports are committed under `evidence/` and re-verify offline with
+`pnpm compatibility:phase-4:verify`. A full re-run reproduces the packed
+hashes, verdicts, next commands, and hotspots, but not a compatibility row's
+`actionId`: that identity is specific to the throwaway repository each run
+builds. Phase 4 therefore freezes the verdict and next command and binds the
+action ID through within-run cross-surface equality. This remains exact-pair
+evidence and does not establish a package-version support window.

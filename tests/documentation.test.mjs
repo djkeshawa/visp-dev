@@ -7,6 +7,7 @@ import {
   DELIBERATELY_UNSUPPORTED_CASES,
 } from "../src/compatibility-matrix.mjs";
 import { PHASE_3_COMPATIBILITY_DEFINITION } from "../src/phase-3-compatibility.mjs";
+import { PHASE_4_COMPATIBILITY_DEFINITION } from "../src/phase-4-compatibility.mjs";
 
 test("public compatibility documentation matches the frozen exact-pair matrix", async () => {
   const [readme, report] = await Promise.all([
@@ -36,4 +37,24 @@ test("public compatibility documentation matches the frozen exact-pair matrix", 
   assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.packages.hyperNew.commit, "u"));
   assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.schemaHash, "u"));
   assert.doesNotMatch(readme, /dormant and documentation-only during Phase 0/u);
+});
+
+test("published Phase 4 evidence names the exact corrected-Kit pair", async () => {
+  const report = await readFile(new URL("../docs/compatibility.md", import.meta.url), "utf8");
+
+  for (const id of ["kitNew", "kitOld", "hyperNew", "hyperOld"]) {
+    assert.match(
+      report,
+      new RegExp(PHASE_4_COMPATIBILITY_DEFINITION.packages[id].commit, "u"),
+      `missing published Phase 4 ${id} commit`,
+    );
+  }
+  // The Phase 4 claim is that the wire contract did not move.
+  assert.match(report, new RegExp(PHASE_4_COMPATIBILITY_DEFINITION.schemaHash, "u"));
+  assert.equal(
+    PHASE_4_COMPATIBILITY_DEFINITION.schemaHash,
+    PHASE_3_COMPATIBILITY_DEFINITION.schemaHash,
+  );
+  assert.match(report, /all three rows negotiated 3\.2/iu);
+  assert.match(report, /exact-pair\s+evidence\s+and\s+does\s+not\s+establish\s+a\s+package-version\s+support\s+window/u);
 });

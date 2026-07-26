@@ -1,0 +1,287 @@
+{
+  "examples": [
+    {
+      "assets": [
+        {
+          "destination": ".claude/agents/coordinator.md",
+          "renderedSha256": "530c414513c09f171a55857ad8793c164fd3c99389afe5603feeed992e1b6bea",
+          "templatePath": "agents/coordinator.md"
+        },
+        {
+          "destination": ".claude/agents/scout.md",
+          "renderedSha256": "fb5420ce09e5691e2f98b9cd008f8aaa938a6ac5d6fb6e1d9f367a24531cc009",
+          "templatePath": "agents/scout.md"
+        },
+        {
+          "destination": ".claude/agents/implementer.md",
+          "renderedSha256": "ee8c79d9b07db9a97b0e64047558a4a5971dc705f03c33948ff13c328f27dc5c",
+          "templatePath": "agents/implementer.md"
+        },
+        {
+          "destination": ".claude/skills/visp-hyper/SKILL.md",
+          "renderedSha256": "2afbd38ae6db7eb3fbd733594d55e7c2e7e070f0433a309ac263adb9c3dfa5c4",
+          "templatePath": "skills/visp-hyper/SKILL.md"
+        },
+        {
+          "destination": ".claude/commands/hyper-run.md",
+          "renderedSha256": "9d583913ebf770b9cf5a26b9d2c3eaff9cd31013ce5aef713c32747b365b7468",
+          "templatePath": "commands/hyper-run.md"
+        },
+        {
+          "destination": ".claude/commands/hyper-next.md",
+          "renderedSha256": "298ca8780e839470dfccf89aa915fe7f4f659b3364a8c3ce703a397a7528c437",
+          "templatePath": "commands/hyper-next.md"
+        },
+        {
+          "destination": ".claude/commands/hyper-checkpoint.md",
+          "renderedSha256": "6896cbfc3d74a9ebad76810784318570e03e66501ec855550575d66e4d5fbc07",
+          "templatePath": "commands/hyper-checkpoint.md"
+        },
+        {
+          "destination": ".claude/commands/hyper-review.md",
+          "renderedSha256": "0eaa3a8d8ff7a54aa1edd5511832376731136f39c43a62f335b43726eba88755",
+          "templatePath": "commands/hyper-review.md"
+        },
+        {
+          "destination": ".claude/commands/hyper-remember.md",
+          "renderedSha256": "d5454f2886ab44dbe19ec5037048c2c5e62144b879d397005954bdf8e5354f10",
+          "templatePath": "commands/hyper-remember.md"
+        },
+        {
+          "destination": ".claude/commands/hyper-fanout.md",
+          "renderedSha256": "5e6cfd694c9b84d9a9a9ed1088062b6d62a3cb8fc07cc360a754d855153aa369",
+          "templatePath": "commands/hyper-fanout.md"
+        }
+      ],
+      "fallbacks": {
+        "mechanicalEnforcement": "git_and_ci",
+        "modelSelection": "host_controlled",
+        "orchestration": "native_subagents"
+      },
+      "host": "claude-code",
+      "manifestSha256": "064b6024ebbf851603762ca3f7f43e405e0fbd89df855c15e8875687dcb86212",
+      "supports": {
+        "automaticModelSelection": "surface_limited",
+        "challengerRole": "native",
+        "commands": "native",
+        "hooks": "native",
+        "mcp": "native",
+        "repoGuidance": "native",
+        "skills": "native",
+        "subagents": "native",
+        "verifierRole": "native"
+      },
+      "surface": "Claude Code",
+      "validatedAsOf": "2026-07-25"
+    },
+    {
+      "assets": [
+        {
+          "destination": "AGENTS.visp-hyper.md",
+          "renderedSha256": "ceb405914351985be41912c003e0716e1c2e39b990a101f269ab2d5afd76bb60",
+          "templatePath": "AGENTS.visp-hyper.md"
+        },
+        {
+          "destination": ".agents/skills/visp-hyper/SKILL.md",
+          "renderedSha256": "fb58bd8d8116379e49056b1ffa90ecd0b534f53fe02de065c778ad7f8644a77c",
+          "templatePath": ".agents/skills/visp-hyper/SKILL.md"
+        }
+      ],
+      "fallbacks": {
+        "mechanicalEnforcement": "git_and_ci",
+        "modelSelection": "host_controlled",
+        "orchestration": "native_subagents"
+      },
+      "host": "codex",
+      "manifestSha256": "25d7c905b3d112b60245de42a2949fa20b6b2def9389960d25abc394cf5c268f",
+      "supports": {
+        "automaticModelSelection": "unsupported",
+        "challengerRole": "native",
+        "commands": "manual",
+        "hooks": "native",
+        "mcp": "native",
+        "repoGuidance": "native",
+        "skills": "native",
+        "subagents": "native",
+        "verifierRole": "native"
+      },
+      "surface": "Codex CLI",
+      "validatedAsOf": "2026-07-25"
+    },
+    {
+      "assets": [
+        {
+          "destination": ".github/instructions/visp-hyper.instructions.md",
+          "renderedSha256": "511662ba5ad21839c07436f8e307e796cf54588090f22eb905858c7c152b7ca3",
+          "templatePath": ".github/instructions/visp-hyper.instructions.md"
+        }
+      ],
+      "fallbacks": {
+        "mechanicalEnforcement": "git_and_ci",
+        "modelSelection": "host_controlled",
+        "orchestration": "sequential"
+      },
+      "host": "copilot",
+      "manifestSha256": "51734b76fab2e52c93ec6f32052ee7333e7d31e160c91b0441af4f50ee65f0a3",
+      "supports": {
+        "automaticModelSelection": "surface_limited",
+        "challengerRole": "surface_limited",
+        "commands": "surface_limited",
+        "hooks": "surface_limited",
+        "mcp": "native",
+        "repoGuidance": "native",
+        "skills": "native",
+        "subagents": "surface_limited",
+        "verifierRole": "surface_limited"
+      },
+      "surface": "GitHub Copilot CLI, GitHub.com, and supported IDE surfaces",
+      "validatedAsOf": "2026-07-25"
+    },
+    {
+      "assets": [
+        {
+          "destination": "visp-hyper-instructions.md",
+          "renderedSha256": "747c0cb92c570ecc46c8a09259ce9658bf6faffb2fba4df18622108a4b3c6297",
+          "templatePath": "visp-hyper-instructions.md"
+        }
+      ],
+      "fallbacks": {
+        "mechanicalEnforcement": "git_and_ci",
+        "modelSelection": "advisory",
+        "orchestration": "sequential"
+      },
+      "host": "generic",
+      "manifestSha256": "e61c86c78aad761b73eb7b0c0545f5ca81a670aa4e15beecd7ccbac1e9d0aea0",
+      "supports": {
+        "automaticModelSelection": "unsupported",
+        "challengerRole": "manual",
+        "commands": "unsupported",
+        "hooks": "unsupported",
+        "mcp": "unsupported",
+        "repoGuidance": "manual",
+        "skills": "unsupported",
+        "subagents": "unsupported",
+        "verifierRole": "manual"
+      },
+      "surface": "host-neutral manual integration",
+      "validatedAsOf": "2026-07-25"
+    },
+    {
+      "assets": [
+        {
+          "destination": "visp-hyper-instructions.md",
+          "renderedSha256": "aa8f854b58e410bd3ac108be306ee06b0d3329e20dd7a15259c9b96d8ac00001",
+          "templatePath": "visp-hyper-instructions.md"
+        },
+        {
+          "destination": ".agents/skills/visp-hyper/SKILL.md",
+          "renderedSha256": "00f64ec8a1ca7c1f94f902bf31a1f7437f7957fdc54f33936541b6b3b99a0c59",
+          "templatePath": ".agents/skills/visp-hyper/SKILL.md"
+        }
+      ],
+      "fallbacks": {
+        "mechanicalEnforcement": "git_and_ci",
+        "modelSelection": "host_controlled",
+        "orchestration": "native_subagents"
+      },
+      "host": "opencode",
+      "manifestSha256": "9b346f868718bbfa0943c391fd493470116678c672cf22ae2d572aa0be67263e",
+      "supports": {
+        "automaticModelSelection": "unsupported",
+        "challengerRole": "native",
+        "commands": "native",
+        "hooks": "native",
+        "mcp": "native",
+        "repoGuidance": "native",
+        "skills": "native",
+        "subagents": "native",
+        "verifierRole": "native"
+      },
+      "surface": "OpenCode CLI",
+      "validatedAsOf": "2026-07-25"
+    }
+  ],
+  "package": {
+    "binSha256": "1a56eb39cc72785c9c43152d941680f9e7fb84769399f0c9cb9046c974ff4a83",
+    "dependencyTreeSha256": "a17673249e8726239146542ba28dce4b4033803fadc276a0f83faa73041e99ff",
+    "installCacheMode": "repository_local_tarballs",
+    "lifecycleScriptsDisabled": true,
+    "name": "visp-hyper-agent",
+    "offlineInstall": true,
+    "version": "0.3.0"
+  },
+  "packageSha256": "382324c8802b1660cc41c8917f464ec89e213a1a657ea30d1d33867e548418eb",
+  "reportSha256": "e2695e37cd1d18a3a1c6a24f9177633ebcebfb311eff91395f152d6ed0344d53",
+  "runtime": {
+    "hosts": [
+      {
+        "assets": "pass",
+        "ciFallback": "installed",
+        "configuredHost": "claude-code",
+        "doctor": "pass",
+        "gitFallback": "installed",
+        "hostBinary": "intentionally_absent",
+        "hostSelection": "fallback",
+        "kitMode": "local_checked",
+        "mcp": "pass",
+        "skillMode": "review"
+      },
+      {
+        "assets": "pass",
+        "ciFallback": "installed",
+        "configuredHost": "codex",
+        "doctor": "pass",
+        "gitFallback": "installed",
+        "hostBinary": "intentionally_absent",
+        "hostSelection": "fallback",
+        "kitMode": "local_checked",
+        "mcp": "pass",
+        "skillMode": "review"
+      },
+      {
+        "assets": "pass",
+        "ciFallback": "installed",
+        "configuredHost": "copilot",
+        "doctor": "pass",
+        "gitFallback": "installed",
+        "hostBinary": "intentionally_absent",
+        "hostSelection": "fallback",
+        "kitMode": "local_checked",
+        "mcp": "pass",
+        "skillMode": "review"
+      },
+      {
+        "assets": "pass",
+        "ciFallback": "installed",
+        "configuredHost": "generic",
+        "doctor": "pass",
+        "gitFallback": "installed",
+        "hostBinary": "not_required",
+        "hostSelection": "manual",
+        "kitMode": "local_checked",
+        "mcp": "pass",
+        "skillMode": "review"
+      },
+      {
+        "assets": "pass",
+        "ciFallback": "installed",
+        "configuredHost": "opencode",
+        "doctor": "pass",
+        "gitFallback": "installed",
+        "hostBinary": "intentionally_absent",
+        "hostSelection": "fallback",
+        "kitMode": "local_checked",
+        "mcp": "pass",
+        "skillMode": "review"
+      }
+    ]
+  },
+  "schemaVersion": "visp.phase-4-host-examples.v2",
+  "summary": {
+    "assetsVerified": 16,
+    "hostsVerified": 5,
+    "mechanicalFallback": "git_and_ci",
+    "runtimeHostsVerified": 5,
+    "runtimeVerified": true
+  }
+}

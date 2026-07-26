@@ -1,0 +1,1349 @@
+{
+  "definitionSha256": "ebe2b4474e6f005ac7f235e3399449d4cb79245e7300c4f72d459e4fd536999f",
+  "environment": {
+    "architecture": "x64",
+    "git": "git version 2.34.1",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "operatingSystem": "linux",
+    "pnpm": "11.3.0"
+  },
+  "packages": {
+    "hyper": {
+      "install": {
+        "bins": [
+          {
+            "name": "visp-hyper",
+            "sha256": "82aad6a1e3f84bd875fbc56108d64ed695459d2a7a0a9291aa3ba2d5fe966ce6",
+            "target": "node_modules/visp-hyper-agent/dist/index.js"
+          }
+        ],
+        "cache": {
+          "inventorySha256": "cf396388110fb3994e0938d7fbf08c5984329e9d6f8468bfc0bcdffa545873ef",
+          "mode": "caller_snapshot"
+        },
+        "dependencyTree": {
+          "sha256": "ecd78ccd508f22563cd9123017de02c9e8c312b8bcde1ecff94d8fe6d5049d92",
+          "tree": {
+            "dependencies": [
+              {
+                "dependencies": [
+                  {
+                    "dependencies": [],
+                    "name": "commander",
+                    "version": "12.1.0"
+                  },
+                  {
+                    "dependencies": [],
+                    "name": "zod",
+                    "version": "3.25.76"
+                  }
+                ],
+                "name": "visp-hyper-agent",
+                "version": "0.3.0"
+              }
+            ],
+            "name": "visp-compatibility-install",
+            "version": null
+          }
+        },
+        "installLock": {
+          "edgeSha256": "e987475e351da95ecc3293628fa9f0d7c5a66e98c14a74651af365cedc2913d0",
+          "edges": [
+            {
+              "ownerKey": "node_modules/visp-hyper-agent",
+              "requestedName": "commander",
+              "requestedSpec": "^12.1.0",
+              "resolvedKey": "node_modules/commander",
+              "resolvedVersion": "12.1.0"
+            },
+            {
+              "ownerKey": "node_modules/visp-hyper-agent",
+              "requestedName": "zod",
+              "requestedSpec": "^3.25.76",
+              "resolvedKey": "node_modules/zod",
+              "resolvedVersion": "3.25.76"
+            }
+          ],
+          "graphSha256": "02efa3ffa1c80b68ba3d7ec90ba1f55a21f96d53eb45297f9ba625547afa47f0",
+          "packages": [
+            {
+              "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+              "key": "node_modules/commander",
+              "manifestSha256": "4ee3239971f47b1be752b2a9510184a5ece7c2d888890772b6ab69443ce089de",
+              "name": "commander",
+              "version": "12.1.0"
+            },
+            {
+              "integrity": "sha512-pBCxH51OeqkYhVOIP0jCDQQdAM6qXomh9s+HK9bd85KgnSs+sDl/obqi35xFBYv9kRmqiCRSWG+ZDaB1YU0hKg==",
+              "key": "node_modules/visp-hyper-agent",
+              "manifestSha256": "2d85a9383913676d060c59ac651f1f7ea38ee1591d0e872edde21e59fc0601be",
+              "name": "visp-hyper-agent",
+              "version": "0.3.0"
+            },
+            {
+              "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
+              "key": "node_modules/zod",
+              "manifestSha256": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+              "name": "zod",
+              "version": "3.25.76"
+            }
+          ],
+          "path": "package-lock.json",
+          "sha256": "379ea89749471f2d2bc2e87f06f6983a9a04c2ca3498a176ced7ad25e011b545"
+        },
+        "lifecycleScriptsDisabled": true,
+        "offline": true,
+        "tool": {
+          "name": "npm",
+          "version": "11.12.1"
+        }
+      },
+      "pack": {
+        "byteEquality": true,
+        "first": {
+          "byteSize": 274429,
+          "memberListSha256": "f878f796ece882b0c9a1c098705a9964dc509dab190bcd3378de965c4f7f47cd",
+          "members": [
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/package.json",
+            "package/templates/claude-code/agents/coordinator.md",
+            "package/templates/claude-code/agents/implementer.md",
+            "package/templates/claude-code/agents/scout.md",
+            "package/templates/claude-code/commands/hyper-checkpoint.md",
+            "package/templates/claude-code/commands/hyper-fanout.md",
+            "package/templates/claude-code/commands/hyper-next.md",
+            "package/templates/claude-code/commands/hyper-remember.md",
+            "package/templates/claude-code/commands/hyper-review.md",
+            "package/templates/claude-code/commands/hyper-run.md",
+            "package/templates/claude-code/model-map.json",
+            "package/templates/codex/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/AGENTS.visp-hyper.md",
+            "package/templates/copilot/.github/instructions/visp-hyper.instructions.md",
+            "package/templates/generic/visp-hyper-instructions.md",
+            "package/templates/opencode/visp-hyper-instructions.md"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp-hyper",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-hyper-agent",
+            "version": "0.3.0"
+          },
+          "sha256": "95e91eac9b3bab510cf801d67815ddd961022d008176dd4780e490843349701a",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        },
+        "second": {
+          "byteSize": 274429,
+          "memberListSha256": "f878f796ece882b0c9a1c098705a9964dc509dab190bcd3378de965c4f7f47cd",
+          "members": [
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/package.json",
+            "package/templates/claude-code/agents/coordinator.md",
+            "package/templates/claude-code/agents/implementer.md",
+            "package/templates/claude-code/agents/scout.md",
+            "package/templates/claude-code/commands/hyper-checkpoint.md",
+            "package/templates/claude-code/commands/hyper-fanout.md",
+            "package/templates/claude-code/commands/hyper-next.md",
+            "package/templates/claude-code/commands/hyper-remember.md",
+            "package/templates/claude-code/commands/hyper-review.md",
+            "package/templates/claude-code/commands/hyper-run.md",
+            "package/templates/claude-code/model-map.json",
+            "package/templates/codex/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/AGENTS.visp-hyper.md",
+            "package/templates/copilot/.github/instructions/visp-hyper.instructions.md",
+            "package/templates/generic/visp-hyper-instructions.md",
+            "package/templates/opencode/visp-hyper-instructions.md"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp-hyper",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-hyper-agent",
+            "version": "0.3.0"
+          },
+          "sha256": "95e91eac9b3bab510cf801d67815ddd961022d008176dd4780e490843349701a",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        }
+      },
+      "runtimeLock": {
+        "localIntegrity": "sha512-pBCxH51OeqkYhVOIP0jCDQQdAM6qXomh9s+HK9bd85KgnSs+sDl/obqi35xFBYv9kRmqiCRSWG+ZDaB1YU0hKg==",
+        "materializedSha256": "379ea89749471f2d2bc2e87f06f6983a9a04c2ca3498a176ced7ad25e011b545",
+        "templateSha256": "9f9ad90240f554773c25999b59f3dfa008393a184538921408ac91ec677966fb"
+      },
+      "source": {
+        "commit": "98b65d05a10766cb66b1caa9cb7ae3c5c589137d",
+        "tree": "34bb04ed2454e389f7aca7bea76fd05ab81f264c"
+      }
+    },
+    "kit": {
+      "install": {
+        "bins": [
+          {
+            "name": "visp",
+            "sha256": "c74be4e12522b4df023722dccc6d81de080b943564ead8a66c58025c6ef7ba5b",
+            "target": "node_modules/visp-kit/dist/index.js"
+          }
+        ],
+        "cache": {
+          "inventorySha256": "cf396388110fb3994e0938d7fbf08c5984329e9d6f8468bfc0bcdffa545873ef",
+          "mode": "caller_snapshot"
+        },
+        "dependencyTree": {
+          "sha256": "b7b10e29d46ad35b3723ffae355bc8c72b7f0363fcb6a148501ad8adff0cbbb1",
+          "tree": {
+            "dependencies": [
+              {
+                "dependencies": [
+                  {
+                    "dependencies": [],
+                    "name": "commander",
+                    "version": "12.1.0"
+                  },
+                  {
+                    "dependencies": [],
+                    "name": "zod",
+                    "version": "3.25.76"
+                  }
+                ],
+                "name": "visp-kit",
+                "version": "0.1.1"
+              }
+            ],
+            "name": "visp-compatibility-install",
+            "version": null
+          }
+        },
+        "installLock": {
+          "edgeSha256": "27990ff3fa29b24c97f5bf5d60cd021ebae833ed6252a6b8b2c10a42c77a8237",
+          "edges": [
+            {
+              "ownerKey": "node_modules/visp-kit",
+              "requestedName": "commander",
+              "requestedSpec": "^12.1.0",
+              "resolvedKey": "node_modules/commander",
+              "resolvedVersion": "12.1.0"
+            },
+            {
+              "ownerKey": "node_modules/visp-kit",
+              "requestedName": "zod",
+              "requestedSpec": "^3.25.76",
+              "resolvedKey": "node_modules/zod",
+              "resolvedVersion": "3.25.76"
+            }
+          ],
+          "graphSha256": "15aa084d53ff54c19d37a149e72a1d8eaf0f0e8091c1dabc9ce21fbdbcf27491",
+          "packages": [
+            {
+              "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+              "key": "node_modules/commander",
+              "manifestSha256": "4ee3239971f47b1be752b2a9510184a5ece7c2d888890772b6ab69443ce089de",
+              "name": "commander",
+              "version": "12.1.0"
+            },
+            {
+              "integrity": "sha512-tgNUM3cU4Zb8Io5zZM8xyCwQvHxYGWlA69SXQsBuIWs415CajCOtbLK+WjR4qPFCV12aJWWSHT3vxlU3/ncO9A==",
+              "key": "node_modules/visp-kit",
+              "manifestSha256": "7f20a73c093392336b5c452cbe5e4f13f7422d23c03dbf3f18f8241cb0207544",
+              "name": "visp-kit",
+              "version": "0.1.1"
+            },
+            {
+              "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
+              "key": "node_modules/zod",
+              "manifestSha256": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+              "name": "zod",
+              "version": "3.25.76"
+            }
+          ],
+          "path": "package-lock.json",
+          "sha256": "7c22f5fef8065e28e1b870fe6d9d6d38dd22c92f2dc59d31a1ec2139ac8c3029"
+        },
+        "lifecycleScriptsDisabled": true,
+        "offline": true,
+        "tool": {
+          "name": "npm",
+          "version": "11.12.1"
+        }
+      },
+      "pack": {
+        "byteEquality": true,
+        "first": {
+          "byteSize": 700504,
+          "memberListSha256": "efa9ca43976ea9c5993cd7f73cafdc3414204b25a033d15680d397aa1460b8d0",
+          "members": [
+            "package/AGENTS.md",
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/docs/adr/0001-kit-authoritative-engine.md",
+            "package/docs/adr/0002-protocol-versioning.md",
+            "package/docs/agent-native-workflows.md",
+            "package/docs/agent-targets.md",
+            "package/docs/artifacts.md",
+            "package/docs/benchmarks.md",
+            "package/docs/codex.md",
+            "package/docs/commands.md",
+            "package/docs/company-adoption.md",
+            "package/docs/configuration.md",
+            "package/docs/development.md",
+            "package/docs/enforcement.md",
+            "package/docs/faq.md",
+            "package/docs/overrides.md",
+            "package/docs/policy-and-gates.md",
+            "package/docs/quickstart.md",
+            "package/docs/release-checklist.md",
+            "package/docs/spec-vs-visp-kit.md",
+            "package/docs/token-efficiency.md",
+            "package/docs/troubleshooting.md",
+            "package/docs/workflow.md",
+            "package/examples/basic-typescript/README.md",
+            "package/examples/basic-typescript/package.json",
+            "package/examples/basic-typescript/src/notes.ts",
+            "package/examples/basic-typescript/tests/notes.test.ts",
+            "package/examples/basic-typescript/tsconfig.json",
+            "package/examples/strict-agent-workflow/README.md",
+            "package/examples/strict-agent-workflow/package.json",
+            "package/examples/strict-agent-workflow/src/notes.ts",
+            "package/examples/strict-agent-workflow/tests/notes.test.js",
+            "package/package.json",
+            "package/schemas/workflow-action/2.0.schema.json",
+            "package/schemas/workflow-action/3.0.schema.json",
+            "package/schemas/workflow-action/3.1.schema.json",
+            "package/scripts/benchmark-strict-workflow.sh",
+            "package/scripts/dogfood-strict-agent-workflow.sh",
+            "package/scripts/generate-workflow-action-schemas.mjs"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-kit",
+            "version": "0.1.1"
+          },
+          "sha256": "5be534dad6fc6e76ca803bf3dcd7316bd6ebe3cd91053e4b3993c6bf2b0798a5",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        },
+        "second": {
+          "byteSize": 700504,
+          "memberListSha256": "efa9ca43976ea9c5993cd7f73cafdc3414204b25a033d15680d397aa1460b8d0",
+          "members": [
+            "package/AGENTS.md",
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/docs/adr/0001-kit-authoritative-engine.md",
+            "package/docs/adr/0002-protocol-versioning.md",
+            "package/docs/agent-native-workflows.md",
+            "package/docs/agent-targets.md",
+            "package/docs/artifacts.md",
+            "package/docs/benchmarks.md",
+            "package/docs/codex.md",
+            "package/docs/commands.md",
+            "package/docs/company-adoption.md",
+            "package/docs/configuration.md",
+            "package/docs/development.md",
+            "package/docs/enforcement.md",
+            "package/docs/faq.md",
+            "package/docs/overrides.md",
+            "package/docs/policy-and-gates.md",
+            "package/docs/quickstart.md",
+            "package/docs/release-checklist.md",
+            "package/docs/spec-vs-visp-kit.md",
+            "package/docs/token-efficiency.md",
+            "package/docs/troubleshooting.md",
+            "package/docs/workflow.md",
+            "package/examples/basic-typescript/README.md",
+            "package/examples/basic-typescript/package.json",
+            "package/examples/basic-typescript/src/notes.ts",
+            "package/examples/basic-typescript/tests/notes.test.ts",
+            "package/examples/basic-typescript/tsconfig.json",
+            "package/examples/strict-agent-workflow/README.md",
+            "package/examples/strict-agent-workflow/package.json",
+            "package/examples/strict-agent-workflow/src/notes.ts",
+            "package/examples/strict-agent-workflow/tests/notes.test.js",
+            "package/package.json",
+            "package/schemas/workflow-action/2.0.schema.json",
+            "package/schemas/workflow-action/3.0.schema.json",
+            "package/schemas/workflow-action/3.1.schema.json",
+            "package/scripts/benchmark-strict-workflow.sh",
+            "package/scripts/dogfood-strict-agent-workflow.sh",
+            "package/scripts/generate-workflow-action-schemas.mjs"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-kit",
+            "version": "0.1.1"
+          },
+          "sha256": "5be534dad6fc6e76ca803bf3dcd7316bd6ebe3cd91053e4b3993c6bf2b0798a5",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        }
+      },
+      "runtimeLock": {
+        "localIntegrity": "sha512-tgNUM3cU4Zb8Io5zZM8xyCwQvHxYGWlA69SXQsBuIWs415CajCOtbLK+WjR4qPFCV12aJWWSHT3vxlU3/ncO9A==",
+        "materializedSha256": "7c22f5fef8065e28e1b870fe6d9d6d38dd22c92f2dc59d31a1ec2139ac8c3029",
+        "templateSha256": "9f9ad90240f554773c25999b59f3dfa008393a184538921408ac91ec677966fb"
+      },
+      "source": {
+        "commit": "3dbc9184e8ee4bb7d1599aa825bfd2ed57b384d8",
+        "tree": "6b5a45bed9f97007490f553c0d6d3af81be8ae2e"
+      }
+    }
+  },
+  "pair": {
+    "hyper": {
+      "commit": "98b65d05a10766cb66b1caa9cb7ae3c5c589137d",
+      "tree": "34bb04ed2454e389f7aca7bea76fd05ab81f264c"
+    },
+    "kit": {
+      "commit": "3dbc9184e8ee4bb7d1599aa825bfd2ed57b384d8",
+      "tree": "6b5a45bed9f97007490f553c0d6d3af81be8ae2e"
+    }
+  },
+  "profiles": [
+    {
+      "artifacts": {
+        "baseline": {
+          "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/baseline-evidence.json",
+          "sha256": "sha256:8cac5211bd2f68c532e4e227b80ae3a54a0660276e4c96445b92d00741d864d1"
+        },
+        "candidate": {
+          "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/candidate-evidence.json",
+          "sha256": "sha256:38aa991ac14c0997df73d79c187477482558be19c308a2e0c2e5ef336485a5c2"
+        },
+        "lock": {
+          "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/oracle-lock.json",
+          "sha256": "sha256:d5c8644c7efd77787114cbf311d1818390085c3948dcf6258839f82ad3a3ed2f"
+        },
+        "plan": {
+          "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/oracle-plan.json",
+          "sha256": "sha256:bee2a42bd0a5cce232ccf45f723d682e3d180e1a0ee3061680e21f1525de023a"
+        }
+      },
+      "humanApproval": false,
+      "id": "routine_candidate_evidence",
+      "kit": {
+        "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+        "evidence": {
+          "freshness": "fresh",
+          "outcome": "passed",
+          "providers": [
+            {
+              "results": [
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_existing",
+                  "status": "passed"
+                },
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_existing",
+                  "status": "passed"
+                }
+              ],
+              "status": "passed"
+            },
+            {
+              "results": [
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                }
+              ],
+              "status": "passed"
+            }
+          ],
+          "source": "candidate"
+        },
+        "profile": "routine",
+        "protocolVersion": "3.1",
+        "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+      },
+      "profile": "routine",
+      "surfaces": [
+        {
+          "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "run",
+          "profile": "routine",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "next",
+          "profile": "routine",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "resume",
+          "profile": "routine",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "checkpoint",
+          "profile": "routine",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "guard",
+          "profile": "routine",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:d59a18a50627960a4efdf69ae1d9e25458d426ef0b5bae0f6b8f4ec4735f60cf",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_existing",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "mcp",
+          "profile": "routine",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        }
+      ],
+      "taskId": "T001"
+    },
+    {
+      "artifacts": {
+        "baseline": {
+          "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/baseline-evidence.json",
+          "sha256": "sha256:abca3b0f0dec31cbd125a62360aca2c4410e58b220ad88da155a62619ecba1e2"
+        },
+        "candidate": {
+          "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/candidate-evidence.json",
+          "sha256": "sha256:cc18d9357e830710234e9266f9a345be15f1df0ea7ac9a1039ff120cdbabf8e8"
+        },
+        "lock": {
+          "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/oracle-lock.json",
+          "sha256": "sha256:a3230ed7078d26143c7a24e31cff5a7062183a4a76e306529f1d45a1d3957329"
+        },
+        "plan": {
+          "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/oracle-plan.json",
+          "sha256": "sha256:e3cecffe9d0748c63d6a71956f3abacdd243e41de85e3f31b4129dc68d9ac9ea"
+        }
+      },
+      "humanApproval": false,
+      "id": "behavioral_candidate_evidence",
+      "kit": {
+        "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+        "evidence": {
+          "freshness": "fresh",
+          "outcome": "passed",
+          "providers": [
+            {
+              "results": [
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                },
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                }
+              ],
+              "status": "passed"
+            },
+            {
+              "results": [
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                }
+              ],
+              "status": "passed"
+            }
+          ],
+          "source": "candidate"
+        },
+        "profile": "behavioral",
+        "protocolVersion": "3.1",
+        "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+      },
+      "profile": "behavioral",
+      "surfaces": [
+        {
+          "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "run",
+          "profile": "behavioral",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "next",
+          "profile": "behavioral",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "resume",
+          "profile": "behavioral",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "checkpoint",
+          "profile": "behavioral",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "guard",
+          "profile": "behavioral",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:73420020b0dd3820ffeb3bd21219116909f79ce6f2d68eee0d60a9b02a89fbfd",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "mcp",
+          "profile": "behavioral",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        }
+      ],
+      "taskId": "T001"
+    },
+    {
+      "artifacts": {
+        "baseline": {
+          "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/baseline-evidence.json",
+          "sha256": "sha256:6a68772a72454d6ebb3d9197a1cd345436efcc8547873b0951c52eebb4f4d256"
+        },
+        "candidate": {
+          "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/candidate-evidence.json",
+          "sha256": "sha256:9b986979324fb1445b3d1e1217bb94f1f538fb2be07b0237f4045b9032f15a98"
+        },
+        "lock": {
+          "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/oracle-lock.json",
+          "sha256": "sha256:8333dedbb6d68a6b4c1bed564919f032e7b55422f2369d156ca35918c3462344"
+        },
+        "plan": {
+          "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/oracle-plan.json",
+          "sha256": "sha256:6c857758a3d73699d3717157746480cc68c5d2ab7b76b98cb359b482e8656a30"
+        }
+      },
+      "humanApproval": true,
+      "id": "critical_candidate_evidence",
+      "kit": {
+        "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+        "evidence": {
+          "freshness": "fresh",
+          "outcome": "passed",
+          "providers": [
+            {
+              "results": [
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                },
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                }
+              ],
+              "status": "passed"
+            },
+            {
+              "results": [
+                {
+                  "freshness": "fresh",
+                  "independence": "pre_approved",
+                  "status": "passed"
+                }
+              ],
+              "status": "passed"
+            }
+          ],
+          "source": "candidate"
+        },
+        "profile": "critical",
+        "protocolVersion": "3.1",
+        "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+      },
+      "profile": "critical",
+      "surfaces": [
+        {
+          "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "run",
+          "profile": "critical",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "next",
+          "profile": "critical",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "resume",
+          "profile": "critical",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "checkpoint",
+          "profile": "critical",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "guard",
+          "profile": "critical",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        },
+        {
+          "actionId": "sha256:5f84f36b04b3ee4ef43380cbbc0ae79178f9fecccd34b63f99c009ae9fb6a7c5",
+          "evidence": {
+            "freshness": "fresh",
+            "outcome": "passed",
+            "providers": [
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  },
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              },
+              {
+                "results": [
+                  {
+                    "freshness": "fresh",
+                    "independence": "pre_approved",
+                    "status": "passed"
+                  }
+                ],
+                "status": "passed"
+              }
+            ],
+            "source": "candidate"
+          },
+          "id": "mcp",
+          "profile": "critical",
+          "protocolVersion": "3.1",
+          "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d"
+        }
+      ],
+      "taskId": "T001"
+    }
+  ],
+  "reportSha256": "e34a3e4f02b060a0b4ce1d896f44c73d720a39391a2294319365af589ac1d5a0",
+  "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d",
+  "schemaVersion": "visp.phase-2-compatibility.evidence.v1",
+  "summary": {
+    "profilesPassed": 3,
+    "surfacesPassed": 18,
+    "testsPassed": true
+  }
+}

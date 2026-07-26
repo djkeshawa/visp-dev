@@ -1,2 +1,3 @@
 node_modules/
 .compatibility-lab/
+pnpm-lock.yaml

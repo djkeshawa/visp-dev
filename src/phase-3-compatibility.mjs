@@ -211,7 +211,7 @@ const PHASE_3_EXPECTED_SEMANTICS = deepFreeze({
   },
 });
 
-function plain(value, label) {
+export function plain(value, label) {
   if (value === null || typeof value !== "object" || Array.isArray(value)
     || Object.getPrototypeOf(value) !== Object.prototype) {
     throw new TypeError(`${label} must be a plain object`);
@@ -219,14 +219,14 @@ function plain(value, label) {
   return value;
 }
 
-function exactKeys(value, keys, label) {
+export function exactKeys(value, keys, label) {
   plain(value, label);
   if (canonicalStringify(Object.keys(value).sort()) !== canonicalStringify([...keys].sort())) {
     throw new Error(`${label} has an unexpected field set`);
   }
 }
 
-function exactValue(actual, expected, label) {
+export function exactValue(actual, expected, label) {
   if (canonicalStringify(actual) !== canonicalStringify(expected)) {
     throw new Error(`${label} drifted`);
   }
@@ -277,7 +277,7 @@ function validateReviewDecision(value, definition, label) {
   }
 }
 
-function validateHotspots(hotspots, label) {
+export function validateHotspots(hotspots, label) {
   if (!Array.isArray(hotspots)) throw new Error(`${label} must be an array`);
   for (const hotspot of hotspots) {
     exactKeys(hotspot, ["category", "id", "path", "reason", "severity"], label);
@@ -531,7 +531,10 @@ export function verifyPhase3CompatibilityReport(report) {
   return true;
 }
 
-function projectActionView(action, schemaHash) {
+// Shared with Phase 4, which pins the same WorkflowAction 3.2 schema hash. The
+// expected hash is the caller's `schemaHash` so neither phase reads the other's
+// frozen definition.
+export function projectActionView(action, schemaHash) {
   const protocolVersion = action?.protocolVersion ?? action?.source?.protocolVersion;
   const actionId = typeof action?.actionId === "string"
     ? action.actionId
@@ -541,7 +544,7 @@ function projectActionView(action, schemaHash) {
   const localSchemaHash = action?.source?.localSchemaHash ?? schemaHash;
   const assuranceSummary = action?.assuranceSummary;
   if (protocolVersion !== "3.2"
-    || localSchemaHash !== PHASE_3_COMPATIBILITY_DEFINITION.schemaHash
+    || localSchemaHash !== schemaHash
     || !PREFIXED_HASH.test(actionId ?? "")
     || assuranceSummary?.state !== "available"
     || typeof action?.nextCommand !== "string"
@@ -562,7 +565,7 @@ function projectActionView(action, schemaHash) {
   };
 }
 
-function compatibilityActionView(action, definition) {
+export function compatibilityActionView(action, definition) {
   const protocolVersion = action?.source?.protocolVersion;
   const actionId = action?.actionId?.state === "available" ? action.actionId.value : null;
   if (protocolVersion !== definition.expectedProtocol
@@ -583,7 +586,7 @@ function compatibilityActionView(action, definition) {
   };
 }
 
-function mcpAction(result, label) {
+export function mcpAction(result, label) {
   const messages = result.stdout.text.trim().split("\n").map((line) => JSON.parse(line));
   const text = messages.find(({ id }) => id === 2)?.result?.contents?.[0]?.text;
   if (typeof text !== "string") throw new Error(`${label} omitted the canonical action resource`);
@@ -594,7 +597,7 @@ function mcpAction(result, label) {
   return resource.envelope.action;
 }
 
-async function collectSurfaceActions({ context, hyper, label, taskId }) {
+export async function collectSurfaceActions({ context, hyper, label, taskId }) {
   const rawHyper = async (args, surface, stdin) => requireCompleted(
     await runExact(
       hyper.executable,
@@ -669,7 +672,7 @@ async function collectSurfaceActions({ context, hyper, label, taskId }) {
   ]);
 }
 
-async function prepareEvidence({ context, definition }) {
+export async function prepareEvidence({ context, definition }) {
   const plan = [
     "oracle",
     "plan",

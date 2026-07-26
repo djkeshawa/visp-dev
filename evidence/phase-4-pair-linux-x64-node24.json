@@ -1,0 +1,3555 @@
+{
+  "compatibility": [
+    {
+      "id": "new_kit_old_hyper",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:ceb314560b68e887bf1d0769c292fa11a7e3333e11409984761a5afff2f5d23e",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:ceb314560b68e887bf1d0769c292fa11a7e3333e11409984761a5afff2f5d23e",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:ceb314560b68e887bf1d0769c292fa11a7e3333e11409984761a5afff2f5d23e",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:ceb314560b68e887bf1d0769c292fa11a7e3333e11409984761a5afff2f5d23e",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:ceb314560b68e887bf1d0769c292fa11a7e3333e11409984761a5afff2f5d23e",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:ceb314560b68e887bf1d0769c292fa11a7e3333e11409984761a5afff2f5d23e",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        }
+      ]
+    },
+    {
+      "id": "old_kit_new_hyper",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:4f52a2cf1acb105a9563643786af7cdc5ff31777d150e69a89b4c1896fba3434",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:4f52a2cf1acb105a9563643786af7cdc5ff31777d150e69a89b4c1896fba3434",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:4f52a2cf1acb105a9563643786af7cdc5ff31777d150e69a89b4c1896fba3434",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:4f52a2cf1acb105a9563643786af7cdc5ff31777d150e69a89b4c1896fba3434",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:4f52a2cf1acb105a9563643786af7cdc5ff31777d150e69a89b4c1896fba3434",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:4f52a2cf1acb105a9563643786af7cdc5ff31777d150e69a89b4c1896fba3434",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        }
+      ]
+    },
+    {
+      "id": "new_kit_new_hyper",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:929d5f57b07b3fbd2ecc665996ba81000125eae26a81e72c0ab51f5e2cf980a1",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:929d5f57b07b3fbd2ecc665996ba81000125eae26a81e72c0ab51f5e2cf980a1",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:929d5f57b07b3fbd2ecc665996ba81000125eae26a81e72c0ab51f5e2cf980a1",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:929d5f57b07b3fbd2ecc665996ba81000125eae26a81e72c0ab51f5e2cf980a1",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:929d5f57b07b3fbd2ecc665996ba81000125eae26a81e72c0ab51f5e2cf980a1",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:929d5f57b07b3fbd2ecc665996ba81000125eae26a81e72c0ab51f5e2cf980a1",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        }
+      ]
+    }
+  ],
+  "definitionSha256": "baf25fc778628095d0baa91d18fbba723aa2c927a49923eda06d1e230b537a5e",
+  "environment": {
+    "architecture": "x64",
+    "git": "git version 2.34.1",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "operatingSystem": "linux",
+    "pnpm": "11.3.0"
+  },
+  "packages": {
+    "hyperNew": {
+      "install": {
+        "bins": [
+          {
+            "name": "visp-hyper",
+            "sha256": "30d5203e4c2a9f0323a415f399c9741e1b9f6ee5b3d96b6eac5ef29b9f25cc7d",
+            "target": "node_modules/visp-hyper-agent/dist/index.js"
+          }
+        ],
+        "cache": {
+          "inventorySha256": "493b91c8c37f924cd17c2b3b8fb4ee19fcd457305c912ec14d39b3c8e40200f1",
+          "mode": "caller_snapshot"
+        },
+        "dependencyTree": {
+          "sha256": "ecd78ccd508f22563cd9123017de02c9e8c312b8bcde1ecff94d8fe6d5049d92",
+          "tree": {
+            "dependencies": [
+              {
+                "dependencies": [
+                  {
+                    "dependencies": [],
+                    "name": "commander",
+                    "version": "12.1.0"
+                  },
+                  {
+                    "dependencies": [],
+                    "name": "zod",
+                    "version": "3.25.76"
+                  }
+                ],
+                "name": "visp-hyper-agent",
+                "version": "0.3.0"
+              }
+            ],
+            "name": "visp-compatibility-install",
+            "version": null
+          }
+        },
+        "installLock": {
+          "edgeSha256": "e987475e351da95ecc3293628fa9f0d7c5a66e98c14a74651af365cedc2913d0",
+          "edges": [
+            {
+              "ownerKey": "node_modules/visp-hyper-agent",
+              "requestedName": "commander",
+              "requestedSpec": "^12.1.0",
+              "resolvedKey": "node_modules/commander",
+              "resolvedVersion": "12.1.0"
+            },
+            {
+              "ownerKey": "node_modules/visp-hyper-agent",
+              "requestedName": "zod",
+              "requestedSpec": "^3.25.76",
+              "resolvedKey": "node_modules/zod",
+              "resolvedVersion": "3.25.76"
+            }
+          ],
+          "graphSha256": "2784d583310e1af49cca31a825fca6601d55aab6cbb9b4bf7fbf3019a01f2a83",
+          "packages": [
+            {
+              "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+              "key": "node_modules/commander",
+              "manifestSha256": "4ee3239971f47b1be752b2a9510184a5ece7c2d888890772b6ab69443ce089de",
+              "name": "commander",
+              "version": "12.1.0"
+            },
+            {
+              "integrity": "sha512-S/QQuOoxbwr0UNSBtSNt9Pg+hm3lwVX0usIg06M1fMqNq93BeEBSHLPZ1zuV78qmkctRTvC0Ns1pVQ/ypy9hMg==",
+              "key": "node_modules/visp-hyper-agent",
+              "manifestSha256": "2d85a9383913676d060c59ac651f1f7ea38ee1591d0e872edde21e59fc0601be",
+              "name": "visp-hyper-agent",
+              "version": "0.3.0"
+            },
+            {
+              "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
+              "key": "node_modules/zod",
+              "manifestSha256": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+              "name": "zod",
+              "version": "3.25.76"
+            }
+          ],
+          "path": "package-lock.json",
+          "sha256": "3277dfbfcb09b90ea2f8b37940e17a6a334c3f7773aec7244d672cc7447dccd2"
+        },
+        "lifecycleScriptsDisabled": true,
+        "offline": true,
+        "tool": {
+          "name": "npm",
+          "version": "11.12.1"
+        }
+      },
+      "pack": {
+        "byteEquality": true,
+        "first": {
+          "byteSize": 314472,
+          "memberListSha256": "bdedb3593c8ad5453adb597c1ead6dbaa2ea8b51c0b9a0f06a34631b4ebefe1d",
+          "members": [
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/package.json",
+            "package/templates/claude-code/agents/coordinator.md",
+            "package/templates/claude-code/agents/implementer.md",
+            "package/templates/claude-code/agents/scout.md",
+            "package/templates/claude-code/capabilities.json",
+            "package/templates/claude-code/commands/hyper-checkpoint.md",
+            "package/templates/claude-code/commands/hyper-fanout.md",
+            "package/templates/claude-code/commands/hyper-next.md",
+            "package/templates/claude-code/commands/hyper-remember.md",
+            "package/templates/claude-code/commands/hyper-review.md",
+            "package/templates/claude-code/commands/hyper-run.md",
+            "package/templates/claude-code/model-map.json",
+            "package/templates/claude-code/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/AGENTS.visp-hyper.md",
+            "package/templates/codex/capabilities.json",
+            "package/templates/copilot/.github/instructions/visp-hyper.instructions.md",
+            "package/templates/copilot/capabilities.json",
+            "package/templates/generic/capabilities.json",
+            "package/templates/generic/visp-hyper-instructions.md",
+            "package/templates/opencode/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/opencode/capabilities.json",
+            "package/templates/opencode/visp-hyper-instructions.md"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp-hyper",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-hyper-agent",
+            "version": "0.3.0"
+          },
+          "sha256": "0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        },
+        "second": {
+          "byteSize": 314472,
+          "memberListSha256": "bdedb3593c8ad5453adb597c1ead6dbaa2ea8b51c0b9a0f06a34631b4ebefe1d",
+          "members": [
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/package.json",
+            "package/templates/claude-code/agents/coordinator.md",
+            "package/templates/claude-code/agents/implementer.md",
+            "package/templates/claude-code/agents/scout.md",
+            "package/templates/claude-code/capabilities.json",
+            "package/templates/claude-code/commands/hyper-checkpoint.md",
+            "package/templates/claude-code/commands/hyper-fanout.md",
+            "package/templates/claude-code/commands/hyper-next.md",
+            "package/templates/claude-code/commands/hyper-remember.md",
+            "package/templates/claude-code/commands/hyper-review.md",
+            "package/templates/claude-code/commands/hyper-run.md",
+            "package/templates/claude-code/model-map.json",
+            "package/templates/claude-code/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/AGENTS.visp-hyper.md",
+            "package/templates/codex/capabilities.json",
+            "package/templates/copilot/.github/instructions/visp-hyper.instructions.md",
+            "package/templates/copilot/capabilities.json",
+            "package/templates/generic/capabilities.json",
+            "package/templates/generic/visp-hyper-instructions.md",
+            "package/templates/opencode/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/opencode/capabilities.json",
+            "package/templates/opencode/visp-hyper-instructions.md"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp-hyper",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-hyper-agent",
+            "version": "0.3.0"
+          },
+          "sha256": "0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        }
+      },
+      "runtimeLock": {
+        "localIntegrity": "sha512-S/QQuOoxbwr0UNSBtSNt9Pg+hm3lwVX0usIg06M1fMqNq93BeEBSHLPZ1zuV78qmkctRTvC0Ns1pVQ/ypy9hMg==",
+        "materializedSha256": "3277dfbfcb09b90ea2f8b37940e17a6a334c3f7773aec7244d672cc7447dccd2",
+        "templateSha256": "9f9ad90240f554773c25999b59f3dfa008393a184538921408ac91ec677966fb"
+      },
+      "source": {
+        "commit": "61858199d90bffafb062bde61453f5def6357efa",
+        "tree": "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
+      }
+    },
+    "hyperOld": {
+      "install": {
+        "bins": [
+          {
+            "name": "visp-hyper",
+            "sha256": "1bdf38c4f40e854e22f4c8ea37d11ffd0305257543037500f22076bcc78908b6",
+            "target": "node_modules/visp-hyper-agent/dist/index.js"
+          }
+        ],
+        "cache": {
+          "inventorySha256": "493b91c8c37f924cd17c2b3b8fb4ee19fcd457305c912ec14d39b3c8e40200f1",
+          "mode": "caller_snapshot"
+        },
+        "dependencyTree": {
+          "sha256": "ecd78ccd508f22563cd9123017de02c9e8c312b8bcde1ecff94d8fe6d5049d92",
+          "tree": {
+            "dependencies": [
+              {
+                "dependencies": [
+                  {
+                    "dependencies": [],
+                    "name": "commander",
+                    "version": "12.1.0"
+                  },
+                  {
+                    "dependencies": [],
+                    "name": "zod",
+                    "version": "3.25.76"
+                  }
+                ],
+                "name": "visp-hyper-agent",
+                "version": "0.3.0"
+              }
+            ],
+            "name": "visp-compatibility-install",
+            "version": null
+          }
+        },
+        "installLock": {
+          "edgeSha256": "e987475e351da95ecc3293628fa9f0d7c5a66e98c14a74651af365cedc2913d0",
+          "edges": [
+            {
+              "ownerKey": "node_modules/visp-hyper-agent",
+              "requestedName": "commander",
+              "requestedSpec": "^12.1.0",
+              "resolvedKey": "node_modules/commander",
+              "resolvedVersion": "12.1.0"
+            },
+            {
+              "ownerKey": "node_modules/visp-hyper-agent",
+              "requestedName": "zod",
+              "requestedSpec": "^3.25.76",
+              "resolvedKey": "node_modules/zod",
+              "resolvedVersion": "3.25.76"
+            }
+          ],
+          "graphSha256": "f68bdb2f10fa8a0838b70688e4f14f44953af40ab704f5f90546d0e6eade5e08",
+          "packages": [
+            {
+              "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+              "key": "node_modules/commander",
+              "manifestSha256": "4ee3239971f47b1be752b2a9510184a5ece7c2d888890772b6ab69443ce089de",
+              "name": "commander",
+              "version": "12.1.0"
+            },
+            {
+              "integrity": "sha512-4lLxjoyn9SPP8Ct8vMFb1K56h4aDJjgfJXTsI0OHZLFPxCXbLJC4+IlPfvZ6BniJWXTdYNZWOD0avUG+JQZ3VA==",
+              "key": "node_modules/visp-hyper-agent",
+              "manifestSha256": "2d85a9383913676d060c59ac651f1f7ea38ee1591d0e872edde21e59fc0601be",
+              "name": "visp-hyper-agent",
+              "version": "0.3.0"
+            },
+            {
+              "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
+              "key": "node_modules/zod",
+              "manifestSha256": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+              "name": "zod",
+              "version": "3.25.76"
+            }
+          ],
+          "path": "package-lock.json",
+          "sha256": "0bcba9fe9943aeb61895302bc072c4713ffc45dacadeb06081dd5ea67ca35e70"
+        },
+        "lifecycleScriptsDisabled": true,
+        "offline": true,
+        "tool": {
+          "name": "npm",
+          "version": "11.12.1"
+        }
+      },
+      "pack": {
+        "byteEquality": true,
+        "first": {
+          "byteSize": 276116,
+          "memberListSha256": "f878f796ece882b0c9a1c098705a9964dc509dab190bcd3378de965c4f7f47cd",
+          "members": [
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/package.json",
+            "package/templates/claude-code/agents/coordinator.md",
+            "package/templates/claude-code/agents/implementer.md",
+            "package/templates/claude-code/agents/scout.md",
+            "package/templates/claude-code/commands/hyper-checkpoint.md",
+            "package/templates/claude-code/commands/hyper-fanout.md",
+            "package/templates/claude-code/commands/hyper-next.md",
+            "package/templates/claude-code/commands/hyper-remember.md",
+            "package/templates/claude-code/commands/hyper-review.md",
+            "package/templates/claude-code/commands/hyper-run.md",
+            "package/templates/claude-code/model-map.json",
+            "package/templates/codex/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/AGENTS.visp-hyper.md",
+            "package/templates/copilot/.github/instructions/visp-hyper.instructions.md",
+            "package/templates/generic/visp-hyper-instructions.md",
+            "package/templates/opencode/visp-hyper-instructions.md"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp-hyper",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-hyper-agent",
+            "version": "0.3.0"
+          },
+          "sha256": "5a917a5111e0178c9e712655a366e7536bc5f5873c3c6800c261423e3829d43d",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        },
+        "second": {
+          "byteSize": 276116,
+          "memberListSha256": "f878f796ece882b0c9a1c098705a9964dc509dab190bcd3378de965c4f7f47cd",
+          "members": [
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/package.json",
+            "package/templates/claude-code/agents/coordinator.md",
+            "package/templates/claude-code/agents/implementer.md",
+            "package/templates/claude-code/agents/scout.md",
+            "package/templates/claude-code/commands/hyper-checkpoint.md",
+            "package/templates/claude-code/commands/hyper-fanout.md",
+            "package/templates/claude-code/commands/hyper-next.md",
+            "package/templates/claude-code/commands/hyper-remember.md",
+            "package/templates/claude-code/commands/hyper-review.md",
+            "package/templates/claude-code/commands/hyper-run.md",
+            "package/templates/claude-code/model-map.json",
+            "package/templates/codex/.agents/skills/visp-hyper/SKILL.md",
+            "package/templates/codex/AGENTS.visp-hyper.md",
+            "package/templates/copilot/.github/instructions/visp-hyper.instructions.md",
+            "package/templates/generic/visp-hyper-instructions.md",
+            "package/templates/opencode/visp-hyper-instructions.md"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp-hyper",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-hyper-agent",
+            "version": "0.3.0"
+          },
+          "sha256": "5a917a5111e0178c9e712655a366e7536bc5f5873c3c6800c261423e3829d43d",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        }
+      },
+      "runtimeLock": {
+        "localIntegrity": "sha512-4lLxjoyn9SPP8Ct8vMFb1K56h4aDJjgfJXTsI0OHZLFPxCXbLJC4+IlPfvZ6BniJWXTdYNZWOD0avUG+JQZ3VA==",
+        "materializedSha256": "0bcba9fe9943aeb61895302bc072c4713ffc45dacadeb06081dd5ea67ca35e70",
+        "templateSha256": "9f9ad90240f554773c25999b59f3dfa008393a184538921408ac91ec677966fb"
+      },
+      "source": {
+        "commit": "cda0c6ce43abc6a69f4a436026d482e95ed74a2c",
+        "tree": "9694a2d7e36215ee95336ade735f1a5426698187"
+      }
+    },
+    "kitNew": {
+      "install": {
+        "bins": [
+          {
+            "name": "visp",
+            "sha256": "1bb5e55d3617b432211c4f9e783ea09078b129851fd75fcf54483607c6c6c623",
+            "target": "node_modules/visp-kit/dist/index.js"
+          }
+        ],
+        "cache": {
+          "inventorySha256": "493b91c8c37f924cd17c2b3b8fb4ee19fcd457305c912ec14d39b3c8e40200f1",
+          "mode": "caller_snapshot"
+        },
+        "dependencyTree": {
+          "sha256": "b9fffc4f76884e7b51a85edc54a66972eb069c02c0b927254cce69a992325558",
+          "tree": {
+            "dependencies": [
+              {
+                "dependencies": [
+                  {
+                    "dependencies": [],
+                    "name": "commander",
+                    "version": "12.1.0"
+                  },
+                  {
+                    "dependencies": [],
+                    "name": "zod",
+                    "version": "3.25.76"
+                  }
+                ],
+                "name": "visp-kit",
+                "version": "0.2.0"
+              }
+            ],
+            "name": "visp-compatibility-install",
+            "version": null
+          }
+        },
+        "installLock": {
+          "edgeSha256": "27990ff3fa29b24c97f5bf5d60cd021ebae833ed6252a6b8b2c10a42c77a8237",
+          "edges": [
+            {
+              "ownerKey": "node_modules/visp-kit",
+              "requestedName": "commander",
+              "requestedSpec": "^12.1.0",
+              "resolvedKey": "node_modules/commander",
+              "resolvedVersion": "12.1.0"
+            },
+            {
+              "ownerKey": "node_modules/visp-kit",
+              "requestedName": "zod",
+              "requestedSpec": "^3.25.76",
+              "resolvedKey": "node_modules/zod",
+              "resolvedVersion": "3.25.76"
+            }
+          ],
+          "graphSha256": "54f56d348c4b3e8b89a25a2fd16387e1a9f144d9381e034b1cd45eef71a746a4",
+          "packages": [
+            {
+              "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+              "key": "node_modules/commander",
+              "manifestSha256": "4ee3239971f47b1be752b2a9510184a5ece7c2d888890772b6ab69443ce089de",
+              "name": "commander",
+              "version": "12.1.0"
+            },
+            {
+              "integrity": "sha512-+ElkwrDWj9HVbj995OXbdH55/7FX2PIL2Y+3yrY+52sTeIE50B49q5aQIF3twXJ7t7ft5nTeJ30Nq+Beg1ebRA==",
+              "key": "node_modules/visp-kit",
+              "manifestSha256": "5e016071ba92b2581793bf5bba43dddf958dc187122e9dd5f779ecf74180f3cf",
+              "name": "visp-kit",
+              "version": "0.2.0"
+            },
+            {
+              "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
+              "key": "node_modules/zod",
+              "manifestSha256": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+              "name": "zod",
+              "version": "3.25.76"
+            }
+          ],
+          "path": "package-lock.json",
+          "sha256": "c7123b2e2e90b8bcb11435e14cfceec2d48761670b96695faa8ff639e91c5dd8"
+        },
+        "lifecycleScriptsDisabled": true,
+        "offline": true,
+        "tool": {
+          "name": "npm",
+          "version": "11.12.1"
+        }
+      },
+      "pack": {
+        "byteEquality": true,
+        "first": {
+          "byteSize": 812762,
+          "memberListSha256": "9384085c668ebd52afaccb1f2884e213d42992f38285a2569972c03131bf369d",
+          "members": [
+            "package/AGENTS.md",
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/docs/adr/0001-kit-authoritative-engine.md",
+            "package/docs/adr/0002-protocol-versioning.md",
+            "package/docs/adr/0003-local-signature-verification.md",
+            "package/docs/agent-native-workflows.md",
+            "package/docs/agent-targets.md",
+            "package/docs/artifacts.md",
+            "package/docs/benchmarks.md",
+            "package/docs/codex.md",
+            "package/docs/commands.md",
+            "package/docs/company-adoption.md",
+            "package/docs/configuration.md",
+            "package/docs/development.md",
+            "package/docs/enforcement.md",
+            "package/docs/faq.md",
+            "package/docs/overrides.md",
+            "package/docs/policy-and-gates.md",
+            "package/docs/quickstart.md",
+            "package/docs/release-checklist.md",
+            "package/docs/spec-vs-visp-kit.md",
+            "package/docs/token-efficiency.md",
+            "package/docs/troubleshooting.md",
+            "package/docs/workflow.md",
+            "package/examples/basic-typescript/README.md",
+            "package/examples/basic-typescript/package.json",
+            "package/examples/basic-typescript/src/notes.ts",
+            "package/examples/basic-typescript/tests/notes.test.ts",
+            "package/examples/basic-typescript/tsconfig.json",
+            "package/examples/strict-agent-workflow/README.md",
+            "package/examples/strict-agent-workflow/package.json",
+            "package/examples/strict-agent-workflow/src/notes.ts",
+            "package/examples/strict-agent-workflow/tests/notes.test.js",
+            "package/package.json",
+            "package/schemas/workflow-action/2.0.schema.json",
+            "package/schemas/workflow-action/3.0.schema.json",
+            "package/schemas/workflow-action/3.1.schema.json",
+            "package/schemas/workflow-action/3.2.schema.json",
+            "package/scripts/benchmark-strict-workflow.sh",
+            "package/scripts/dogfood-strict-agent-workflow.sh",
+            "package/scripts/generate-workflow-action-schemas.mjs"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-kit",
+            "version": "0.2.0"
+          },
+          "sha256": "d8df0c8c468ac98375c78c8f12d4df35846cfcf3e6dabf505051c6a5d2df49f9",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        },
+        "second": {
+          "byteSize": 812762,
+          "memberListSha256": "9384085c668ebd52afaccb1f2884e213d42992f38285a2569972c03131bf369d",
+          "members": [
+            "package/AGENTS.md",
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/docs/adr/0001-kit-authoritative-engine.md",
+            "package/docs/adr/0002-protocol-versioning.md",
+            "package/docs/adr/0003-local-signature-verification.md",
+            "package/docs/agent-native-workflows.md",
+            "package/docs/agent-targets.md",
+            "package/docs/artifacts.md",
+            "package/docs/benchmarks.md",
+            "package/docs/codex.md",
+            "package/docs/commands.md",
+            "package/docs/company-adoption.md",
+            "package/docs/configuration.md",
+            "package/docs/development.md",
+            "package/docs/enforcement.md",
+            "package/docs/faq.md",
+            "package/docs/overrides.md",
+            "package/docs/policy-and-gates.md",
+            "package/docs/quickstart.md",
+            "package/docs/release-checklist.md",
+            "package/docs/spec-vs-visp-kit.md",
+            "package/docs/token-efficiency.md",
+            "package/docs/troubleshooting.md",
+            "package/docs/workflow.md",
+            "package/examples/basic-typescript/README.md",
+            "package/examples/basic-typescript/package.json",
+            "package/examples/basic-typescript/src/notes.ts",
+            "package/examples/basic-typescript/tests/notes.test.ts",
+            "package/examples/basic-typescript/tsconfig.json",
+            "package/examples/strict-agent-workflow/README.md",
+            "package/examples/strict-agent-workflow/package.json",
+            "package/examples/strict-agent-workflow/src/notes.ts",
+            "package/examples/strict-agent-workflow/tests/notes.test.js",
+            "package/package.json",
+            "package/schemas/workflow-action/2.0.schema.json",
+            "package/schemas/workflow-action/3.0.schema.json",
+            "package/schemas/workflow-action/3.1.schema.json",
+            "package/schemas/workflow-action/3.2.schema.json",
+            "package/scripts/benchmark-strict-workflow.sh",
+            "package/scripts/dogfood-strict-agent-workflow.sh",
+            "package/scripts/generate-workflow-action-schemas.mjs"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-kit",
+            "version": "0.2.0"
+          },
+          "sha256": "d8df0c8c468ac98375c78c8f12d4df35846cfcf3e6dabf505051c6a5d2df49f9",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        }
+      },
+      "runtimeLock": {
+        "localIntegrity": "sha512-+ElkwrDWj9HVbj995OXbdH55/7FX2PIL2Y+3yrY+52sTeIE50B49q5aQIF3twXJ7t7ft5nTeJ30Nq+Beg1ebRA==",
+        "materializedSha256": "c7123b2e2e90b8bcb11435e14cfceec2d48761670b96695faa8ff639e91c5dd8",
+        "templateSha256": "9f9ad90240f554773c25999b59f3dfa008393a184538921408ac91ec677966fb"
+      },
+      "source": {
+        "commit": "3a8901b9b9fe788a0be98f247c75f9715db24723",
+        "tree": "74740a41b227ec73561e4adf09dd53bf02c2eff7"
+      }
+    },
+    "kitOld": {
+      "install": {
+        "bins": [
+          {
+            "name": "visp",
+            "sha256": "c6a2a0aa75c5c2cec729ef5d6d36884c89965e488900fb804b72442edd5c0a57",
+            "target": "node_modules/visp-kit/dist/index.js"
+          }
+        ],
+        "cache": {
+          "inventorySha256": "493b91c8c37f924cd17c2b3b8fb4ee19fcd457305c912ec14d39b3c8e40200f1",
+          "mode": "caller_snapshot"
+        },
+        "dependencyTree": {
+          "sha256": "b7b10e29d46ad35b3723ffae355bc8c72b7f0363fcb6a148501ad8adff0cbbb1",
+          "tree": {
+            "dependencies": [
+              {
+                "dependencies": [
+                  {
+                    "dependencies": [],
+                    "name": "commander",
+                    "version": "12.1.0"
+                  },
+                  {
+                    "dependencies": [],
+                    "name": "zod",
+                    "version": "3.25.76"
+                  }
+                ],
+                "name": "visp-kit",
+                "version": "0.1.1"
+              }
+            ],
+            "name": "visp-compatibility-install",
+            "version": null
+          }
+        },
+        "installLock": {
+          "edgeSha256": "27990ff3fa29b24c97f5bf5d60cd021ebae833ed6252a6b8b2c10a42c77a8237",
+          "edges": [
+            {
+              "ownerKey": "node_modules/visp-kit",
+              "requestedName": "commander",
+              "requestedSpec": "^12.1.0",
+              "resolvedKey": "node_modules/commander",
+              "resolvedVersion": "12.1.0"
+            },
+            {
+              "ownerKey": "node_modules/visp-kit",
+              "requestedName": "zod",
+              "requestedSpec": "^3.25.76",
+              "resolvedKey": "node_modules/zod",
+              "resolvedVersion": "3.25.76"
+            }
+          ],
+          "graphSha256": "d609e8f5385aae9a70b17429563b5501a8395cb94039515bfecb9f9cb363d3f8",
+          "packages": [
+            {
+              "integrity": "sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==",
+              "key": "node_modules/commander",
+              "manifestSha256": "4ee3239971f47b1be752b2a9510184a5ece7c2d888890772b6ab69443ce089de",
+              "name": "commander",
+              "version": "12.1.0"
+            },
+            {
+              "integrity": "sha512-F+pZzaSYEK+xOcCDm3m+TWSM28zKk0SoQ/hoQ678UHojjkbfhKm28JgZm9LVaXAJzoQbo9/g9uXnLSQok9NNKw==",
+              "key": "node_modules/visp-kit",
+              "manifestSha256": "7f20a73c093392336b5c452cbe5e4f13f7422d23c03dbf3f18f8241cb0207544",
+              "name": "visp-kit",
+              "version": "0.1.1"
+            },
+            {
+              "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==",
+              "key": "node_modules/zod",
+              "manifestSha256": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+              "name": "zod",
+              "version": "3.25.76"
+            }
+          ],
+          "path": "package-lock.json",
+          "sha256": "e8a0fb801245816b1d9e9fb999e46689ef0dc5619fa14c627079e098c2a4f1b1"
+        },
+        "lifecycleScriptsDisabled": true,
+        "offline": true,
+        "tool": {
+          "name": "npm",
+          "version": "11.12.1"
+        }
+      },
+      "pack": {
+        "byteEquality": true,
+        "first": {
+          "byteSize": 798611,
+          "memberListSha256": "3ad6f9e9aaeaffb2715c39ac3d186a1b9b44fd3d84b237bf11758a056ed51009",
+          "members": [
+            "package/AGENTS.md",
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/docs/adr/0001-kit-authoritative-engine.md",
+            "package/docs/adr/0002-protocol-versioning.md",
+            "package/docs/agent-native-workflows.md",
+            "package/docs/agent-targets.md",
+            "package/docs/artifacts.md",
+            "package/docs/benchmarks.md",
+            "package/docs/codex.md",
+            "package/docs/commands.md",
+            "package/docs/company-adoption.md",
+            "package/docs/configuration.md",
+            "package/docs/development.md",
+            "package/docs/enforcement.md",
+            "package/docs/faq.md",
+            "package/docs/overrides.md",
+            "package/docs/policy-and-gates.md",
+            "package/docs/quickstart.md",
+            "package/docs/release-checklist.md",
+            "package/docs/spec-vs-visp-kit.md",
+            "package/docs/token-efficiency.md",
+            "package/docs/troubleshooting.md",
+            "package/docs/workflow.md",
+            "package/examples/basic-typescript/README.md",
+            "package/examples/basic-typescript/package.json",
+            "package/examples/basic-typescript/src/notes.ts",
+            "package/examples/basic-typescript/tests/notes.test.ts",
+            "package/examples/basic-typescript/tsconfig.json",
+            "package/examples/strict-agent-workflow/README.md",
+            "package/examples/strict-agent-workflow/package.json",
+            "package/examples/strict-agent-workflow/src/notes.ts",
+            "package/examples/strict-agent-workflow/tests/notes.test.js",
+            "package/package.json",
+            "package/schemas/workflow-action/2.0.schema.json",
+            "package/schemas/workflow-action/3.0.schema.json",
+            "package/schemas/workflow-action/3.1.schema.json",
+            "package/schemas/workflow-action/3.2.schema.json",
+            "package/scripts/benchmark-strict-workflow.sh",
+            "package/scripts/dogfood-strict-agent-workflow.sh",
+            "package/scripts/generate-workflow-action-schemas.mjs"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-kit",
+            "version": "0.1.1"
+          },
+          "sha256": "6ab0a137018095685088d688dea889147a763bd4d2b8601ada2f9e29b6bc1f8d",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        },
+        "second": {
+          "byteSize": 798611,
+          "memberListSha256": "3ad6f9e9aaeaffb2715c39ac3d186a1b9b44fd3d84b237bf11758a056ed51009",
+          "members": [
+            "package/AGENTS.md",
+            "package/LICENSE",
+            "package/README.md",
+            "package/dist/index.d.ts",
+            "package/dist/index.js",
+            "package/dist/index.js.map",
+            "package/docs/adr/0001-kit-authoritative-engine.md",
+            "package/docs/adr/0002-protocol-versioning.md",
+            "package/docs/agent-native-workflows.md",
+            "package/docs/agent-targets.md",
+            "package/docs/artifacts.md",
+            "package/docs/benchmarks.md",
+            "package/docs/codex.md",
+            "package/docs/commands.md",
+            "package/docs/company-adoption.md",
+            "package/docs/configuration.md",
+            "package/docs/development.md",
+            "package/docs/enforcement.md",
+            "package/docs/faq.md",
+            "package/docs/overrides.md",
+            "package/docs/policy-and-gates.md",
+            "package/docs/quickstart.md",
+            "package/docs/release-checklist.md",
+            "package/docs/spec-vs-visp-kit.md",
+            "package/docs/token-efficiency.md",
+            "package/docs/troubleshooting.md",
+            "package/docs/workflow.md",
+            "package/examples/basic-typescript/README.md",
+            "package/examples/basic-typescript/package.json",
+            "package/examples/basic-typescript/src/notes.ts",
+            "package/examples/basic-typescript/tests/notes.test.ts",
+            "package/examples/basic-typescript/tsconfig.json",
+            "package/examples/strict-agent-workflow/README.md",
+            "package/examples/strict-agent-workflow/package.json",
+            "package/examples/strict-agent-workflow/src/notes.ts",
+            "package/examples/strict-agent-workflow/tests/notes.test.js",
+            "package/package.json",
+            "package/schemas/workflow-action/2.0.schema.json",
+            "package/schemas/workflow-action/3.0.schema.json",
+            "package/schemas/workflow-action/3.1.schema.json",
+            "package/schemas/workflow-action/3.2.schema.json",
+            "package/scripts/benchmark-strict-workflow.sh",
+            "package/scripts/dogfood-strict-agent-workflow.sh",
+            "package/scripts/generate-workflow-action-schemas.mjs"
+          ],
+          "package": {
+            "declaredBins": [
+              {
+                "name": "visp",
+                "path": "dist/index.js"
+              }
+            ],
+            "name": "visp-kit",
+            "version": "0.1.1"
+          },
+          "sha256": "6ab0a137018095685088d688dea889147a763bd4d2b8601ada2f9e29b6bc1f8d",
+          "tool": {
+            "lifecycleScriptsPolicy": "required",
+            "name": "npm",
+            "version": "11.12.1"
+          }
+        }
+      },
+      "runtimeLock": {
+        "localIntegrity": "sha512-F+pZzaSYEK+xOcCDm3m+TWSM28zKk0SoQ/hoQ678UHojjkbfhKm28JgZm9LVaXAJzoQbo9/g9uXnLSQok9NNKw==",
+        "materializedSha256": "e8a0fb801245816b1d9e9fb999e46689ef0dc5619fa14c627079e098c2a4f1b1",
+        "templateSha256": "9f9ad90240f554773c25999b59f3dfa008393a184538921408ac91ec677966fb"
+      },
+      "source": {
+        "commit": "d92364e8b3fd9d38771bcfe1df18fb9434a8ad4e",
+        "tree": "6aa999a59ad7bd3b77f6b85bc07fabd6575d9f95"
+      }
+    }
+  },
+  "reportSha256": "593f49385b22e3775a328cd83e87f159595cde6174c07006de9f43414ded3252",
+  "scenarios": [
+    {
+      "flow": "accepted",
+      "id": "routine_accepted",
+      "kit": {
+        "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+        "actionVerdict": "ready",
+        "assuranceSummary": {
+          "artifact": {
+            "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+            "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+          },
+          "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+          "mandatoryHotspots": [
+            {
+              "category": "validation_command_change",
+              "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+              "path": null,
+              "reason": "Task and locked oracle validation commands differ.",
+              "severity": "high"
+            },
+            {
+              "category": "unmapped_change",
+              "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+              "path": "docs/profile.md",
+              "reason": "Changed unit is not mapped to an authoritative claim.",
+              "severity": "medium"
+            },
+            {
+              "category": "inconclusive_evidence",
+              "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+              "path": null,
+              "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+              "severity": "medium"
+            }
+          ],
+          "reviewDecision": {
+            "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+            "reason": "The current review decision accepts this assurance case.",
+            "required": true,
+            "status": "current"
+          },
+          "state": "available",
+          "verdict": "inconclusive",
+          "version": "1.0"
+        },
+        "assuranceVerdict": "inconclusive",
+        "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+        "mandatoryHotspots": [
+          {
+            "category": "validation_command_change",
+            "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+            "path": null,
+            "reason": "Task and locked oracle validation commands differ.",
+            "severity": "high"
+          },
+          {
+            "category": "unmapped_change",
+            "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+            "path": "docs/profile.md",
+            "reason": "Changed unit is not mapped to an authoritative claim.",
+            "severity": "medium"
+          },
+          {
+            "category": "inconclusive_evidence",
+            "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+            "path": null,
+            "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+            "severity": "medium"
+          }
+        ],
+        "nextCommand": "visp verify --task T001",
+        "protocolVersion": "3.2",
+        "reviewDecision": {
+          "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+          "reason": "The current review decision accepts this assurance case.",
+          "required": true,
+          "status": "current"
+        },
+        "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+      },
+      "profile": "routine",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+                "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                  "path": "docs/profile.md",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+                "reason": "The current review decision accepts this assurance case.",
+                "required": true,
+                "status": "current"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                "path": "docs/profile.md",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+              "reason": "The current review decision accepts this assurance case.",
+              "required": true,
+              "status": "current"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+                "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                  "path": "docs/profile.md",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+                "reason": "The current review decision accepts this assurance case.",
+                "required": true,
+                "status": "current"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                "path": "docs/profile.md",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+              "reason": "The current review decision accepts this assurance case.",
+              "required": true,
+              "status": "current"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+                "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                  "path": "docs/profile.md",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+                "reason": "The current review decision accepts this assurance case.",
+                "required": true,
+                "status": "current"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                "path": "docs/profile.md",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+              "reason": "The current review decision accepts this assurance case.",
+              "required": true,
+              "status": "current"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+                "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                  "path": "docs/profile.md",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+                "reason": "The current review decision accepts this assurance case.",
+                "required": true,
+                "status": "current"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                "path": "docs/profile.md",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+              "reason": "The current review decision accepts this assurance case.",
+              "required": true,
+              "status": "current"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+                "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                  "path": "docs/profile.md",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+                "reason": "The current review decision accepts this assurance case.",
+                "required": true,
+                "status": "current"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                "path": "docs/profile.md",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+              "reason": "The current review decision accepts this assurance case.",
+              "required": true,
+              "status": "current"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:8ef8d0a6909dbb3c7d81966303a1a3b1a6752281a55a1117c1cab6717dd48d95",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:234d0a82eea8c8ddf61110954a4e5f855acd17faa14cf06fd386157d862f478a",
+                "path": ".visp/features/001-routine-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                  "path": "docs/profile.md",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+                "reason": "The current review decision accepts this assurance case.",
+                "required": true,
+                "status": "current"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:48d851afa1222c58fdb9730dc8baefe180a1819beb7be356d148b218e58e2066",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-8525b69745abc7c139ca0982104f8dea9c2f6ce55667d519cad30eed74412d9f",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2dacd3d42d42d17dd80208beac8cda8e049122ac826bb5f01caaca39f071502b",
+                "path": "docs/profile.md",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:d985c011dedb6ca37bea3cbe285339386cab44eef72fb8effa2e83525862e3f2",
+              "reason": "The current review decision accepts this assurance case.",
+              "required": true,
+              "status": "current"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        }
+      ]
+    },
+    {
+      "flow": "rejected",
+      "id": "behavioral_rejected",
+      "kit": {
+        "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+        "actionVerdict": "ready",
+        "assuranceSummary": {
+          "artifact": {
+            "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+            "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+          },
+          "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+          "mandatoryHotspots": [
+            {
+              "category": "validation_command_change",
+              "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+              "path": null,
+              "reason": "Task and locked oracle validation commands differ.",
+              "severity": "high"
+            },
+            {
+              "category": "unmapped_change",
+              "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+              "path": "src/profile.mjs",
+              "reason": "Changed unit is not mapped to an authoritative claim.",
+              "severity": "medium"
+            },
+            {
+              "category": "inconclusive_evidence",
+              "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+              "path": null,
+              "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+              "severity": "medium"
+            }
+          ],
+          "reviewDecision": {
+            "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+            "reason": "The current review decision rejects this assurance case.",
+            "required": true,
+            "status": "rejected"
+          },
+          "state": "available",
+          "verdict": "inconclusive",
+          "version": "1.0"
+        },
+        "assuranceVerdict": "inconclusive",
+        "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+        "mandatoryHotspots": [
+          {
+            "category": "validation_command_change",
+            "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+            "path": null,
+            "reason": "Task and locked oracle validation commands differ.",
+            "severity": "high"
+          },
+          {
+            "category": "unmapped_change",
+            "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+            "path": "src/profile.mjs",
+            "reason": "Changed unit is not mapped to an authoritative claim.",
+            "severity": "medium"
+          },
+          {
+            "category": "inconclusive_evidence",
+            "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+            "path": null,
+            "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+            "severity": "medium"
+          }
+        ],
+        "nextCommand": "visp verify --task T001",
+        "protocolVersion": "3.2",
+        "reviewDecision": {
+          "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+          "reason": "The current review decision rejects this assurance case.",
+          "required": true,
+          "status": "rejected"
+        },
+        "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+      },
+      "profile": "behavioral",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+                "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+                "reason": "The current review decision rejects this assurance case.",
+                "required": true,
+                "status": "rejected"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+              "reason": "The current review decision rejects this assurance case.",
+              "required": true,
+              "status": "rejected"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+                "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+                "reason": "The current review decision rejects this assurance case.",
+                "required": true,
+                "status": "rejected"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+              "reason": "The current review decision rejects this assurance case.",
+              "required": true,
+              "status": "rejected"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+                "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+                "reason": "The current review decision rejects this assurance case.",
+                "required": true,
+                "status": "rejected"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+              "reason": "The current review decision rejects this assurance case.",
+              "required": true,
+              "status": "rejected"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+                "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+                "reason": "The current review decision rejects this assurance case.",
+                "required": true,
+                "status": "rejected"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+              "reason": "The current review decision rejects this assurance case.",
+              "required": true,
+              "status": "rejected"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+                "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+                "reason": "The current review decision rejects this assurance case.",
+                "required": true,
+                "status": "rejected"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+              "reason": "The current review decision rejects this assurance case.",
+              "required": true,
+              "status": "rejected"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:940256ec48838699cb58510a915b2c8df55e0f220efb05ff980b80efe61f9286",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:fe057cd85f997511890d19476e1f7dd89550e343b8f7df4e46c345cd99c35605",
+                "path": ".visp/features/001-behavioral-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+              "mandatoryHotspots": [
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+                "reason": "The current review decision rejects this assurance case.",
+                "required": true,
+                "status": "rejected"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:5faad14785f4d5b335ba5c97555fcccff24cd9244fe1f47bcb98fcd270b5e445",
+            "mandatoryHotspots": [
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-02736d27c87c19d131d2d80711ee1a1ee4edb6a1ea764863600f6313a0184e57",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-2d70548b253a512e581e57a27be48f9b09d2dde86f07b6af4744997a3bb2a36c",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:20cd65f8bd1ab4b887a15010c15464be660b91e5c3197490895d7d8a8192d449",
+              "reason": "The current review decision rejects this assurance case.",
+              "required": true,
+              "status": "rejected"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        }
+      ]
+    },
+    {
+      "flow": "stale",
+      "id": "critical_stale",
+      "kit": {
+        "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+        "actionVerdict": "inconclusive",
+        "assuranceSummary": {
+          "artifact": {
+            "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+            "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+          },
+          "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+          "mandatoryHotspots": [
+            {
+              "category": "permissions",
+              "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+              "path": null,
+              "reason": "Task risk factor authorization requires review.",
+              "severity": "critical"
+            },
+            {
+              "category": "validation_command_change",
+              "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+              "path": null,
+              "reason": "Task and locked oracle validation commands differ.",
+              "severity": "high"
+            },
+            {
+              "category": "unmapped_change",
+              "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+              "path": "src/profile.mjs",
+              "reason": "Changed unit is not mapped to an authoritative claim.",
+              "severity": "medium"
+            },
+            {
+              "category": "inconclusive_evidence",
+              "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+              "path": null,
+              "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+              "severity": "medium"
+            }
+          ],
+          "reviewDecision": {
+            "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+            "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+            "required": true,
+            "status": "stale"
+          },
+          "state": "available",
+          "verdict": "inconclusive",
+          "version": "1.0"
+        },
+        "assuranceVerdict": "inconclusive",
+        "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+        "mandatoryHotspots": [
+          {
+            "category": "permissions",
+            "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+            "path": null,
+            "reason": "Task risk factor authorization requires review.",
+            "severity": "critical"
+          },
+          {
+            "category": "validation_command_change",
+            "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+            "path": null,
+            "reason": "Task and locked oracle validation commands differ.",
+            "severity": "high"
+          },
+          {
+            "category": "unmapped_change",
+            "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+            "path": "src/profile.mjs",
+            "reason": "Changed unit is not mapped to an authoritative claim.",
+            "severity": "medium"
+          },
+          {
+            "category": "inconclusive_evidence",
+            "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+            "path": null,
+            "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+            "severity": "medium"
+          }
+        ],
+        "nextCommand": "visp verify --task T001",
+        "protocolVersion": "3.2",
+        "reviewDecision": {
+          "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+          "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+          "required": true,
+          "status": "stale"
+        },
+        "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+      },
+      "profile": "critical",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+            "actionVerdict": "inconclusive",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+                "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+                "required": true,
+                "status": "stale"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+              "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+              "required": true,
+              "status": "stale"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+            "actionVerdict": "inconclusive",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+                "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+                "required": true,
+                "status": "stale"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+              "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+              "required": true,
+              "status": "stale"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+            "actionVerdict": "inconclusive",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+                "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+                "required": true,
+                "status": "stale"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+              "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+              "required": true,
+              "status": "stale"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+            "actionVerdict": "inconclusive",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+                "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+                "required": true,
+                "status": "stale"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+              "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+              "required": true,
+              "status": "stale"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+            "actionVerdict": "inconclusive",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+                "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+                "required": true,
+                "status": "stale"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+              "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+              "required": true,
+              "status": "stale"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:089d33b70139abb21f0fd68562cfc52e8bf3e106e3905445bd50d0037e682316",
+            "actionVerdict": "inconclusive",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:48a4838ec583c47b176f8bae9b95653c01df0be6d423268f8633399d56fc7962",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+                "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+                "required": true,
+                "status": "stale"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:72efd31801400566f799b6b277e4bcc23c9cbebcf4535b56e9c278537add3b7c",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-5fe04c2895e241871da2faaeeba28781e91c9a3eba4e11af340de45e37b77729",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-0e4bfbb88987d6e8a0bd23c1a940e6ca54fba8d5f6be966c1efc53fac1de84d1",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-359ec31c990b193e9a991e268788e4326c475c4acd8c72bb4b044b05ef8320c1",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": "sha256:f7d4c733b55eb4046a70b532f2dbbf83d5ae164fa4ab419e87d7587d60804eb5",
+              "reason": "Reconstructed authoritative assurance inputs do not match the assurance case.",
+              "required": true,
+              "status": "stale"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        }
+      ]
+    },
+    {
+      "flow": "inconclusive",
+      "id": "critical_inconclusive",
+      "kit": {
+        "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+        "actionVerdict": "ready",
+        "assuranceSummary": {
+          "artifact": {
+            "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+            "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+          },
+          "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+          "mandatoryHotspots": [
+            {
+              "category": "permissions",
+              "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+              "path": null,
+              "reason": "Task risk factor authorization requires review.",
+              "severity": "critical"
+            },
+            {
+              "category": "validation_command_change",
+              "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+              "path": null,
+              "reason": "Task and locked oracle validation commands differ.",
+              "severity": "high"
+            },
+            {
+              "category": "inconclusive_evidence",
+              "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+              "path": null,
+              "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+              "severity": "medium"
+            },
+            {
+              "category": "unmapped_change",
+              "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+              "path": "src/profile.mjs",
+              "reason": "Changed unit is not mapped to an authoritative claim.",
+              "severity": "medium"
+            }
+          ],
+          "reviewDecision": {
+            "decisionHash": null,
+            "reason": "No review decision is recorded.",
+            "required": true,
+            "status": "missing"
+          },
+          "state": "available",
+          "verdict": "inconclusive",
+          "version": "1.0"
+        },
+        "assuranceVerdict": "inconclusive",
+        "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+        "mandatoryHotspots": [
+          {
+            "category": "permissions",
+            "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+            "path": null,
+            "reason": "Task risk factor authorization requires review.",
+            "severity": "critical"
+          },
+          {
+            "category": "validation_command_change",
+            "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+            "path": null,
+            "reason": "Task and locked oracle validation commands differ.",
+            "severity": "high"
+          },
+          {
+            "category": "inconclusive_evidence",
+            "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+            "path": null,
+            "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+            "severity": "medium"
+          },
+          {
+            "category": "unmapped_change",
+            "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+            "path": "src/profile.mjs",
+            "reason": "Changed unit is not mapped to an authoritative claim.",
+            "severity": "medium"
+          }
+        ],
+        "nextCommand": "visp verify --task T001",
+        "protocolVersion": "3.2",
+        "reviewDecision": {
+          "decisionHash": null,
+          "reason": "No review decision is recorded.",
+          "required": true,
+          "status": "missing"
+        },
+        "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+      },
+      "profile": "critical",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": null,
+                "reason": "No review decision is recorded.",
+                "required": true,
+                "status": "missing"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": null,
+              "reason": "No review decision is recorded.",
+              "required": true,
+              "status": "missing"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": null,
+                "reason": "No review decision is recorded.",
+                "required": true,
+                "status": "missing"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": null,
+              "reason": "No review decision is recorded.",
+              "required": true,
+              "status": "missing"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": null,
+                "reason": "No review decision is recorded.",
+                "required": true,
+                "status": "missing"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": null,
+              "reason": "No review decision is recorded.",
+              "required": true,
+              "status": "missing"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": null,
+                "reason": "No review decision is recorded.",
+                "required": true,
+                "status": "missing"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": null,
+              "reason": "No review decision is recorded.",
+              "required": true,
+              "status": "missing"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": null,
+                "reason": "No review decision is recorded.",
+                "required": true,
+                "status": "missing"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": null,
+              "reason": "No review decision is recorded.",
+              "required": true,
+              "status": "missing"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:ed445577a9c06ed1220d8a7f59a8a3b40ca38885320bcef16db98022a364556e",
+            "actionVerdict": "ready",
+            "assuranceSummary": {
+              "artifact": {
+                "contentHash": "sha256:78e7af56fe1d23599ae3c68f07be07dd0d15390a83b225c00fd4f0742eab3675",
+                "path": ".visp/features/001-critical-candidate-evidence/assurance/T001/assurance-case.json"
+              },
+              "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+              "mandatoryHotspots": [
+                {
+                  "category": "permissions",
+                  "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                  "path": null,
+                  "reason": "Task risk factor authorization requires review.",
+                  "severity": "critical"
+                },
+                {
+                  "category": "validation_command_change",
+                  "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                  "path": null,
+                  "reason": "Task and locked oracle validation commands differ.",
+                  "severity": "high"
+                },
+                {
+                  "category": "inconclusive_evidence",
+                  "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                  "path": null,
+                  "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                  "severity": "medium"
+                },
+                {
+                  "category": "unmapped_change",
+                  "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                  "path": "src/profile.mjs",
+                  "reason": "Changed unit is not mapped to an authoritative claim.",
+                  "severity": "medium"
+                }
+              ],
+              "reviewDecision": {
+                "decisionHash": null,
+                "reason": "No review decision is recorded.",
+                "required": true,
+                "status": "missing"
+              },
+              "state": "available",
+              "verdict": "inconclusive",
+              "version": "1.0"
+            },
+            "assuranceVerdict": "inconclusive",
+            "caseHash": "sha256:edce3274a3e7e0b9e853658b27bf5db77b0f4589011ebf2aa095f7126a9ed67d",
+            "mandatoryHotspots": [
+              {
+                "category": "permissions",
+                "id": "HS-00-61493e67cf93703897e0888cd4eff13b362ab5874b6e70129da23f57f696099f",
+                "path": null,
+                "reason": "Task risk factor authorization requires review.",
+                "severity": "critical"
+              },
+              {
+                "category": "validation_command_change",
+                "id": "HS-10-9dda892742a0ca799735ece91a911594053df93a103bfa7996f7dc604daeb6fa",
+                "path": null,
+                "reason": "Task and locked oracle validation commands differ.",
+                "severity": "high"
+              },
+              {
+                "category": "inconclusive_evidence",
+                "id": "HS-20-4cc0ee3b392fc85e087ed9ac0a8a2683497610ad8b532a7dbd3df7b3b0e42925",
+                "path": null,
+                "reason": "Evidence comparison EC-ORACLE-AC001 is inconclusive.",
+                "severity": "medium"
+              },
+              {
+                "category": "unmapped_change",
+                "id": "HS-20-e4e34d3ac69c7420a8646d4d4e5d8a39c026eda59d98928ffd58d967acbcfc6d",
+                "path": "src/profile.mjs",
+                "reason": "Changed unit is not mapped to an authoritative claim.",
+                "severity": "medium"
+              }
+            ],
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "reviewDecision": {
+              "decisionHash": null,
+              "reason": "No review decision is recorded.",
+              "required": true,
+              "status": "missing"
+            },
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9"
+          }
+        }
+      ]
+    }
+  ],
+  "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+  "schemaVersion": "visp.phase-4-compatibility.evidence.v1",
+  "summary": {
+    "compatibilityRowsPassed": 3,
+    "scenariosPassed": 4,
+    "surfacesPassed": 24,
+    "testsPassed": true
+  }
+}

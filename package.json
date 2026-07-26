@@ -25,8 +25,8 @@
   },
   "packageManager": "pnpm@11.3.0",
   "scripts": {
-    "syntax": "node --check src/compatibility-lab.mjs && node --check src/compatibility-matrix.mjs && node --check src/phase-2-compatibility.mjs && node --check src/phase-3-compatibility.mjs && node --check scripts/run-compatibility-lab.mjs && node --check scripts/run-compatibility-matrix.mjs && node --check scripts/run-phase-2-compatibility.mjs && node --check scripts/run-phase-3-compatibility.mjs",
-    "test": "node --test tests/compatibility-lab.test.mjs tests/compatibility-matrix.test.mjs tests/phase-2-compatibility.test.mjs tests/phase-3-compatibility.test.mjs tests/documentation.test.mjs",
+    "syntax": "node --check src/compatibility-lab.mjs && node --check src/compatibility-matrix.mjs && node --check src/phase-2-compatibility.mjs && node --check src/phase-3-compatibility.mjs && node --check src/phase-4-host-examples.mjs && node --check scripts/run-compatibility-lab.mjs && node --check scripts/run-compatibility-matrix.mjs && node --check scripts/run-phase-2-compatibility.mjs && node --check scripts/run-phase-3-compatibility.mjs && node --check scripts/run-phase-4-host-examples.mjs",
+    "test": "node --test tests/compatibility-lab.test.mjs tests/compatibility-matrix.test.mjs tests/phase-2-compatibility.test.mjs tests/phase-3-compatibility.test.mjs tests/phase-4-host-examples.test.mjs tests/documentation.test.mjs",
     "check": "pnpm run syntax && pnpm test",
     "compatibility-lab": "node scripts/run-compatibility-lab.mjs",
     "compatibility-matrix": "node scripts/run-compatibility-matrix.mjs",
@@ -34,6 +34,7 @@
     "compatibility:phase-2": "node scripts/run-phase-2-compatibility.mjs",
     "compatibility:phase-2:verify": "node scripts/run-phase-2-compatibility.mjs --verify",
     "compatibility:phase-3": "node scripts/run-phase-3-compatibility.mjs",
-    "compatibility:phase-3:verify": "node scripts/run-phase-3-compatibility.mjs --verify"
+    "compatibility:phase-3:verify": "node scripts/run-phase-3-compatibility.mjs --verify",
+    "examples:phase-4": "node scripts/run-phase-4-host-examples.mjs"
   }
 }

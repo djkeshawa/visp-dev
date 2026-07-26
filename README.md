@@ -39,6 +39,15 @@ inconclusive. It also exercises the additive 3.1 boundary with the prior Kit
 and Hyper producers. Visp Dev records and compares Kit-authored facts; it does
 not calculate acceptance, decision freshness, or PR readiness.
 
+The Phase 4 host example runner clean-installs a packed Hyper CLI with lifecycle
+scripts disabled, then runs `init`, Git/CI fallback installation, and `doctor`
+for Claude Code, Codex, Copilot, generic, and OpenCode fixtures. Repository mode
+packs installed runtime dependencies into the owned temporary fixture and
+stays offline. Tarball mode requires an explicit offline npm cache snapshot.
+The host fixtures deliberately omit named host binaries so `doctor` must report
+the documented sequential and Git/CI fallback; the generic fixture verifies
+the manual-host path.
+
 See [the exact compatibility and migration report](docs/compatibility.md).
 
 ## Run the laboratory
@@ -69,10 +78,25 @@ node scripts/run-phase-3-compatibility.mjs \
   --output <new-phase-3-report-path>
 
 node scripts/run-phase-3-compatibility.mjs --verify <phase-3-report-path>
+
+node scripts/run-phase-4-host-examples.mjs \
+  --repository ../visp-hyper-agent \
+  --output <new-phase-4-host-report-path>
+
+node scripts/run-phase-4-host-examples.mjs \
+  --tarball <visp-hyper-agent.tgz> \
+  --offline-cache <npm-cache-snapshot> \
+  --output <new-phase-4-host-report-path>
+
+node scripts/run-phase-4-host-examples.mjs --verify <phase-4-host-report-path>
 ```
 
 Use `--row A` through `--row E` only for bounded diagnosis. A selected-row
 debug run is not a complete compatibility report.
+
+The repository-mode Phase 4 command packages the existing `dist/` directory
+without running repository lifecycle scripts. Build Hyper before running it so
+the packed CLI matches the source candidate under review.
 
 ## Contributing and security
 

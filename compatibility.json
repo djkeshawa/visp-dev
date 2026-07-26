@@ -1,4 +1,21 @@
 {
+  "deprecated": [
+    {
+      "name": "visp-kit",
+      "reason": "Predates the enforcement-hole fixes.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "visp-hyper-agent",
+      "reason": "Superseded and unsupported.",
+      "version": "0.2.0"
+    },
+    {
+      "name": "visp-hyper-agent",
+      "reason": "Documents an install path pointing at an unrelated third-party package.",
+      "version": "0.3.0"
+    }
+  ],
   "environment": {
     "architecture": "x64",
     "node": "v24.15.0",

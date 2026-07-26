@@ -90,6 +90,18 @@ export async function buildCompatibility() {
     // all predating this matrix. See docs/release-process.md.
     published: false,
     generatedFrom: "evidence/",
+    // Versions that exist on the registry and must never be used. Recorded here
+    // so tooling can warn rather than relying on a human to remember, and so
+    // doctor can name the specific build a user already has installed.
+    deprecated: [
+      { name: "visp-kit", version: "0.1.0", reason: "Predates the enforcement-hole fixes." },
+      { name: "visp-hyper-agent", version: "0.2.0", reason: "Superseded and unsupported." },
+      {
+        name: "visp-hyper-agent",
+        version: "0.3.0",
+        reason: "Documents an install path pointing at an unrelated third-party package."
+      }
+    ],
     note: "Compatibility is pinned by commit and artifact hash, never by a version range. The same version string can carry different content, and on this project it already does.",
     environment: { operatingSystem: "linux", architecture: "x64", node: "v24.15.0" },
     pairs

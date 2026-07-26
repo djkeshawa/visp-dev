@@ -21,6 +21,9 @@ jobs:
         # usual differences, and both are load-bearing for this repository.
         os: [ubuntu-latest, macos-latest, windows-latest]
         node: [22, 24]
+        # Both managers are exercised because the compatibility harness shells
+        # out to them, and their offline and lockfile behaviour differs.
+        manager: [npm, pnpm]
 
     steps:
       - name: Check out repository
@@ -44,8 +47,26 @@ jobs:
             exit 1
           fi
 
+      - name: Enable pnpm
+        if: matrix.manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+
       - name: Syntax and tests
-        run: npm run check
+        run: ${{ matrix.manager }} run check
+
+      # A clean environment is part of the claim: the harness must not depend on
+      # ambient npm or pnpm configuration that happens to exist on a maintainer's
+      # machine. Running with a scratch HOME is the cheapest way to prove it.
+      - name: Tests in a clean user environment
+        shell: bash
+        env:
+          HOME: ${{ runner.temp }}/clean-home
+          USERPROFILE: ${{ runner.temp }}/clean-home
+        run: |
+          mkdir -p "$HOME"
+          ${{ matrix.manager }} run check
 
       - name: Re-verify committed compatibility evidence
         shell: bash
@@ -53,6 +74,8 @@ jobs:
           npm run compatibility:phase-2:verify evidence/phase-2-packed-linux-x64-node24.json
           npm run compatibility:phase-3:verify evidence/phase-3-packed-linux-x64-node24.json
           npm run compatibility:phase-4:verify evidence/phase-4-pair-linux-x64-node24.json
+          npm run divergence:verify evidence/registry-divergence-linux-x64-node24.json
+          npm run golden-path:verify evidence/golden-path-linux-x64-node24.json
 
       - name: Confirm nothing was published by this run
         shell: bash

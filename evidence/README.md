@@ -15,6 +15,7 @@ It does not grant permission to release, publish, or claim a support window.
 | `phase-3-packed-linux-x64-node24.json` | `pnpm compatibility:phase-3` | Assurance cases and review compression on the Phase 3 pair |
 | `phase-4-host-examples-linux-x64-node24.json` | `pnpm examples:phase-4` | Packed Hyper renders honest host assets for every supported host |
 | `phase-4-pair-linux-x64-node24.json` | `pnpm compatibility:phase-4` | Kit `3a8901b` and Hyper `6185819` agree across three cross-version rows and four golden scenarios on 24 surfaces |
+| `golden-path-linux-x64-node24.json` | `pnpm golden-path` | The full journey against packed binaries, including an out-of-scope change being blocked and corrected |
 | `registry-divergence-linux-x64-node24.json` | `pnpm divergence` | That `visp-hyper-agent@0.3.0` on npm and `0.3.0` in the repository are different content: 20 of 21 shared files differ and 10 files exist only locally |
 
 ## Re-verifying
@@ -35,6 +36,10 @@ pnpm compatibility:phase-4:verify evidence/phase-4-pair-linux-x64-node24.json
 
 ```bash
 pnpm divergence:verify evidence/registry-divergence-linux-x64-node24.json
+```
+
+```bash
+pnpm golden-path:verify evidence/golden-path-linux-x64-node24.json
 ```
 
 Each verifier recomputes the report's `reportSha256` over its canonical content,

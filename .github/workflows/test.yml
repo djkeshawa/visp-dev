@@ -1,0 +1,66 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Do not stop the other legs on the first failure: an OS-specific or
+      # version-specific break is exactly what this matrix exists to surface,
+      # and cancelling hides whether the failure is universal or local.
+      fail-fast: false
+      matrix:
+        # The engines floor and the current LTS, across the three platforms the
+        # compatibility evidence claims. Path handling and line endings are the
+        # usual differences, and both are load-bearing for this repository.
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [22, 24]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # This repository declares no dependencies, so there is nothing to install
+      # and nothing to cache. Verifying that stays true is itself worthwhile: a
+      # dependency appearing here would change what the published artifact
+      # carries.
+      - name: Verify the dependency surface is still empty
+        shell: bash
+        run: |
+          deps=$(node -p "Object.keys(require('./package.json').dependencies || {}).length")
+          if [ "$deps" != "0" ]; then
+            echo "visp-dev declared $deps runtime dependencies; it is meant to have none."
+            exit 1
+          fi
+
+      - name: Syntax and tests
+        run: npm run check
+
+      - name: Re-verify committed compatibility evidence
+        shell: bash
+        run: |
+          npm run compatibility:phase-2:verify evidence/phase-2-packed-linux-x64-node24.json
+          npm run compatibility:phase-3:verify evidence/phase-3-packed-linux-x64-node24.json
+          npm run compatibility:phase-4:verify evidence/phase-4-pair-linux-x64-node24.json
+
+      - name: Confirm nothing was published by this run
+        shell: bash
+        run: |
+          # A build must never be able to publish. This is a cheap standing
+          # assertion that the freeze recorded in docs/release-process.md still
+          # holds in CI.
+          if [ "$(node -p "require('./package.json').private === true")" != "true" ]; then
+            echo "package.json is no longer marked private; publication is gated."
+            exit 1
+          fi

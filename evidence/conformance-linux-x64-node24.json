@@ -1,0 +1,147 @@
+{
+  "candidate": {
+    "artifacts": [
+      {
+        "commit": "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
+        "name": "visp-hyper-agent",
+        "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea",
+        "version": "0.4.0"
+      },
+      {
+        "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
+        "name": "visp-kit",
+        "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c",
+        "version": "0.2.0"
+      }
+    ],
+    "status": "assembled_not_published"
+  },
+  "families": [
+    {
+      "description": "WorkflowAction negotiation and schema-hash agreement across versions",
+      "id": "protocol",
+      "reports": [
+        {
+          "path": "evidence/phase-3-packed-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "29f027f0ee1efdf0147a90fff4ed25ae763a6ccd65cba409f5afb3a4fd67dd83"
+        },
+        {
+          "path": "evidence/phase-4-pair-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "593f49385b22e3775a328cd83e87f159595cde6174c07006de9f43414ded3252"
+        }
+      ],
+      "status": "covered"
+    },
+    {
+      "description": "Evidence validity: freshness, independence, and fail-closed behaviour",
+      "id": "evidence",
+      "reports": [
+        {
+          "path": "evidence/phase-2-packed-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "e34a3e4f02b060a0b4ce1d896f44c73d720a39391a2294319365af589ac1d5a0"
+        }
+      ],
+      "status": "covered"
+    },
+    {
+      "description": "Assurance cases, ranked hotspots, and bound human review decisions",
+      "id": "assurance",
+      "reports": [
+        {
+          "path": "evidence/phase-3-packed-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "29f027f0ee1efdf0147a90fff4ed25ae763a6ccd65cba409f5afb3a4fd67dd83"
+        },
+        {
+          "path": "evidence/golden-path-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "82c3424d1eb20c2423812e268dd4d2478c9fcf3cb3f454e4b90755f623d547d0"
+        }
+      ],
+      "status": "covered"
+    },
+    {
+      "description": "Host capability manifests and rendered assets per supported host",
+      "id": "host",
+      "reports": [
+        {
+          "path": "evidence/phase-4-host-examples-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "e2695e37cd1d18a3a1c6a24f9177633ebcebfb311eff91395f152d6ed0344d53"
+        }
+      ],
+      "status": "covered"
+    },
+    {
+      "description": "Out-of-scope changes are blocked and correction is possible",
+      "id": "scope",
+      "reports": [
+        {
+          "path": "evidence/golden-path-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "82c3424d1eb20c2423812e268dd4d2478c9fcf3cb3f454e4b90755f623d547d0"
+        }
+      ],
+      "status": "covered"
+    },
+    {
+      "description": "Artifacts identified by commit and hash; published versions are immutable",
+      "id": "release_identity",
+      "reports": [
+        {
+          "path": "evidence/registry-divergence-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "04112dc6ed2c637e093d843bb59100c06e1eb57d10bdadb320e7fb3ba65d5d45"
+        },
+        {
+          "path": "evidence/release-candidate-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "fa1f4a5f0680d36404eee93728bf344f24dabd46a63f0cff7ba75b08a16ce4d4"
+        }
+      ],
+      "status": "covered"
+    },
+    {
+      "description": "Git and CI hook enforcement remains authoritative when native hooks exist",
+      "id": "hook",
+      "reports": [],
+      "status": "no_evidence"
+    },
+    {
+      "description": "Packed installation verified on macOS and Windows, not only Linux",
+      "id": "operating_system",
+      "reports": [],
+      "status": "no_evidence"
+    },
+    {
+      "description": "Path traversal, command injection, and package-allowlist fixtures against packed binaries",
+      "id": "security",
+      "reports": [],
+      "status": "no_evidence"
+    },
+    {
+      "description": "Missing binary, unsupported host version, corrupted artifact, and interrupted run",
+      "id": "failure_mode",
+      "reports": [],
+      "status": "no_evidence"
+    }
+  ],
+  "note": "Families are declared independently of the evidence that happens to exist, so a gap reports as a gap.",
+  "reportSha256": "70214ddde4adaa10563100014dbb789086e97cd28808781a188af594e99ac21a",
+  "schemaVersion": "visp.conformance.v1",
+  "summary": {
+    "covered": 6,
+    "gapIds": [
+      "failure_mode",
+      "hook",
+      "operating_system",
+      "security"
+    ],
+    "gaps": 4,
+    "required": 10
+  },
+  "verdict": "partial"
+}

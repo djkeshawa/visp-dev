@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    {
+      "byteIdenticalOnRepack": true,
+      "commit": "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
+      "name": "visp-hyper-agent",
+      "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea",
+      "tree": "6e39c12b762398a5c1bbcbc8a2c836ace5f8d6d5",
+      "version": "0.4.0"
+    },
+    {
+      "byteIdenticalOnRepack": true,
+      "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
+      "name": "visp-kit",
+      "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c",
+      "tree": "44a5e805f53c48ad64422c1ebb9261487392bb58",
+      "version": "0.2.0"
+    }
+  ],
+  "environment": {
+    "architecture": "x64",
+    "node": "v24.15.0",
+    "operatingSystem": "linux"
+  },
+  "knownLimitations": [
+    "No supported release is published. visp-kit@0.1.0 and visp-hyper-agent@0.2.0/0.3.0 are deprecated and predate this candidate.",
+    "Compatibility is exact-pair only, pinned by commit and artifact hash. No version range is supported.",
+    "Committed evidence was produced on Linux x64 with Node 24. The CI matrix covers macOS and Windows; the evidence reports do not.",
+    "Assurance verdicts are inconclusive because oracle-result mapping is incomplete. inconclusive is never a pass.",
+    "No performance or review-efficiency claim is made; the Phase 6 evaluation gates have not run.",
+    "Dogfooding covers one real repository across three runs. That is real use, not a broad sample."
+  ],
+  "note": "A release candidate. Nothing here has been published, and this tool has no registry write path.",
+  "publicationPreconditions": [
+    "The D-069 publication freeze is lifted by an explicit recorded decision.",
+    "Every artifact SHA-256 above is re-verified immediately before upload.",
+    "The disposition of the already-published deprecated versions is executed.",
+    "An SBOM exists for each artifact."
+  ],
+  "reportSha256": "fa1f4a5f0680d36404eee93728bf344f24dabd46a63f0cff7ba75b08a16ce4d4",
+  "schemaVersion": "visp.release-candidate.v1",
+  "status": "assembled_not_published"
+}

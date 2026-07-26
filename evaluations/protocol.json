@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "visp.evaluation-protocol.v1",
+  "version": "1.0",
+  "frozen": "2026-07-27",
+  "preregistered": false,
+  "preregistrationNote": "Preregistration means publishing a timestamped copy. The D-069 freeze forbids publication, so this protocol is frozen but not preregistered, and no study run under it may be cited publicly until it is.",
+  "claimCeiling": "No claim about correctness, defect rate, review time, or productivity may be made until a study under this protocol meets its threshold.",
+  "hypotheses": [
+    { "id": "H1", "statement": "Visp reduces AI-authored changes reaching review with unmet declared scope.", "primaryMetric": "out_of_scope_files_per_accepted_change", "direction": "reduction", "threshold": { "relativeReduction": 0.3, "confidenceIntervalExcludesZero": true } },
+    { "id": "H2", "statement": "Visp reduces changes accepted on evidence that does not test the change.", "primaryMetric": "implementer_authored_passing_without_change_rate", "direction": "reduction", "threshold": { "relativeReduction": 0.3, "confidenceIntervalExcludesZero": true } },
+    { "id": "H3", "statement": "Visp does not materially increase time-to-merge for routine changes.", "primaryMetric": "median_task_to_decision_minutes_routine", "direction": "non_inferiority", "threshold": { "maxMedianIncrease": 0.2 } },
+    { "id": "H4", "statement": "Assurance-case reviewers match full-diff reviewers with less active review time.", "primaryMetric": "decision_agreement_and_active_review_minutes", "direction": "equivalence_plus_reduction", "threshold": { "minAgreement": 0.9, "minTimeReduction": 0.2 } }
+  ],
+  "exclusions": {
+    "permitted": ["harness_crash", "environment_misconfiguration", "provider_infrastructure_error", "ambiguous_task_in_both_arms", "participant_withdrawal"],
+    "forbidden": ["poor_model_performance", "analyst_disagrees_with_a_block", "inconvenient_result"],
+    "maxExclusionRate": 0.1
+  },
+  "failureCategories": ["true_block", "false_block", "true_pass", "false_pass", "inconclusive"],
+  "analysis": {
+    "design": "paired_counterbalanced",
+    "multiplicityCorrection": "holm_bonferroni",
+    "optionalStopping": false,
+    "effectSizeRequired": true,
+    "analysisCodeWrittenBeforeData": true
+  },
+  "publicationConditions": [
+    "primary_metric_met_threshold",
+    "effect_size_practically_meaningful",
+    "false_block_rate_at_or_below_0.05",
+    "raw_artifacts_published",
+    "negative_and_null_results_published_equally"
+  ],
+  "cannotEstablish": [
+    "generalisation_beyond_the_task_set",
+    "long_run_maintenance_effects",
+    "causal_attribution_to_a_single_mechanism",
+    "anything_about_model_quality"
+  ]
+}

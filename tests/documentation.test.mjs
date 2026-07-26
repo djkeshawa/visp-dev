@@ -58,3 +58,28 @@ test("published Phase 4 evidence names the exact corrected-Kit pair", async () =
   assert.match(report, /all three rows negotiated 3\.2/iu);
   assert.match(report, /exact-pair\s+evidence\s+and\s+does\s+not\s+establish\s+a\s+package-version\s+support\s+window/u);
 });
+
+test("the README is outcome-first and states its limitations honestly", async () => {
+  const readme = await readFile(new URL("../README.md", import.meta.url), "utf8");
+  const heading = (name) => readme.indexOf(`## ${name}`);
+
+  // User value before internal architecture. A reader deciding whether this
+  // solves their problem should not have to read the design first.
+  assert.ok(heading("The problem") > 0, "missing problem statement");
+  assert.ok(heading("Five-minute start") > heading("The problem"));
+  assert.ok(heading("Limitations") > heading("Five-minute start"));
+  assert.ok(
+    heading("How it works") > heading("Limitations"),
+    "architecture must come after user value"
+  );
+
+  // The limitations that would mislead a reader if omitted.
+  assert.match(readme, /deprecated/u);
+  assert.match(readme, /exact-pair/u);
+  assert.match(readme, /inconclusive/u);
+  assert.match(readme, /No performance or review-efficiency claim/u);
+
+  // Never point a reader at an install path while nothing supported is published.
+  assert.doesNotMatch(readme, /npm i(nstall)? -g visp-kit/u);
+  assert.doesNotMatch(readme, /npx visp-dev/u);
+});

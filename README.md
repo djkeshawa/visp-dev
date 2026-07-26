@@ -1,13 +1,82 @@
 # Visp Dev
 
-Visp Dev is the thin public integration and product shell for compatible Visp
-Kit, Visp Hyper Agent, and optional Visp Memory releases.
+## The problem
 
-The current implementation is a dependency-free compatibility laboratory. It
-packs exact Kit and Hyper commits twice, installs the tarballs into clean
-offline fixtures with lifecycle scripts disabled, exercises the public
-binaries, and emits deterministic machine evidence for protocol compatibility,
-evidence profiles, and golden assurance-review flows.
+An AI coding agent will happily tell you it is done. It writes the code, runs
+the tests it just wrote, and reports success. What it cannot tell you is whether
+the change was in scope, whether the evidence proves anything, or whether the
+tests were strong enough to have failed.
+
+Visp makes that reviewable. Kit decides what is allowed and what counts as
+proof; Hyper renders it for your coding host; Visp Dev is the thin shell that
+gets you a compatible setup and tells you the exact next command.
+
+Visp Dev decides nothing. It holds no workflow state and computes no evidence.
+If it ever starts to, it has become a second engine and the boundary has failed.
+
+## Five-minute start
+
+**Nothing is installable yet.** No supported release is published — see
+[Limitations](#limitations) — so the honest version of this section is: build
+the pinned pair from source.
+
+```bash
+node scripts/visp-dev.mjs doctor     # what you have, what is missing, what to run
+node scripts/visp-dev.mjs versions   # the supported pairs, pinned by commit
+node scripts/visp-dev.mjs init       # the exact steps for this project
+```
+
+`doctor` will tell you if you already have a **deprecated** Visp on your PATH,
+which matters more than it sounds: `visp-kit@0.1.0` predates the fixes that
+close four policy-bypass holes.
+
+Once Kit and Hyper are built and on your PATH, the workflow is Kit's, not ours:
+
+```bash
+visp init .
+visp scan .
+visp next .
+```
+
+## Supported hosts
+
+Hyper renders for Codex, Claude Code, Copilot, OpenCode, and a generic MCP
+target, driven by versioned capability manifests rather than assumptions. A host
+that lacks a capability gets honest sequential or Git/CI fallback guidance
+instead of a broken integration.
+
+## Assurance levels
+
+| Level | Meaning |
+|---|---|
+| `kit_strict` | Kit is present and authoritative. Permission, scope, evidence sufficiency, and readiness are its verdicts. |
+| `local_checked` | Kit-less fallback. Local checks ran, but nothing here is an authoritative verdict. |
+| `advisory` | Guidance only. No claim about correctness. |
+
+A `passed` verdict means the declared evidence satisfied the declared
+requirement. It does not mean the change is correct, and Visp does not claim it
+does. `inconclusive` never becomes a pass.
+
+## Limitations
+
+Stated plainly, because a compatibility product that oversells is worse than
+none.
+
+- **No supported release exists.** The only Visp versions on npm are
+  `visp-kit@0.1.0` and `visp-hyper-agent@0.2.0`/`0.3.0`, all **deprecated** and
+  all predating the current compatibility matrix. Do not install them.
+- **Compatibility is exact-pair only.** Every claim is pinned to a commit and an
+  artifact hash. No version range is supported, because a version string is not
+  an identity — `visp-hyper-agent@0.3.0` on npm and `0.3.0` in this workspace
+  share 21 files of which 20 differ.
+- **Evidence is Linux x64, Node 24.** The CI matrix covers macOS and Windows,
+  but the committed evidence reports were produced on Linux.
+- **Assurance verdicts are currently `inconclusive`.** Oracle-result mapping is
+  incomplete, so the honest verdict is not `passed`.
+- **No performance or review-efficiency claim is made.** Those need the Phase 6
+  evaluation gates, which have not run.
+
+## How it works
 
 ## Current responsibility
 

@@ -10,6 +10,8 @@
  *   - **F-D4** (`994e46e`) — traceability failures print the exact repair.
  *   - **Override visibility** (`77d1317`) — an override with no expiry is
  *     counted and named.
+ *   - **Assurance delta** (`27b49bf`) — a stale review decision reports what
+ *     moved, not only that something did.
  *
  * Each changes behaviour on damaged, incomplete, or unusual input, which is
  * exactly the kind of change that can break a host relying on the old silence.
@@ -92,8 +94,8 @@ export const PHASE_6_COMPATIBILITY_DEFINITION = deepFreeze({
       tree: "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
     },
     kitFixed: {
-      commit: "77d1317a197752cd32567f0e856c0fa8abc942cb",
-      tree: "9b5bae38de6a6ef96ee7b7290e52b3931a2eef3f"
+      commit: "27b49bf90798cd3be48ff6e7b97146eb982be878",
+      tree: "f2f348402a920a8b55ba0cf1cdf256aa5cfa7976"
     },
     kitPrevious: {
       commit: "19d5ffb3276e52462a945c66043f48e31cd6b38f",

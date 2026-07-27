@@ -147,11 +147,11 @@
       "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea"
     },
     "kit": {
-      "commit": "77d1317a197752cd32567f0e856c0fa8abc942cb",
-      "tarballSha256": "d3e71c089905fc7982db9a1f808168dabe68235f04170ca7fa38f9632c53463c"
+      "commit": "27b49bf90798cd3be48ff6e7b97146eb982be878",
+      "tarballSha256": "2fc3468e46b4f20e523ac5d7e2f1d6c2dfee7b7dfb7021b9fd29211ba58dc658"
     }
   },
-  "reportSha256": "bf6a1029de763f83631124f4464ce10780ff805d8062d7ad3b126c4ec3afb7d2",
+  "reportSha256": "6c2cdf7586e53f073f73a1ba3a3dc4f719e2e63d45833ba29a74d56899310ac6",
   "schemaVersion": "visp.conformance-fixtures.v1",
   "summary": {
     "failed": 0,

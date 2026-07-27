@@ -76,7 +76,7 @@ test("the pinned pair names the Kit carrying every correction since the baseline
   // whether that gap matters; this assertion is what makes the gap visible.
   assert.equal(
     committed.packages.kitFixed.commit,
-    "77d1317a197752cd32567f0e856c0fa8abc942cb"
+    "27b49bf90798cd3be48ff6e7b97146eb982be878"
   );
   assert.equal(
     committed.packages.kitPrevious.commit,

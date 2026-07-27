@@ -70,12 +70,13 @@ test("a report whose packages drift from the frozen pair is rejected", () => {
   assert.throws(() => verifyPhase6CompatibilityReport(drifted), /hash does not match/u);
 });
 
-test("the pinned pair names the Kit carrying the fail-closed corrections", () => {
+test("the pinned pair names the Kit carrying every correction since the baseline", () => {
   // If Kit moves again, this is what notices the evidence describes an older
-  // Kit than the repository holds.
+  // Kit than the repository holds. `evidence:currency` is the tool that says
+  // whether that gap matters; this assertion is what makes the gap visible.
   assert.equal(
     committed.packages.kitFixed.commit,
-    "2fd30d38125ebcbf4816bb46287970ede866fa87"
+    "77d1317a197752cd32567f0e856c0fa8abc942cb"
   );
   assert.equal(
     committed.packages.kitPrevious.commit,

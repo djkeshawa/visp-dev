@@ -1,16 +1,28 @@
 /**
  * Phase 6 pins the pair that Phase 4's frozen evidence cannot describe.
  *
- * Kit advanced past the Phase 4 and Phase 5 baselines with the F-C1 and F-C2
- * fail-closed corrections (Kit `2fd30d3`): `visp next` now refuses to advise
- * from a core state artifact it could not parse, and `doctor` reports a deleted
- * required artifact as loudly as a corrupted one.
+ * Kit advanced past the Phase 4 and Phase 5 baselines through three changes,
+ * all of which alter what Kit says without altering what it speaks:
  *
- * Those corrections change what Kit does on damaged input, which is exactly the
- * kind of change that can break a host that depended on the old silence. Kit's
- * schemas and integration surface were untouched across the range, so every row
- * here expects the unchanged WorkflowAction 3.2 schema hash. Proving that is
- * the point: a fail-closed correction must be additive at the wire contract.
+ *   - **F-C1 and F-C2** (`2fd30d3`) — `visp next` refuses to advise from a core
+ *     state artifact it could not parse, and `doctor` reports a deleted required
+ *     artifact as loudly as a corrupted one.
+ *   - **F-D4** (`994e46e`) — traceability failures print the exact repair.
+ *   - **Override visibility** (`77d1317`) — an override with no expiry is
+ *     counted and named.
+ *
+ * Each changes behaviour on damaged, incomplete, or unusual input, which is
+ * exactly the kind of change that can break a host relying on the old silence.
+ * `schemas/` and `src/integration/` are untouched across the whole range, so
+ * every row expects the unchanged WorkflowAction 3.2 schema hash. Proving that
+ * is the point: corrections of this kind must be additive at the wire contract.
+ *
+ * The pin was moved here deliberately rather than left at `2fd30d3`. Two of the
+ * three changes landed after that commit and the evidence-currency check
+ * classified them as material, meaning they can change observable behaviour.
+ * Leaving the pin would have kept evidence that no longer described the Kit in
+ * the tree. This is not chasing HEAD — it is re-establishing proof after a
+ * change the tooling flagged as capable of invalidating it.
  *
  * The differential row is the one that matters. It asserts that the corrected
  * Kit and the previous Kit produce **identical** action views on a healthy
@@ -80,8 +92,8 @@ export const PHASE_6_COMPATIBILITY_DEFINITION = deepFreeze({
       tree: "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
     },
     kitFixed: {
-      commit: "2fd30d38125ebcbf4816bb46287970ede866fa87",
-      tree: "1d7ebedc339a3959e4e9a1fe69a014833d849db8"
+      commit: "77d1317a197752cd32567f0e856c0fa8abc942cb",
+      tree: "9b5bae38de6a6ef96ee7b7290e52b3931a2eef3f"
     },
     kitPrevious: {
       commit: "19d5ffb3276e52462a945c66043f48e31cd6b38f",

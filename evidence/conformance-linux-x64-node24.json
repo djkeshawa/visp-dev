@@ -20,6 +20,7 @@
     {
       "description": "WorkflowAction negotiation and schema-hash agreement across versions",
       "id": "protocol",
+      "knownDefects": [],
       "reports": [
         {
           "path": "evidence/phase-3-packed-linux-x64-node24.json",
@@ -37,6 +38,7 @@
     {
       "description": "Evidence validity: freshness, independence, and fail-closed behaviour",
       "id": "evidence",
+      "knownDefects": [],
       "reports": [
         {
           "path": "evidence/phase-2-packed-linux-x64-node24.json",
@@ -49,6 +51,7 @@
     {
       "description": "Assurance cases, ranked hotspots, and bound human review decisions",
       "id": "assurance",
+      "knownDefects": [],
       "reports": [
         {
           "path": "evidence/phase-3-packed-linux-x64-node24.json",
@@ -66,6 +69,7 @@
     {
       "description": "Host capability manifests and rendered assets per supported host",
       "id": "host",
+      "knownDefects": [],
       "reports": [
         {
           "path": "evidence/phase-4-host-examples-linux-x64-node24.json",
@@ -78,6 +82,7 @@
     {
       "description": "Out-of-scope changes are blocked and correction is possible",
       "id": "scope",
+      "knownDefects": [],
       "reports": [
         {
           "path": "evidence/golden-path-linux-x64-node24.json",
@@ -90,6 +95,7 @@
     {
       "description": "Artifacts identified by commit and hash; published versions are immutable",
       "id": "release_identity",
+      "knownDefects": [],
       "reports": [
         {
           "path": "evidence/registry-divergence-linux-x64-node24.json",
@@ -107,41 +113,84 @@
     {
       "description": "Git and CI hook enforcement remains authoritative when native hooks exist",
       "id": "hook",
-      "reports": [],
-      "status": "no_evidence"
+      "knownDefects": [],
+      "reports": [
+        {
+          "path": "evidence/conformance-fixtures-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "a793d4f57d9d057beeb20fa30a1ae0ed06abc4018d4b584c31cfb1edd487ba6d"
+        }
+      ],
+      "status": "covered"
     },
     {
       "description": "Packed installation verified on macOS and Windows, not only Linux",
       "id": "operating_system",
-      "reports": [],
-      "status": "no_evidence"
+      "knownDefects": [],
+      "reports": [
+        {
+          "path": "evidence/conformance-fixtures-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "a793d4f57d9d057beeb20fa30a1ae0ed06abc4018d4b584c31cfb1edd487ba6d"
+        },
+        {
+          "path": "evidence/conformance-fixtures-darwin-arm64-node24.json",
+          "present": false,
+          "reportSha256": null
+        },
+        {
+          "path": "evidence/conformance-fixtures-win32-x64-node24.json",
+          "present": false,
+          "reportSha256": null
+        }
+      ],
+      "status": "evidence_missing"
     },
     {
       "description": "Path traversal, command injection, and package-allowlist fixtures against packed binaries",
       "id": "security",
-      "reports": [],
-      "status": "no_evidence"
+      "knownDefects": [],
+      "reports": [
+        {
+          "path": "evidence/conformance-fixtures-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "a793d4f57d9d057beeb20fa30a1ae0ed06abc4018d4b584c31cfb1edd487ba6d"
+        }
+      ],
+      "status": "covered"
     },
     {
       "description": "Missing binary, unsupported host version, corrupted artifact, and interrupted run",
       "id": "failure_mode",
-      "reports": [],
-      "status": "no_evidence"
+      "knownDefects": [
+        "corrupted_artifact_detected_by_next",
+        "interrupted_run_recovers"
+      ],
+      "reports": [
+        {
+          "path": "evidence/conformance-fixtures-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "a793d4f57d9d057beeb20fa30a1ae0ed06abc4018d4b584c31cfb1edd487ba6d"
+        }
+      ],
+      "status": "covered"
     }
   ],
   "note": "Families are declared independently of the evidence that happens to exist, so a gap reports as a gap.",
-  "reportSha256": "70214ddde4adaa10563100014dbb789086e97cd28808781a188af594e99ac21a",
+  "reportSha256": "b54c6b04931eed37f3b4e1be7b32039864842c647a026d8616a8b0d749c78924",
   "schemaVersion": "visp.conformance.v1",
   "summary": {
-    "covered": 6,
+    "covered": 9,
     "gapIds": [
-      "failure_mode",
-      "hook",
-      "operating_system",
-      "security"
+      "operating_system"
     ],
-    "gaps": 4,
+    "gaps": 1,
+    "knownDefects": [
+      "corrupted_artifact_detected_by_next",
+      "interrupted_run_recovers"
+    ],
     "required": 10
   },
   "verdict": "partial"
 }
+

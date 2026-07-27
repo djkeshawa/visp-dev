@@ -1,0 +1,169 @@
+{
+  "environment": {
+    "architecture": "x64",
+    "node": "v24.15.0",
+    "operatingSystem": "linux"
+  },
+  "familiesCovered": [
+    "failure_mode",
+    "hook",
+    "security"
+  ],
+  "fixtures": [
+    {
+      "family": "hook",
+      "id": "ci_workflow_generated",
+      "observed": {
+        "exitCode": 0,
+        "invokesVisp": [
+          "visp-evidence.yml"
+        ],
+        "workflowsWritten": [
+          "visp-evidence.yml"
+        ]
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "command_injection_inert",
+      "observed": {
+        "canaryExecuted": false,
+        "exitCode": 0,
+        "note": "Metacharacters were treated as literal text."
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "corrupted_artifact_detected_by_doctor",
+      "observed": {
+        "detected": true,
+        "exitCode": 1
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "corrupted_artifact_detected_by_next",
+      "observed": {
+        "detected": false,
+        "exitCode": 0,
+        "note": "next emits the same guidance whether the status artifact is valid or corrupt. Confirmed not a privilege escalation: gates read evidence artifacts, not this breadcrumb. It is a robustness defect — next advises confidently from state it could not read.",
+        "outputIdenticalToHealthyProject": true
+      },
+      "status": "known_defect"
+    },
+    {
+      "family": "hook",
+      "id": "git_hook_installed",
+      "observed": {
+        "exitCode": 0,
+        "hookWritten": true,
+        "referencesVisp": true
+      },
+      "status": "pass"
+    },
+    {
+      "family": "hook",
+      "id": "git_hook_refuses_to_clobber",
+      "observed": {
+        "exitCode": 0,
+        "nativeHookPreserved": true,
+        "note": "An existing native hook is preserved or the operator is warned.",
+        "warnedBeforeReplacing": true
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "interrupted_run_recovers",
+      "observed": {
+        "corruptedExitCode": 1,
+        "corruptionNoticed": true,
+        "deletedExitCode": 0,
+        "deletionNoticed": false,
+        "note": "Corrupting the run index is reported; deleting it is not. Missing artifacts are treated as not-applicable while invalid ones are errors, so an interrupted run — which leaves files missing rather than malformed — passes doctor."
+      },
+      "status": "known_defect"
+    },
+    {
+      "family": "failure_mode",
+      "id": "missing_binary_reports_honestly",
+      "observed": {
+        "exitCode": 1,
+        "leakedStackTrace": false,
+        "namesTheMissingDependency": true
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "no_credential_material_packed",
+      "observed": {
+        "matches": [],
+        "patternsChecked": 7
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "package_allowlist_honoured",
+      "observed": {
+        "entryCount": 48,
+        "topLevelEntries": [
+          "AGENTS.md",
+          "LICENSE",
+          "NOTICE",
+          "README.md",
+          "SECURITY.md",
+          "TRADEMARKS.md",
+          "dist",
+          "docs",
+          "examples",
+          "package.json",
+          "schemas",
+          "scripts"
+        ],
+        "unexpectedEntries": []
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "path_traversal_refused",
+      "observed": {
+        "exitCode": 1,
+        "note": "A traversal target is refused rather than inspected.",
+        "refused": true
+      },
+      "status": "pass"
+    }
+  ],
+  "note": "Fixtures run against packed, installed binaries. A fixture that observes a defect reports known_defect, never pass.",
+  "packages": {
+    "hyper": {
+      "commit": "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
+      "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea"
+    },
+    "kit": {
+      "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
+      "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c"
+    }
+  },
+  "reportSha256": "a793d4f57d9d057beeb20fa30a1ae0ed06abc4018d4b584c31cfb1edd487ba6d",
+  "schemaVersion": "visp.conformance-fixtures.v1",
+  "summary": {
+    "failed": 0,
+    "failedIds": [],
+    "knownDefectIds": [
+      "corrupted_artifact_detected_by_next",
+      "interrupted_run_recovers"
+    ],
+    "knownDefects": 2,
+    "passed": 9,
+    "ran": 11,
+    "required": 11
+  }
+}
+

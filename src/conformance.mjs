@@ -58,22 +58,30 @@ export const REQUIRED_FAMILIES = [
   {
     id: "hook",
     description: "Git and CI hook enforcement remains authoritative when native hooks exist",
-    evidence: []
+    evidence: ["evidence/conformance-fixtures-linux-x64-node24.json"]
   },
   {
     id: "operating_system",
     description: "Packed installation verified on macOS and Windows, not only Linux",
-    evidence: []
+    // The Linux report exists; the other two are produced by the CI matrix and
+    // are listed here so their absence reports as a gap rather than as silence.
+    // This family cannot be closed from a Linux workstation, and pretending
+    // otherwise is the failure mode this whole module is built to avoid.
+    evidence: [
+      "evidence/conformance-fixtures-linux-x64-node24.json",
+      "evidence/conformance-fixtures-darwin-arm64-node24.json",
+      "evidence/conformance-fixtures-win32-x64-node24.json"
+    ]
   },
   {
     id: "security",
     description: "Path traversal, command injection, and package-allowlist fixtures against packed binaries",
-    evidence: []
+    evidence: ["evidence/conformance-fixtures-linux-x64-node24.json"]
   },
   {
     id: "failure_mode",
     description: "Missing binary, unsupported host version, corrupted artifact, and interrupted run",
-    evidence: []
+    evidence: ["evidence/conformance-fixtures-linux-x64-node24.json"]
   }
 ];
 
@@ -106,10 +114,26 @@ export async function runConformance() {
 
     const covered = family.evidence.length > 0 && reports.every((entry) => entry.present);
 
+    // Coverage is not health. A family can be fully evidenced and still have
+    // recorded defects, and a report that showed only "covered" would hide
+    // exactly the findings the evidence was gathered to expose.
+    const knownDefects = [];
+
+    for (const relative of family.evidence) {
+      const report = await loadReport(relative);
+
+      for (const entry of report?.fixtures ?? []) {
+        if (entry.status === "known_defect" && entry.family === family.id) {
+          knownDefects.push(entry.id);
+        }
+      }
+    }
+
     families.push({
       id: family.id,
       description: family.description,
       status: family.evidence.length === 0 ? "no_evidence" : covered ? "covered" : "evidence_missing",
+      knownDefects: knownDefects.sort(),
       reports
     });
   }
@@ -137,7 +161,8 @@ export async function runConformance() {
       required: families.length,
       covered: covered.length,
       gaps: gaps.length,
-      gapIds: gaps.map((family) => family.id).sort()
+      gapIds: gaps.map((family) => family.id).sort(),
+      knownDefects: [...new Set(families.flatMap((family) => family.knownDefects))].sort()
     },
     // Conformance is not "everything passed". It is "these families are proven
     // and these are not", which is the only version a reader can act on.

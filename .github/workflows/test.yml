@@ -77,6 +77,35 @@ jobs:
           npm run divergence:verify evidence/registry-divergence-linux-x64-node24.json
           npm run golden-path:verify evidence/golden-path-linux-x64-node24.json
 
+      # The operating_system conformance family cannot be closed from a Linux
+      # workstation. These legs are the only place macOS and Windows evidence
+      # can come from, so the report is produced here and uploaded rather than
+      # asserted locally.
+      - name: Produce conformance fixture evidence for this platform
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        shell: bash
+        continue-on-error: true
+        run: |
+          kit_commit=$(git -C ../visp-kit rev-parse HEAD 2>/dev/null || echo "")
+          if [ -z "$kit_commit" ]; then
+            echo "Kit and Hyper repositories are private and not checked out here."
+            echo "This leg records that the fixture harness is wired; evidence"
+            echo "for ${{ matrix.os }} requires access to both engine repositories."
+            exit 0
+          fi
+          node scripts/run-conformance-fixtures.mjs \
+            --kit-repository ../visp-kit --hyper-repository ../visp-hyper-agent \
+            --package-manager pnpm --npm npm \
+            --output "evidence/conformance-fixtures-$(node -p 'process.platform')-$(node -p 'process.arch')-node24.json"
+
+      - name: Upload platform conformance evidence
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        uses: actions/upload-artifact@v4
+        with:
+          name: conformance-fixtures-${{ matrix.os }}
+          path: evidence/conformance-fixtures-*.json
+          if-no-files-found: ignore
+
       - name: Confirm nothing was published by this run
         shell: bash
         run: |

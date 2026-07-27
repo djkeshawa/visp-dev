@@ -19,14 +19,40 @@ test("required families are declared independently of the evidence that exists",
   // construction and the report would always read complete.
   const declared = REQUIRED_FAMILIES.map((family) => family.id);
   for (const id of ["hook", "operating_system", "security", "failure_mode"]) {
-    assert.ok(declared.includes(id), `${id} must be required even though it has no evidence`);
+    assert.ok(declared.includes(id), `${id} must be required independently of its evidence`);
   }
+
+  // The operating_system family names macOS and Windows reports that do not
+  // exist yet. Removing them would close the gap on paper without running a
+  // single fixture on either platform.
+  const operatingSystem = REQUIRED_FAMILIES.find((family) => family.id === "operating_system");
+
+  assert.ok(operatingSystem.evidence.some((entry) => entry.includes("darwin")));
+  assert.ok(operatingSystem.evidence.some((entry) => entry.includes("win32")));
 });
 
 test("the verdict is partial while families remain unproven", () => {
   assert.equal(committed.verdict, "partial");
   assert.ok(committed.summary.gaps > 0);
-  assert.deepEqual(committed.summary.gapIds, ["failure_mode", "hook", "operating_system", "security"]);
+  // hook, security, and failure_mode closed once fixtures ran against packed
+  // binaries. operating_system cannot close from a Linux workstation: it needs
+  // macOS and Windows reports, which only the CI matrix can produce.
+  assert.deepEqual(committed.summary.gapIds, ["operating_system"]);
+});
+
+test("coverage does not conceal the defects the evidence recorded", () => {
+  // A family can be fully evidenced and still unhealthy. If this ever reads
+  // clean, it is because the defects were fixed or because the report stopped
+  // reporting them, and the two must not be confusable.
+  assert.deepEqual(committed.summary.knownDefects, [
+    "corrupted_artifact_detected_by_next",
+    "interrupted_run_recovers"
+  ]);
+
+  const failureMode = committed.families.find((family) => family.id === "failure_mode");
+
+  assert.equal(failureMode.status, "covered");
+  assert.ok(failureMode.knownDefects.length > 0, "covered must not imply defect-free");
 });
 
 test("a report claiming completeness while listing gaps is rejected", () => {

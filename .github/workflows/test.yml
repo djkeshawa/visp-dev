@@ -80,6 +80,20 @@ jobs:
           npm run conformance:verify
           npm run conformance:fixtures:verify evidence/conformance-fixtures-linux-x64-node24.json
 
+      # Standing check that the frozen pairs still describe the engine
+      # repositories. Exits non-zero only when the gap reaches the wire schema
+      # or integration surface, so documentation churn does not fail the build.
+      - name: Measure how far the frozen pair lags the engine repositories
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        shell: bash
+        continue-on-error: true
+        run: |
+          if [ -d ../visp-kit ]; then
+            npm run evidence:currency
+          else
+            echo "Engine repositories are private and not checked out here."
+          fi
+
       # The operating_system conformance family cannot be closed from a Linux
       # workstation. These legs are the only place macOS and Windows evidence
       # can come from, so the report is produced here and uploaded rather than

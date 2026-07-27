@@ -76,6 +76,8 @@ jobs:
           npm run compatibility:phase-4:verify evidence/phase-4-pair-linux-x64-node24.json
           npm run divergence:verify evidence/registry-divergence-linux-x64-node24.json
           npm run golden-path:verify evidence/golden-path-linux-x64-node24.json
+          npm run conformance:verify
+          npm run conformance:fixtures:verify evidence/conformance-fixtures-linux-x64-node24.json
 
       # The operating_system conformance family cannot be closed from a Linux
       # workstation. These legs are the only place macOS and Windows evidence

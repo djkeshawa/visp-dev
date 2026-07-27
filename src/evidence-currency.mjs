@@ -26,7 +26,15 @@ export const CRITICAL_PATHS = [
   { prefix: "src/gates/", reason: "gate decisions", severity: "material" },
   { prefix: "src/policy/", reason: "policy resolution", severity: "material" },
   { prefix: "src/workflows/", reason: "workflow behaviour", severity: "material" },
-  { prefix: "src/validators/", reason: "artifact validation", severity: "material" }
+  { prefix: "src/validators/", reason: "artifact validation", severity: "material" },
+  // Added after this tool reported a real change to src/overrides/ as
+  // unclassified. An override decides whether a gate passes, so it belongs
+  // here; the orchestrator decides what `next` answers; assurance and evidence
+  // decide the verdict a reviewer reads.
+  { prefix: "src/overrides/", reason: "whether an override lets a gate pass", severity: "material" },
+  { prefix: "src/orchestrator/", reason: "the next step Kit recommends", severity: "material" },
+  { prefix: "src/assurance/", reason: "assurance verdicts and hotspots", severity: "material" },
+  { prefix: "src/evidence/", reason: "evidence collection and comparison", severity: "material" }
 ];
 
 /** Paths that cannot change observable behaviour for an integrator. */

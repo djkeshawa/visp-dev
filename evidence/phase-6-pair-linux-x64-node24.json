@@ -1,0 +1,257 @@
+{
+  "compatibility": [
+    {
+      "id": "fixed_kit_previous_hyper",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:cd4a548458b47ae19f9c6b7fcb0edd04f846c984f51e22e95710660ef7e0fe9d",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:cd4a548458b47ae19f9c6b7fcb0edd04f846c984f51e22e95710660ef7e0fe9d",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:cd4a548458b47ae19f9c6b7fcb0edd04f846c984f51e22e95710660ef7e0fe9d",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:cd4a548458b47ae19f9c6b7fcb0edd04f846c984f51e22e95710660ef7e0fe9d",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:cd4a548458b47ae19f9c6b7fcb0edd04f846c984f51e22e95710660ef7e0fe9d",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:cd4a548458b47ae19f9c6b7fcb0edd04f846c984f51e22e95710660ef7e0fe9d",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fixed_kit_current_hyper",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:3808539ea05061aaeae5cf24ad19661abd15b2a775f97db249c10b85288342ed",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:3808539ea05061aaeae5cf24ad19661abd15b2a775f97db249c10b85288342ed",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:3808539ea05061aaeae5cf24ad19661abd15b2a775f97db249c10b85288342ed",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:3808539ea05061aaeae5cf24ad19661abd15b2a775f97db249c10b85288342ed",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:3808539ea05061aaeae5cf24ad19661abd15b2a775f97db249c10b85288342ed",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:3808539ea05061aaeae5cf24ad19661abd15b2a775f97db249c10b85288342ed",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        }
+      ]
+    },
+    {
+      "id": "previous_kit_current_hyper",
+      "surfaces": [
+        {
+          "id": "run",
+          "view": {
+            "actionId": "sha256:9c366aa5fdfb778ae811e875118e9f834389eccaa7ad303873b19301d9c39412",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "next",
+          "view": {
+            "actionId": "sha256:9c366aa5fdfb778ae811e875118e9f834389eccaa7ad303873b19301d9c39412",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "resume",
+          "view": {
+            "actionId": "sha256:9c366aa5fdfb778ae811e875118e9f834389eccaa7ad303873b19301d9c39412",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "view": {
+            "actionId": "sha256:9c366aa5fdfb778ae811e875118e9f834389eccaa7ad303873b19301d9c39412",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "guard",
+          "view": {
+            "actionId": "sha256:9c366aa5fdfb778ae811e875118e9f834389eccaa7ad303873b19301d9c39412",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        },
+        {
+          "id": "mcp",
+          "view": {
+            "actionId": "sha256:9c366aa5fdfb778ae811e875118e9f834389eccaa7ad303873b19301d9c39412",
+            "actionVerdict": "ready",
+            "nextCommand": "visp verify --task T001",
+            "protocolVersion": "3.2",
+            "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+            "selectionMode": "advertised"
+          }
+        }
+      ]
+    }
+  ],
+  "definitionSha256": "e4d6bc2193bae710efd8fd04f1c271399818bf0accb8fa9ac0103e230b60b758",
+  "differential": {
+    "baseline": "previous_kit_current_hyper",
+    "corrected": "fixed_kit_current_hyper",
+    "identical": true
+  },
+  "environment": {
+    "architecture": "x64",
+    "git": "git version 2.34.1",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "operatingSystem": "linux",
+    "pnpm": "11.3.0"
+  },
+  "note": "Pins the pair carrying the F-C1 and F-C2 fail-closed corrections. The differential row proves the behaviour change is confined to input that was already broken.",
+  "packages": {
+    "hyperCurrent": {
+      "commit": "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
+      "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea",
+      "tree": "6e39c12b762398a5c1bbcbc8a2c836ace5f8d6d5"
+    },
+    "hyperPrevious": {
+      "commit": "61858199d90bffafb062bde61453f5def6357efa",
+      "tarballSha256": "0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55",
+      "tree": "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
+    },
+    "kitFixed": {
+      "commit": "2fd30d38125ebcbf4816bb46287970ede866fa87",
+      "tarballSha256": "46d441d653b4f0ac0900851fb56bb1406a21c6b44906fd115f206e4243ac9c71",
+      "tree": "1d7ebedc339a3959e4e9a1fe69a014833d849db8"
+    },
+    "kitPrevious": {
+      "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
+      "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c",
+      "tree": "44a5e805f53c48ad64422c1ebb9261487392bb58"
+    }
+  },
+  "reportSha256": "0cc9b00ad69bbbb4d6dcb75c9c8b0855da1f4e06f8c286dab7a39b4027482526",
+  "schemaVersion": "visp.phase-6-compatibility.v1"
+}
+

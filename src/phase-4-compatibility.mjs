@@ -569,28 +569,55 @@ async function runGoldenScenario({ definition, hyper, kit, root }) {
   };
 }
 
-async function runCompatibilityJourney({ definition, hyper, kit, root }) {
-  const scenario = PHASE_4_COMPATIBILITY_DEFINITION.scenarios[0];
+/**
+ * Runs one compatibility row against a packed Kit and Hyper.
+ *
+ * The scenario, surface list, and label are parameters rather than reads of the
+ * Phase 4 constant so a later phase can pin its own pair without copying this
+ * journey. Phase 4 passes its own frozen values below, so its behaviour and its
+ * committed evidence are unchanged.
+ */
+export async function runPairCompatibilityJourney({
+  definition,
+  hyper,
+  kit,
+  root,
+  scenario,
+  surfaces,
+  label,
+}) {
   const context = await createRealProject({ definition: scenario, hyper, kit, root });
   const relativeCandidate = "docs/profile.md";
   await writeFile(
     path.join(context.project, relativeCandidate),
     `${await readFile(path.join(context.project, relativeCandidate), "utf8")}// compatibility\n`,
   );
-  await context.runGit(["add", relativeCandidate], `Phase 4 ${definition.id} staging`);
+  await context.runGit(["add", relativeCandidate], `${label} ${definition.id} staging`);
   const actions = await collectSurfaceActions({
     context,
     hyper,
-    label: `Phase 4 ${definition.id}`,
+    label: `${label} ${definition.id}`,
     taskId: scenario.taskId,
   });
   return {
     id: definition.id,
-    surfaces: PHASE_4_COMPATIBILITY_DEFINITION.surfaces.map((id) => ({
+    surfaces: surfaces.map((id) => ({
       id,
       view: compatibilityActionView(actions.get(id), definition),
     })),
   };
+}
+
+async function runCompatibilityJourney({ definition, hyper, kit, root }) {
+  return runPairCompatibilityJourney({
+    definition,
+    hyper,
+    kit,
+    root,
+    scenario: PHASE_4_COMPATIBILITY_DEFINITION.scenarios[0],
+    surfaces: PHASE_4_COMPATIBILITY_DEFINITION.surfaces,
+    label: "Phase 4",
+  });
 }
 
 export async function runPackedPhase4Compatibility(input) {

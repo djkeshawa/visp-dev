@@ -111,10 +111,10 @@ test("the committed fixture evidence verifies and records real observations", as
   assert.equal(report.summary.ran, REQUIRED_FIXTURES.length);
   assert.deepEqual(report.familiesCovered, ["failure_mode", "hook", "security"]);
 
-  // The two defects this evidence records are real, reproduced findings. If a
-  // fix lands, this assertion is the thing that notices the evidence is stale.
-  assert.deepEqual(report.summary.knownDefectIds, [
-    "corrupted_artifact_detected_by_next",
-    "interrupted_run_recovers"
-  ]);
+  // F-C1 and F-C2 were recorded here as known defects and fixed in Kit at
+  // 2fd30d3. This assertion is what noticed the evidence had gone stale, and
+  // it keeps working in the other direction: a regression reintroduces a
+  // known_defect and fails here rather than passing quietly.
+  assert.deepEqual(report.summary.knownDefectIds, []);
+  assert.equal(report.summary.passed, report.summary.ran);
 });

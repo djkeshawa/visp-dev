@@ -41,18 +41,19 @@ test("the verdict is partial while families remain unproven", () => {
 });
 
 test("coverage does not conceal the defects the evidence recorded", () => {
-  // A family can be fully evidenced and still unhealthy. If this ever reads
-  // clean, it is because the defects were fixed or because the report stopped
-  // reporting them, and the two must not be confusable.
-  assert.deepEqual(committed.summary.knownDefects, [
-    "corrupted_artifact_detected_by_next",
-    "interrupted_run_recovers"
-  ]);
+  // A family can be fully evidenced and still unhealthy, so the report carries
+  // defects separately from coverage. F-C1 and F-C2 are fixed, so this reads
+  // clean — but it reads clean because the underlying fixtures pass, not
+  // because the report stopped looking.
+  assert.deepEqual(committed.summary.knownDefects, []);
 
   const failureMode = committed.families.find((family) => family.id === "failure_mode");
 
   assert.equal(failureMode.status, "covered");
-  assert.ok(failureMode.knownDefects.length > 0, "covered must not imply defect-free");
+  assert.ok(
+    Array.isArray(failureMode.knownDefects),
+    "the field must survive being empty, or a later defect has nowhere to appear"
+  );
 });
 
 test("a report claiming completeness while listing gaps is rejected", () => {

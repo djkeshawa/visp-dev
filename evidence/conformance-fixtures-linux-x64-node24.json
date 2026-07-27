@@ -47,12 +47,12 @@
       "family": "failure_mode",
       "id": "corrupted_artifact_detected_by_next",
       "observed": {
-        "detected": false,
-        "exitCode": 0,
-        "note": "next emits the same guidance whether the status artifact is valid or corrupt. Confirmed not a privilege escalation: gates read evidence artifacts, not this breadcrumb. It is a robustness defect — next advises confidently from state it could not read.",
-        "outputIdenticalToHealthyProject": true
+        "detected": true,
+        "exitCode": 1,
+        "note": "next refuses to advise from an unreadable status artifact.",
+        "outputIdenticalToHealthyProject": false
       },
-      "status": "known_defect"
+      "status": "pass"
     },
     {
       "family": "hook",
@@ -81,11 +81,11 @@
       "observed": {
         "corruptedExitCode": 1,
         "corruptionNoticed": true,
-        "deletedExitCode": 0,
-        "deletionNoticed": false,
-        "note": "Corrupting the run index is reported; deleting it is not. Missing artifacts are treated as not-applicable while invalid ones are errors, so an interrupted run — which leaves files missing rather than malformed — passes doctor."
+        "deletedExitCode": 1,
+        "deletionNoticed": true,
+        "note": "A missing run index is reported."
       },
-      "status": "known_defect"
+      "status": "pass"
     },
     {
       "family": "failure_mode",
@@ -147,21 +147,18 @@
       "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea"
     },
     "kit": {
-      "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
-      "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c"
+      "commit": "2fd30d38125ebcbf4816bb46287970ede866fa87",
+      "tarballSha256": "46d441d653b4f0ac0900851fb56bb1406a21c6b44906fd115f206e4243ac9c71"
     }
   },
-  "reportSha256": "a793d4f57d9d057beeb20fa30a1ae0ed06abc4018d4b584c31cfb1edd487ba6d",
+  "reportSha256": "f68feea1faa540611c1b1c55ba3a6e7c038a86c9ee4d92d4ea7098756e63eabd",
   "schemaVersion": "visp.conformance-fixtures.v1",
   "summary": {
     "failed": 0,
     "failedIds": [],
-    "knownDefectIds": [
-      "corrupted_artifact_detected_by_next",
-      "interrupted_run_recovers"
-    ],
-    "knownDefects": 2,
-    "passed": 9,
+    "knownDefectIds": [],
+    "knownDefects": 0,
+    "passed": 11,
     "ran": 11,
     "required": 11
   }

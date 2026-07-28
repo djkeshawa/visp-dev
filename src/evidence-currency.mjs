@@ -39,7 +39,27 @@ export const CRITICAL_PATHS = [
 
 /** Paths that cannot change observable behaviour for an integrator. */
 const INERT_PREFIXES = ["tests/", "docs/", ".github/", "planning/"];
-const INERT_FILES = ["README.md", "AGENTS.md", "NOTICE", "LICENSE", "SECURITY.md", "TRADEMARKS.md", "CODE_OF_CONDUCT.md"];
+const INERT_FILES = [
+  "README.md",
+  "AGENTS.md",
+  "CONTRIBUTING.md",
+  "NOTICE",
+  "LICENSE",
+  "SECURITY.md",
+  "TRADEMARKS.md",
+  "CODE_OF_CONDUCT.md"
+];
+
+/**
+ * Files that are not source but decide what a user actually receives.
+ *
+ * `package.json` is the one people forget. It carries the `files` allowlist,
+ * the `bin` mapping, the engines floor, and the dependency set — change any of
+ * those and the installed package differs even though no source moved. It was
+ * previously unclassified, which reported as "cannot tell" when the honest
+ * answer is "this can change what ships".
+ */
+const MATERIAL_FILES = ["package.json"];
 
 async function git(repositoryRoot, args) {
   const result = await runProcess("git", args, { cwd: repositoryRoot });
@@ -58,6 +78,17 @@ function classify(paths) {
     const hits = paths.filter((entry) => entry.startsWith(critical.prefix));
 
     if (hits.length > 0) matched.push({ ...critical, files: hits.length });
+  }
+
+  const manifestHits = paths.filter((entry) => MATERIAL_FILES.includes(entry));
+
+  if (manifestHits.length > 0) {
+    matched.push({
+      prefix: "package.json",
+      reason: "what the published package contains",
+      severity: "material",
+      files: manifestHits.length
+    });
   }
 
   const inert = paths.every(

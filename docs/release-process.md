@@ -83,3 +83,40 @@ Deprecate; do not unpublish. Unpublishing breaks everyone who pinned the
 version, and mirrors mean the content does not actually disappear. A deprecation
 notice should say what is wrong and what to use instead — and if there is no
 fixed version yet, it should say that plainly rather than implying one exists.
+
+## Rebuilding the offline compatibility environment
+
+The packed-pair runs need an offline pnpm store and npm cache. Both live in a
+scratch directory and do not survive a reboot, so they get rebuilt. Three
+things go wrong every time, so they are written down:
+
+1. **The real pnpm store cannot be used directly.** It contains symlinks that
+   escape its own root and the harness refuses them, by design — an escaping
+   link means the snapshot is not self-contained.
+2. **`pnpm fetch` wants to purge `node_modules`.** Run it against a throwaway
+   directory holding only `package.json` and `pnpm-lock.yaml`, never against a
+   working repository.
+3. **`pnpm fetch` leaves its own escaping symlink** under `v11/projects/`,
+   pointing at the directory you fetched from. Delete every symlink in the
+   store afterwards; they are link-tracking bookkeeping, not package content.
+
+```bash
+STORE=/tmp/visp-store CACHE=/tmp/visp-cache
+
+for repo in visp-kit visp-hyper-agent; do
+  mkdir -p "/tmp/fetch-$repo"
+  cp "../$repo/package.json" "../$repo/pnpm-lock.yaml" "/tmp/fetch-$repo/"
+  (cd "/tmp/fetch-$repo" && pnpm fetch --store-dir "$STORE")
+done
+find "$STORE" -type l -delete
+```
+
+The npm cache must be populated by a **real install**, not a lockfile-only run,
+or the packed tarball install fails with `ENOTCACHED` on the runtime
+dependencies:
+
+```bash
+mkdir -p /tmp/cache-build && cd /tmp/cache-build
+echo '{"name":"c","version":"1.0.0","private":true}' > package.json
+npm install commander@^12.1.0 zod@^3.25.76 --cache "$CACHE"
+```

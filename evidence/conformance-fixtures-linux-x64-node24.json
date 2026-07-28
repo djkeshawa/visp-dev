@@ -110,9 +110,10 @@
       "family": "security",
       "id": "package_allowlist_honoured",
       "observed": {
-        "entryCount": 48,
+        "entryCount": 49,
         "topLevelEntries": [
           "AGENTS.md",
+          "CONTRIBUTING.md",
           "LICENSE",
           "NOTICE",
           "README.md",
@@ -143,15 +144,15 @@
   "note": "Fixtures run against packed, installed binaries. A fixture that observes a defect reports known_defect, never pass.",
   "packages": {
     "hyper": {
-      "commit": "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
-      "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea"
+      "commit": "ea68409abffcf299f23120bb5ffb57287710917d",
+      "tarballSha256": "dd57c4929d27655b3f2cc4a0a787f509dd21846c24e8b33843c08fef72643b4c"
     },
     "kit": {
-      "commit": "27b49bf90798cd3be48ff6e7b97146eb982be878",
-      "tarballSha256": "2fc3468e46b4f20e523ac5d7e2f1d6c2dfee7b7dfb7021b9fd29211ba58dc658"
+      "commit": "7aa5fa3fdadb00c6a0144be5e61e4d4e0c5f940c",
+      "tarballSha256": "c31942cbf04696dd36e82a48a10f75135bb97e20f7de750e84af19d06ee578ed"
     }
   },
-  "reportSha256": "6c2cdf7586e53f073f73a1ba3a3dc4f719e2e63d45833ba29a74d56899310ac6",
+  "reportSha256": "cea3d36a35c1ba8bb126286eca0a9f7228340d2ba946d9b300e4bad6b0e83630",
   "schemaVersion": "visp.conformance-fixtures.v1",
   "summary": {
     "failed": 0,

@@ -12,6 +12,14 @@
  *     counted and named.
  *   - **Assurance delta** (`27b49bf`) — a stale review decision reports what
  *     moved, not only that something did.
+ *   - **`visp assurance delta`** (`7aa5fa3`) — that report reaches a human. It
+ *     was deliberately kept off the canonical action, because `reviewDecision`
+ *     lives in the hashed schema and adding a field there would break the very
+ *     claim these rows exist to make.
+ *
+ * Hyper moved too, for packaging and documentation only (`ea68409`). Its
+ * `package.json` counts as material because the `files` allowlist decides what
+ * ships, even when no source changed.
  *
  * Each changes behaviour on damaged, incomplete, or unusual input, which is
  * exactly the kind of change that can break a host relying on the old silence.
@@ -86,16 +94,16 @@ export const PHASE_6_COMPATIBILITY_DEFINITION = deepFreeze({
   ],
   packages: {
     hyperCurrent: {
-      commit: "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
-      tree: "6e39c12b762398a5c1bbcbc8a2c836ace5f8d6d5"
+      commit: "ea68409abffcf299f23120bb5ffb57287710917d",
+      tree: "7ed507752b8c39980f67f623e3517775ae1240a9"
     },
     hyperPrevious: {
       commit: "61858199d90bffafb062bde61453f5def6357efa",
       tree: "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
     },
     kitFixed: {
-      commit: "27b49bf90798cd3be48ff6e7b97146eb982be878",
-      tree: "f2f348402a920a8b55ba0cf1cdf256aa5cfa7976"
+      commit: "7aa5fa3fdadb00c6a0144be5e61e4d4e0c5f940c",
+      tree: "a34ab232be3495ffce3b96f7d5cfe2316b46010e"
     },
     kitPrevious: {
       commit: "19d5ffb3276e52462a945c66043f48e31cd6b38f",

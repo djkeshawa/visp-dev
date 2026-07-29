@@ -1,13 +1,17 @@
 # Release Process
 
-## Current status: nothing may be released
+## Current status: published
 
-A publication freeze is in force. No package may be published to a registry, no
-private repository may be made public, and no dist-tag or deprecation may be
-changed, until the freeze is lifted by an explicit recorded decision.
+The publication freeze was lifted on 2026-07-29. `visp-kit` and
+`visp-hyper-agent` are published, and both source repositories are public.
 
-This document exists so the process is settled *before* it is needed, not
-improvised at the moment of release.
+The freeze is gone; the discipline is not. Every registry action — a publish, a
+dist-tag move, a deprecation — still needs an explicit recorded decision, and
+the preconditions below still apply to each release.
+
+**A published version can never be replaced.** Every correction is a new
+version. This document exists so the process is settled *before* it is needed,
+not improvised at the moment of release.
 
 ## What is already public
 

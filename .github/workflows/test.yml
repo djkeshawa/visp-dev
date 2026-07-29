@@ -47,8 +47,12 @@ jobs:
             exit 1
           fi
 
+      # Installed on every leg, not just the pnpm ones. The matrix varies which
+      # manager *invokes* the suite, but the compatibility-lab fixtures shell out
+      # to pnpm regardless — it is a test dependency, not the thing under test.
+      # Gating it on the manager made every npm leg fail for want of a tool that
+      # leg was never given.
       - name: Enable pnpm
-        if: matrix.manager == 'pnpm'
         uses: pnpm/action-setup@v4
         with:
           version: 11.3.0

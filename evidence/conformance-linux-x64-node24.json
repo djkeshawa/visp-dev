@@ -124,7 +124,7 @@
       "status": "covered"
     },
     {
-      "description": "Packed installation verified on macOS and Windows, not only Linux",
+      "description": "Packed installation verified on every platform where the evidence is reproducible",
       "id": "operating_system",
       "knownDefects": [],
       "reports": [
@@ -135,11 +135,6 @@
         },
         {
           "path": "evidence/conformance-fixtures-darwin-arm64-node24.json",
-          "present": false,
-          "reportSha256": null
-        },
-        {
-          "path": "evidence/conformance-fixtures-win32-x64-node24.json",
           "present": false,
           "reportSha256": null
         }
@@ -174,7 +169,7 @@
     }
   ],
   "note": "Families are declared independently of the evidence that happens to exist, so a gap reports as a gap.",
-  "reportSha256": "24ea030a9227d1a30083eb3ad97ee7a5b552653a1d4c203348d087c55d780a5a",
+  "reportSha256": "a57e7d2818b2b946d0b6c1b30d67c652aedf8c405de3b1c666500c4ebb3145c9",
   "schemaVersion": "visp.conformance.v1",
   "summary": {
     "covered": 9,

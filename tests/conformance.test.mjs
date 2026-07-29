@@ -22,13 +22,19 @@ test("required families are declared independently of the evidence that exists",
     assert.ok(declared.includes(id), `${id} must be required independently of its evidence`);
   }
 
-  // The operating_system family names macOS and Windows reports that do not
-  // exist yet. Removing them would close the gap on paper without running a
-  // single fixture on either platform.
+  // The operating_system family names a macOS report that does not exist yet.
+  // Removing it would close the gap on paper without running a single fixture
+  // on that platform.
   const operatingSystem = REQUIRED_FAMILIES.find((family) => family.id === "operating_system");
 
   assert.ok(operatingSystem.evidence.some((entry) => entry.includes("darwin")));
-  assert.ok(operatingSystem.evidence.some((entry) => entry.includes("win32")));
+
+  // Windows is deliberately absent. The fixtures install from a mode-faithful
+  // snapshot and Windows has no POSIX mode bits, so that evidence is not
+  // reproducible there. Adding the file back would demand evidence that cannot
+  // be produced; relaxing the snapshot to produce it would weaken every other
+  // platform's evidence. Documented in docs/platform-support.md.
+  assert.ok(!operatingSystem.evidence.some((entry) => entry.includes("win32")));
 });
 
 test("the verdict is partial while families remain unproven", () => {

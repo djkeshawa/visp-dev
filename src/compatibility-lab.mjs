@@ -399,6 +399,20 @@ export async function resolveCommit({ repositoryRoot, commit }) {
   return { commit: exactCommit, tree };
 }
 
+/**
+ * Whether this platform can reproduce a committed tree faithfully.
+ *
+ * The snapshot restores each blob's Git mode and verifies it was applied, so a
+ * 100755 file is executable in the snapshot exactly as it is in the commit.
+ * Windows has no POSIX mode bits: `chmod` is a no-op there and the verification
+ * cannot pass. That is a real limit on where this evidence can be produced, not
+ * a defect to code around — relaxing the check would weaken every snapshot on
+ * every platform to make one platform quiet.
+ */
+export function snapshotFidelityAvailable() {
+  return process.platform !== "win32";
+}
+
 export async function snapshotCommit({ repositoryRoot, commit, destination }) {
   const { absolute } = await requireOwnedPath(destination, "destination");
   const resolved = await resolveCommit({ repositoryRoot, commit });

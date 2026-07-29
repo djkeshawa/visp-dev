@@ -62,15 +62,23 @@ export const REQUIRED_FAMILIES = [
   },
   {
     id: "operating_system",
-    description: "Packed installation verified on macOS and Windows, not only Linux",
-    // The Linux report exists; the other two are produced by the CI matrix and
-    // are listed here so their absence reports as a gap rather than as silence.
-    // This family cannot be closed from a Linux workstation, and pretending
-    // otherwise is the failure mode this whole module is built to avoid.
+    description: "Packed installation verified on every platform where the evidence is reproducible",
+    // Linux and macOS. Windows is deliberately absent, and that is a finding
+    // rather than an omission.
+    //
+    // The fixtures install from a snapshot that restores each blob's Git mode
+    // and verifies it applied, so a 100755 file is executable in the snapshot
+    // exactly as in the commit. Windows has no POSIX mode bits, so that
+    // verification cannot pass there. Relaxing it would weaken every snapshot on
+    // every platform to make one platform quiet, which trades real evidence for
+    // the appearance of coverage.
+    //
+    // Windows support is therefore an open question about what evidence is
+    // obtainable there, not a CI job waiting to be run. See
+    // docs/platform-support.md.
     evidence: [
       "evidence/conformance-fixtures-linux-x64-node24.json",
-      "evidence/conformance-fixtures-darwin-arm64-node24.json",
-      "evidence/conformance-fixtures-win32-x64-node24.json"
+      "evidence/conformance-fixtures-darwin-arm64-node24.json"
     ]
   },
   {

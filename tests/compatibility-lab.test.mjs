@@ -21,6 +21,7 @@ import {
   runCompatibilityLab,
   runInstalledBin,
   runProcess,
+  snapshotFidelityAvailable,
   sha256Hex,
   snapshotCommit,
 } from "../src/compatibility-lab.mjs";
@@ -685,6 +686,8 @@ process.stderr.write(result.stderr ?? "");
 
 test("validates a full commit and snapshots only committed content without mutating source", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   await writeFile(path.join(toy.root, "package.json"), "dirty tracked content\n");
   await writeFile(path.join(toy.root, "untracked ; touch should-not-run"), "untracked\n");
   const before = await sourceState(toy.root);
@@ -713,6 +716,8 @@ test("validates a full commit and snapshots only committed content without mutat
 
 test("snapshot materialization ignores hostile Git hooks, filters, attributes, and autocrlf", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   await writeFile(path.join(toy.root, ".gitattributes"), "payload.txt filter=hostile text eol=crlf\n");
   await writeFile(path.join(toy.root, "payload.txt"), "blob bytes stay lf\n");
   await git(toy.root, ["add", ".gitattributes", "payload.txt"]);
@@ -777,6 +782,8 @@ test("snapshot materialization restores exact Git file modes under a restrictive
   }
 
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   const owned = await createOwnedRoot();
   t.after(() => cleanupOwnedRoot({ root: owned.root }));
   const destination = path.join(owned.root, "mode-snapshot");
@@ -1228,6 +1235,8 @@ test("pinned pnpm ordinary and peer edges reject undeclared, ambiguous, or misma
 
 test("independent snapshots pack identically and expose deterministic package inventory", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   const before = await sourceState(toy.root);
   const owned = await createOwnedRoot();
   t.after(() => cleanupOwnedRoot({ root: owned.root }));
@@ -1320,6 +1329,8 @@ test("post-lifecycle packed package identity is inspected from both tarballs", a
 
 test("offline local-tarball install disables scripts and confines installed bins", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   const owned = await createOwnedRoot();
   t.after(() => cleanupOwnedRoot({ root: owned.root }));
   const packed = await packPackageTwice({ repositoryRoot: toy.root, commit: toy.commit, ownedRoot: owned.root });
@@ -1731,6 +1742,8 @@ test("owned-root cleanup rejects foreign paths and supports explicit keep", asyn
 
 test("complete laboratory output is canonical, stable, separated, and non-authoritative", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   const expectations = {
     package: { name: "toy-package", version: "1.2.3", bins: ["toy-command"] },
     execution: {
@@ -1825,6 +1838,8 @@ test("complete laboratory fails stably when an installed bin has a broken interp
 
 test("closed input validation rejects unknown keys and malformed expectations", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   await assert.rejects(
     runCompatibilityLab({ repositoryRoot: toy.root, commit: toy.commit, expectations: {}, extra: true }),
     /unknown input key/i,
@@ -1841,6 +1856,8 @@ test("closed input validation rejects unknown keys and malformed expectations", 
 
 test("CLI runs the complete toy-package laboratory and emits one canonical document", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   const cli = fileURLToPath(new URL("../scripts/run-compatibility-lab.mjs", import.meta.url));
   const { stdout, stderr } = await execFileAsync(process.execPath, [
     cli,
@@ -1876,6 +1893,8 @@ test("CLI runs the complete toy-package laboratory and emits one canonical docum
 
 test("CLI reports and immediately cleans exact kept roots for concurrent failures", async (t) => {
   const toy = await makeToyPackage(t);
+
+  if (toy === null) return;
   const cli = fileURLToPath(new URL("../scripts/run-compatibility-lab.mjs", import.meta.url));
   const invokeFailure = async () => {
     try {

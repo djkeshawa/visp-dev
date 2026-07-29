@@ -137,6 +137,17 @@ async function makePreparedToyPackage(t, { dependencyGroup = "devDependencies" }
     return null;
   }
 
+  // Reached only where pnpm exists, which today excludes Windows because
+  // `pnpmAvailable` spawns a bare `pnpm`. That is the wrong thing to depend on:
+  // this factory builds a registry artifact, and that needs mode-faithful
+  // snapshots regardless of which package manager is installed. Without this
+  // the shield is incidental, and fixing pnpm detection would turn a clean skip
+  // into `Cannot read properties of null`.
+  if (!snapshotFidelityAvailable()) {
+    t.skip("mode-faithful snapshots are not reproducible on this platform");
+    return null;
+  }
+
   assert.ok(["devDependencies", "optionalDependencies"].includes(dependencyGroup));
   const root = await mkdtemp(path.join(tmpdir(), "visp prepared source "));
   const seedRoot = await mkdtemp(path.join(tmpdir(), "visp pnpm seed "));

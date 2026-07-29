@@ -4,10 +4,15 @@ import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 const run = promisify(execFile);
-const cli = new URL("../scripts/visp-dev.mjs", import.meta.url).pathname;
+// `new URL(...).pathname` yields `/D:/a/visp-dev/...` on Windows — a string node
+// cannot resolve — so the CLI never started, stdout was empty, and the test
+// blamed JSON.parse for a path bug. A hostile-path suite that cannot itself
+// handle a platform's paths proves nothing.
+const cli = fileURLToPath(new URL("../scripts/visp-dev.mjs", import.meta.url));
 
 async function hostileProject(name) {
   const base = await mkdtemp(path.join(tmpdir(), "visp-dev-hostile-"));
@@ -39,6 +44,15 @@ for (const name of HOSTILE_NAMES) {
           // That is a finding about the machine, not a failure to handle paths.
           stdout = `${error.stdout ?? ""}`;
           assert.equal(error.code, 1, `${command} exited unexpectedly for ${name}`);
+          // An exit code alone does not distinguish "reported a finding" from
+          // "never started". Both exit 1, and only one of them is the thing
+          // under test, so say which happened rather than letting JSON.parse
+          // report it as malformed output several lines later.
+          assert.notEqual(
+            stdout,
+            "",
+            `${command} exited 1 without output for ${name}; stderr: ${error.stderr ?? ""}`,
+          );
         }
 
         const parsed = JSON.parse(stdout);

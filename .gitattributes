@@ -1,0 +1,13 @@
+# Check every text file out with LF on every platform.
+#
+# Windows runners default to core.autocrlf=true, which rewrites the working tree
+# to CRLF at checkout. That is not cosmetic here. This repository compares
+# generated content against committed content byte for byte:
+# `generate-compatibility.mjs --check` reads compatibility.json as text and
+# compares it to freshly generated JSON, and every evidence report is verified
+# against a self-hash of its own canonical bytes.
+#
+# A CRLF checkout makes the committed file differ from anything generated at run
+# time, so `compatibility:check` reported the file as stale on Windows while it
+# was perfectly current — a false failure that says nothing about the product.
+* text=auto eol=lf

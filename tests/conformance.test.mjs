@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 
+import { canonicalStringify, sha256Hex } from "../src/compatibility-lab.mjs";
 import { REQUIRED_FAMILIES, runConformance, verifyConformanceReport } from "../src/conformance.mjs";
 
 const committed = JSON.parse(
@@ -37,13 +38,30 @@ test("required families are declared independently of the evidence that exists",
   assert.ok(!operatingSystem.evidence.some((entry) => entry.includes("win32")));
 });
 
-test("the verdict is partial while families remain unproven", () => {
-  assert.equal(committed.verdict, "partial");
-  assert.ok(committed.summary.gaps > 0);
-  // hook, security, and failure_mode closed once fixtures ran against packed
-  // binaries. operating_system cannot close from a Linux workstation: it needs
-  // macOS and Windows reports, which only the CI matrix can produce.
-  assert.deepEqual(committed.summary.gapIds, ["operating_system"]);
+test("the verdict is derived from the gaps, never stated alongside them", () => {
+  // This used to assert `partial` and `gapIds: ["operating_system"]` — the state
+  // of the day it was written. It then failed the moment the last gap closed,
+  // which is the wrong signal entirely: closing a gap is the goal, not a
+  // regression. The invariant worth protecting is that the verdict cannot
+  // disagree with the gap list, in either direction.
+  assert.equal(committed.verdict, committed.summary.gaps === 0 ? "complete" : "partial");
+  assert.equal(committed.summary.gaps, committed.summary.gapIds.length);
+  assert.equal(
+    committed.summary.covered + committed.summary.gaps,
+    committed.summary.required,
+  );
+
+  // Every family the report calls a gap must actually lack a present report, so
+  // "gap" cannot become a label applied by hand.
+  for (const family of committed.families) {
+    const missing = family.reports.filter((entry) => !entry.present);
+
+    assert.equal(
+      committed.summary.gapIds.includes(family.id),
+      missing.length > 0,
+      `${family.id} is listed as a gap without missing evidence, or vice versa`,
+    );
+  }
 });
 
 test("coverage does not conceal the defects the evidence recorded", () => {
@@ -63,9 +81,35 @@ test("coverage does not conceal the defects the evidence recorded", () => {
 });
 
 test("a report claiming completeness while listing gaps is rejected", () => {
+  // Tampering is caught by the hash.
+  const tampered = structuredClone(committed);
+
+  tampered.summary.covered += 1;
+  assert.throws(() => verifyConformanceReport(tampered), /hash does not match/u);
+
+  // The overclaim guard is a separate rule, and it needs a lie that survives the
+  // hash — otherwise the hash fires first and the guard is never consulted. The
+  // previous version of this test only flipped `verdict` and asserted a hash
+  // mismatch, so it would have passed with the completeness rule deleted. Once
+  // the last gap closed it stopped testing anything at all, because the verdict
+  // it set was the verdict already there.
   const lying = structuredClone(committed);
+  const [family] = lying.families;
+
+  family.reports[0].present = false;
+  family.status = "evidence_missing";
+  lying.summary.covered -= 1;
+  lying.summary.gaps += 1;
+  lying.summary.gapIds = [...lying.summary.gapIds, family.id].sort();
   lying.verdict = "complete";
-  assert.throws(() => verifyConformanceReport(lying), /hash does not match/u);
+
+  delete lying.reportSha256;
+  lying.reportSha256 = sha256Hex(canonicalStringify(lying));
+
+  assert.throws(
+    () => verifyConformanceReport(lying),
+    /claims completeness while reporting gaps/u,
+  );
 });
 
 test("every covered family names the evidence that covers it", () => {

@@ -83,8 +83,13 @@ none.
   artifact hash. No version range is supported, because a version string is not
   an identity — `visp-hyper-agent@0.3.0` on npm and `0.3.0` in this workspace
   share 21 files of which 20 differ.
-- **Evidence is Linux x64, Node 24.** The CI matrix covers macOS and Windows,
-  but the committed evidence reports were produced on Linux.
+- **Packed-install evidence is Linux and macOS; Windows has none.** The fixture
+  reports cover both, at the same Kit and Hyper commits. Windows cannot produce
+  them — the fixtures verify Git file modes a snapshot restored, and Windows has
+  no POSIX mode bits — so no claim about installing on Windows is supported. The
+  test suite itself does run there. See [docs/platform-support.md](docs/platform-support.md).
+- **The phase compatibility evidence is Linux x64, Node 24.** Those reports pin
+  historical pairs and were produced on one platform.
 - **Assurance verdicts are currently `inconclusive`.** Oracle-result mapping is
   incomplete, so the honest verdict is not `passed`.
 - **No performance or review-efficiency claim is made.** Those need the Phase 6

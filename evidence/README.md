@@ -16,7 +16,9 @@ It does not grant permission to release, publish, or claim a support window.
 | `phase-4-host-examples-linux-x64-node24.json` | `pnpm examples:phase-4` | Packed Hyper renders honest host assets for every supported host |
 | `phase-4-pair-linux-x64-node24.json` | `pnpm compatibility:phase-4` | Kit `3a8901b` and Hyper `6185819` agree across three cross-version rows and four golden scenarios on 24 surfaces |
 | `golden-path-linux-x64-node24.json` | `pnpm golden-path` | The full journey against packed binaries, including an out-of-scope change being blocked and corrected |
-| `conformance-linux-x64-node24.json` | `pnpm conformance` | Which required fixture families are proven and which are not. Currently **partial**: 6 of 10, with hook, OS, security, and failure-mode uncovered |
+| `conformance-linux-x64-node24.json` | `pnpm conformance` | Which required fixture families are proven and which are not. Currently **complete**: 10 of 10, zero known defects |
+| `conformance-fixtures-linux-x64-node24.json` | `pnpm conformance:fixtures` | Eleven fixtures against packed, installed binaries on Linux: hook enforcement, security, and failure modes |
+| `conformance-fixtures-darwin-arm64-node24.json` | the macOS CI leg | The same eleven fixtures on macOS, at the same Kit and Hyper commits. Produced only in CI — see `../docs/platform-support.md` for why Windows carries none |
 | `release-candidate-linux-x64-node24.json` | `pnpm release-candidate` | The assembled candidate, byte-reproducible, published nowhere |
 | `registry-divergence-linux-x64-node24.json` | `pnpm divergence` | That `visp-hyper-agent@0.3.0` on npm and `0.3.0` in the repository are different content: 20 of 21 shared files differ and 10 files exist only locally |
 

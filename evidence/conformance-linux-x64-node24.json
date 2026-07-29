@@ -118,7 +118,7 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "cea3d36a35c1ba8bb126286eca0a9f7228340d2ba946d9b300e4bad6b0e83630"
+          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
         }
       ],
       "status": "covered"
@@ -131,15 +131,15 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "cea3d36a35c1ba8bb126286eca0a9f7228340d2ba946d9b300e4bad6b0e83630"
+          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
         },
         {
           "path": "evidence/conformance-fixtures-darwin-arm64-node24.json",
-          "present": false,
-          "reportSha256": null
+          "present": true,
+          "reportSha256": "7de671149acec8af5d6ad2e3746096b992c09814fb2b15cecd6b5b604cfc041e"
         }
       ],
-      "status": "evidence_missing"
+      "status": "covered"
     },
     {
       "description": "Path traversal, command injection, and package-allowlist fixtures against packed binaries",
@@ -149,7 +149,7 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "cea3d36a35c1ba8bb126286eca0a9f7228340d2ba946d9b300e4bad6b0e83630"
+          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
         }
       ],
       "status": "covered"
@@ -162,24 +162,21 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "cea3d36a35c1ba8bb126286eca0a9f7228340d2ba946d9b300e4bad6b0e83630"
+          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
         }
       ],
       "status": "covered"
     }
   ],
   "note": "Families are declared independently of the evidence that happens to exist, so a gap reports as a gap.",
-  "reportSha256": "a57e7d2818b2b946d0b6c1b30d67c652aedf8c405de3b1c666500c4ebb3145c9",
+  "reportSha256": "ed71fef4effc22cdca99c0175ce62ade3f73846e95b35952a0606e06ccb60832",
   "schemaVersion": "visp.conformance.v1",
   "summary": {
-    "covered": 9,
-    "gapIds": [
-      "operating_system"
-    ],
-    "gaps": 1,
+    "covered": 10,
+    "gapIds": [],
+    "gaps": 0,
     "knownDefects": [],
     "required": 10
   },
-  "verdict": "partial"
+  "verdict": "complete"
 }
-

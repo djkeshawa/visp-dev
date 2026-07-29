@@ -1,8 +1,8 @@
 {
   "environment": {
-    "architecture": "x64",
+    "architecture": "arm64",
     "node": "v24.18.0",
-    "operatingSystem": "linux"
+    "operatingSystem": "darwin"
   },
   "familiesCovered": [
     "failure_mode",
@@ -151,7 +151,7 @@
       "tarballSha256": "0e372af8c87006ca27bbc1b28112628281c92d6d63b22d53012c1c83bf2b4421"
     }
   },
-  "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7",
+  "reportSha256": "7de671149acec8af5d6ad2e3746096b992c09814fb2b15cecd6b5b604cfc041e",
   "schemaVersion": "visp.conformance-fixtures.v1",
   "summary": {
     "failed": 0,

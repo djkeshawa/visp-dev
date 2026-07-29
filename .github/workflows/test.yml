@@ -84,37 +84,93 @@ jobs:
       # Standing check that the frozen pairs still describe the engine
       # repositories. Exits non-zero only when the gap reaches the wire schema
       # or integration surface, so documentation churn does not fail the build.
+
+      # The operating_system conformance family cannot be closed from a Linux
+      # workstation. These legs are the only place macOS and Windows evidence can
+      # come from, so the report is produced here rather than asserted locally.
+      #
+      # This was previously a no-op. It checked for the engine repositories,
+      # found them private, and exited zero — and even with them present it
+      # would have thrown, because it passed five of the eleven arguments the
+      # runner requires. `continue-on-error` hid both problems.
+      - name: Check out visp-kit
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          path: engines/visp-kit
+
+      - name: Check out visp-hyper-agent
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          path: engines/visp-hyper-agent
+
+      # The fixtures install from a local store rather than the network, so the
+      # evidence describes a hermetic install. Building that store is fiddly in
+      # three documented ways; see docs/release-process.md.
+      - name: Build the offline store and cache
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        shell: bash
+        run: |
+          set -euo pipefail
+          STORE="$RUNNER_TEMP/visp-store"
+          CACHE="$RUNNER_TEMP/visp-cache"
+          mkdir -p "$STORE" "$CACHE"
+
+          # pnpm fetch purges node_modules, so it runs against throwaway copies
+          # of the lockfiles rather than the checkouts themselves.
+          for repo in visp-kit visp-hyper-agent; do
+            work="$RUNNER_TEMP/fetch-$repo"
+            mkdir -p "$work"
+            cp "engines/$repo/package.json" "engines/$repo/pnpm-lock.yaml" "$work/"
+            (cd "$work" && pnpm fetch --store-dir "$STORE")
+          done
+
+          # pnpm leaves a link back to the directory it fetched from, which
+          # escapes the store root and the harness refuses it — correctly, since
+          # an escaping link means the snapshot is not self-contained.
+          find "$STORE" -type l -delete
+
+          # The npm cache needs a real install. A lockfile-only run leaves the
+          # tarball install failing ENOTCACHED on the runtime dependencies.
+          build="$RUNNER_TEMP/cache-build"
+          mkdir -p "$build"
+          echo '{"name":"c","version":"1.0.0","private":true}' > "$build/package.json"
+          (cd "$build" && npm install commander@^12.1.0 zod@^3.25.76 --cache "$CACHE" --no-audit --no-fund)
+
+      # Standing check that the frozen pair still describes the engine
+      # repositories. Non-blocking: it reports a gap, and whether that gap
+      # matters is a judgement the report itself explains.
       - name: Measure how far the frozen pair lags the engine repositories
         if: matrix.manager == 'pnpm' && matrix.node == 24
         shell: bash
         continue-on-error: true
         run: |
-          if [ -d ../visp-kit ]; then
-            npm run evidence:currency
-          else
-            echo "Engine repositories are private and not checked out here."
-          fi
+          node scripts/run-evidence-currency.mjs \
+            --kit-repository engines/visp-kit \
+            --hyper-repository engines/visp-hyper-agent
 
-      # The operating_system conformance family cannot be closed from a Linux
-      # workstation. These legs are the only place macOS and Windows evidence
-      # can come from, so the report is produced here and uploaded rather than
-      # asserted locally.
       - name: Produce conformance fixture evidence for this platform
         if: matrix.manager == 'pnpm' && matrix.node == 24
         shell: bash
-        continue-on-error: true
         run: |
-          kit_commit=$(git -C ../visp-kit rev-parse HEAD 2>/dev/null || echo "")
-          if [ -z "$kit_commit" ]; then
-            echo "Kit and Hyper repositories are private and not checked out here."
-            echo "This leg records that the fixture harness is wired; evidence"
-            echo "for ${{ matrix.os }} requires access to both engine repositories."
-            exit 0
-          fi
+          set -euo pipefail
+          platform=$(node -p 'process.platform')
+          arch=$(node -p 'process.arch')
+
           node scripts/run-conformance-fixtures.mjs \
-            --kit-repository ../visp-kit --hyper-repository ../visp-hyper-agent \
+            --kit-repository engines/visp-kit \
+            --hyper-repository engines/visp-hyper-agent \
+            --offline-store "$RUNNER_TEMP/visp-store" \
+            --offline-cache "$RUNNER_TEMP/visp-cache" \
             --package-manager pnpm --npm npm \
-            --output "evidence/conformance-fixtures-$(node -p 'process.platform')-$(node -p 'process.arch')-node24.json"
+            --kit-commit "$(git -C engines/visp-kit rev-parse HEAD)" \
+            --kit-tree "$(git -C engines/visp-kit rev-parse 'HEAD^{tree}')" \
+            --hyper-commit "$(git -C engines/visp-hyper-agent rev-parse HEAD)" \
+            --hyper-tree "$(git -C engines/visp-hyper-agent rev-parse 'HEAD^{tree}')" \
+            --output "evidence/conformance-fixtures-$platform-$arch-node24.json"
 
       - name: Upload platform conformance evidence
         if: matrix.manager == 'pnpm' && matrix.node == 24
@@ -122,7 +178,7 @@ jobs:
         with:
           name: conformance-fixtures-${{ matrix.os }}
           path: evidence/conformance-fixtures-*.json
-          if-no-files-found: ignore
+          if-no-files-found: error
 
       - name: Confirm nothing was published by this run
         shell: bash

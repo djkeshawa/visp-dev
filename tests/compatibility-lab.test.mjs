@@ -36,6 +36,11 @@ async function git(cwd, args) {
 }
 
 async function makeToyPackage(t, name = "toy-package") {
+  if (!snapshotFidelityAvailable()) {
+    t.skip("mode-faithful snapshots are not reproducible on this platform");
+    return null;
+  }
+
   const root = await mkdtemp(path.join(tmpdir(), "visp lab source ;$() "));
   t.after(() => rm(root, { recursive: true, force: true }));
   await git(root, ["init", "--quiet"]);

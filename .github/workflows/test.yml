@@ -154,8 +154,12 @@ jobs:
       # sbom:check inventories the engine packages, so it can only run once they
       # are checked out. It was previously in the verify step, which runs before
       # them, and failed every Linux leg with ENOENT on ../visp-kit/package.json.
+      # Linux only. The SBOM embeds a hash of the packed tarball, and packing is
+      # not byte-identical across platforms, so a macOS or Windows run reports
+      # the committed file as stale when nothing has changed. The committed SBOM
+      # describes the artifact, and that artifact is built on one platform.
       - name: Verify the committed SBOMs are current
-        if: matrix.manager == 'pnpm' && matrix.node == 24
+        if: matrix.manager == 'pnpm' && matrix.node == 24 && matrix.os == 'ubuntu-latest'
         shell: bash
         run: node scripts/generate-sbom.mjs --check --packages-root engines
 

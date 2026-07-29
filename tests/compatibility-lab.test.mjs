@@ -121,6 +121,11 @@ async function directoryDigest(root) {
 }
 
 async function makePreparedToyPackage(t, { dependencyGroup = "devDependencies" } = {}) {
+  if (!(await pnpmAvailable())) {
+    t.skip("pnpm is not installed on this matrix leg");
+    return null;
+  }
+
   assert.ok(["devDependencies", "optionalDependencies"].includes(dependencyGroup));
   const root = await mkdtemp(path.join(tmpdir(), "visp prepared source "));
   const seedRoot = await mkdtemp(path.join(tmpdir(), "visp pnpm seed "));
@@ -198,7 +203,23 @@ async function makePreparedToyPackage(t, { dependencyGroup = "devDependencies" }
  * other cross-platform result, which is the opposite of what a platform matrix
  * is for. It skips instead, and returns null so the caller stops.
  */
+/**
+ * Whether pnpm is on PATH. The CI matrix runs every leg under both managers, and
+ * the pnpm-specific fixtures cannot run on the npm legs — pnpm is only installed
+ * where the matrix asks for it. Absent is "not applicable", not a failure.
+ */
+async function pnpmAvailable() {
+  const result = await runProcess("pnpm", ["--version"], {}).catch(() => null);
+
+  return result !== null && result.exitCode === 0;
+}
+
 async function makeOptionalPreparedToyPackage(t) {
+  if (!(await pnpmAvailable())) {
+    t.skip("pnpm is not installed on this matrix leg");
+    return null;
+  }
+
   if (process.platform !== "linux") {
     t.skip("the pinned-pnpm optional fixture is calibrated for the Linux compatibility lane");
     return null;
@@ -823,6 +844,8 @@ test("process timeout terminates descendants that retain stdio within a bounded 
 
 test("pack preparation is pinned, offline, ambient-config resistant, and repeated independently", async (t) => {
   const toy = await makePreparedToyPackage(t);
+
+  if (toy === null) return;
   const callerStoreBefore = await directoryDigest(toy.storeSource);
   assert.ok((await readdir(toy.storeSource)).length > 0);
   const emptyStore = await mkdtemp(path.join(tmpdir(), "visp empty pnpm store "));
@@ -962,7 +985,11 @@ test("pinned pnpm records deterministic optional absences from a real offline to
 
 test("pinned pnpm optional classification and modules state fail closed without mutating inputs", async (t) => {
   const requiredToy = await makePreparedToyPackage(t);
+
+  if (requiredToy === null) return;
   const optionalToy = await makePreparedToyPackage(t, { dependencyGroup: "optionalDependencies" });
+
+  if (optionalToy === null) return;
   const cases = [
     {
       name: "required missing identity rejects even when forged as skipped",
@@ -1136,6 +1163,8 @@ test("pinned pnpm aliases fail closed on edge, target, manifest, spec, and versi
 
 test("pinned pnpm accepts representative ordinary specs and present peer edges", async (t) => {
   const toy = await makePreparedToyPackage(t);
+
+  if (toy === null) return;
   const cases = [
     { name: "tilde", scenario: "ordinary_spec:~1.0.0" },
     { name: "union", scenario: "ordinary_spec:^1.0.0 || ^2.0.0" },
@@ -1166,6 +1195,8 @@ test("pinned pnpm accepts representative ordinary specs and present peer edges",
 
 test("pinned pnpm ordinary and peer edges reject undeclared, ambiguous, or mismatched identity", async (t) => {
   const toy = await makePreparedToyPackage(t);
+
+  if (toy === null) return;
   const cases = [
     { name: "undeclared edge", scenario: "undeclared_edge" },
     { name: "ambiguous peer edge", scenario: "ambiguous_peer_edge" },

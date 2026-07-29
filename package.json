@@ -25,7 +25,7 @@
   },
   "packageManager": "pnpm@11.3.0",
   "scripts": {
-    "check": "pnpm run syntax && pnpm run compatibility:check && pnpm test",
+    "check": "npm run syntax && npm run compatibility:check && npm test",
     "compatibility-lab": "node scripts/run-compatibility-lab.mjs",
     "compatibility-matrix": "node scripts/run-compatibility-matrix.mjs",
     "compatibility-matrix:verify": "node scripts/run-compatibility-matrix.mjs --verify",

@@ -79,6 +79,11 @@ async function sourceState(root) {
 }
 
 async function makeRegistryArtifact(t, name, version, executableName, executableSource, packageFields = {}) {
+  if (!snapshotFidelityAvailable()) {
+    t.skip("mode-faithful snapshots are not reproducible on this platform");
+    return null;
+  }
+
   const root = await mkdtemp(path.join(tmpdir(), "visp registry artifact "));
   const output = await mkdtemp(path.join(tmpdir(), "visp registry tarball "));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -402,6 +407,8 @@ async function makePreparedAliasToyPackage(
   t.after(() => rm(seedRoot, { recursive: true, force: true }));
 
   const target = await makeRegistryArtifact(t, targetName, version, null, null);
+
+  if (target === null) return;
   await mkdir(seedConsumer);
   const seedTarball = path.join(seedRoot, "artifact.tgz");
   await writeFile(seedTarball, await readFile(target.tarball));
@@ -475,6 +482,11 @@ async function pathExecutable(name) {
 }
 
 async function makePnpmScenarioManager(t, scenario) {
+  if (!snapshotFidelityAvailable()) {
+    t.skip("mode-faithful snapshots are not reproducible on this platform");
+    return null;
+  }
+
   const root = await mkdtemp(path.join(tmpdir(), "visp pnpm scenario "));
   t.after(() => rm(root, { recursive: true, force: true }));
   const executable = path.join(root, "pnpm-scenario.mjs");
@@ -621,6 +633,11 @@ process.stderr.write(result.stderr ?? "");
 }
 
 async function makeAliasScenarioManager(t, scenario, alias) {
+  if (!snapshotFidelityAvailable()) {
+    t.skip("mode-faithful snapshots are not reproducible on this platform");
+    return null;
+  }
+
   const root = await mkdtemp(path.join(tmpdir(), "visp pnpm alias scenario "));
   t.after(() => rm(root, { recursive: true, force: true }));
   const executable = path.join(root, "pnpm-alias-scenario.mjs");
@@ -1077,6 +1094,8 @@ test("pinned pnpm optional classification and modules state fail closed without 
       const sourceBefore = await sourceState(fixture.toy.root);
       const storeBefore = await directoryDigest(fixture.toy.storeSource);
       const manager = await makePnpmScenarioManager(subtest, fixture.scenario);
+
+      if (manager === null) return;
       const owned = await createOwnedRoot();
       subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
       try {
@@ -1167,6 +1186,8 @@ test("pinned pnpm aliases fail closed on edge, target, manifest, spec, and versi
       const sourceBefore = await sourceState(alias.root);
       const storeBefore = await directoryDigest(alias.storeSource);
       const manager = await makeAliasScenarioManager(subtest, fixture.scenario, alias);
+
+      if (manager === null) return;
       const owned = await createOwnedRoot();
       subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
       try {
@@ -1204,6 +1225,8 @@ test("pinned pnpm accepts representative ordinary specs and present peer edges",
   for (const fixture of cases) {
     await t.test(fixture.name, async (subtest) => {
       const manager = await makePnpmScenarioManager(subtest, fixture.scenario);
+
+      if (manager === null) return;
       const owned = await createOwnedRoot();
       subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
       const packed = await packPackageTwice({
@@ -1234,6 +1257,8 @@ test("pinned pnpm ordinary and peer edges reject undeclared, ambiguous, or misma
   for (const fixture of cases) {
     await t.test(fixture.name, async (subtest) => {
       const manager = await makePnpmScenarioManager(subtest, fixture.scenario);
+
+      if (manager === null) return;
       const owned = await createOwnedRoot();
       subtest.after(() => cleanupOwnedRoot({ root: owned.root }));
       await assert.rejects(() => packPackageTwice({
@@ -1321,6 +1346,8 @@ test("independent snapshots pack identically and expose deterministic package in
 
 test("post-lifecycle packed package identity is inspected from both tarballs", async (t) => {
   const toy = await makeToyPackage(t, "pre-lifecycle-name");
+
+  if (toy === null) return;
   await writeFile(
     path.join(toy.root, "scripts", "prepack.mjs"),
     "import { readFileSync, writeFileSync } from 'node:fs';\nconst pkg = JSON.parse(readFileSync('package.json', 'utf8'));\npkg.name = 'post-lifecycle-name'; pkg.version = '9.9.9'; pkg.bin = { 'post-command': 'bin/toy-command.mjs' };\nwriteFileSync('package.json', JSON.stringify(pkg, null, 2) + '\\n');\n",
@@ -1404,18 +1431,38 @@ test("offline local-tarball install disables scripts and confines installed bins
 
 test("caller npm cache hydrates only a closed reachable registry lock graph offline", async (t) => {
   const toy = await makeToyPackage(t, "cache-hydration-package");
+
+  if (toy === null) return;
   const leafOne = await makeRegistryArtifact(t, "@visp/graph-leaf", "1.4.0", null, null);
+
+  if (leafOne === null) return;
   const leafTwo = await makeRegistryArtifact(t, "@visp/graph-leaf", "2.3.0", null, null);
+
+  if (leafTwo === null) return;
   const child = await makeRegistryArtifact(t, "visp-graph-child", "0.2.9", null, null);
+
+  if (child === null) return;
   const zeroPatch = await makeRegistryArtifact(t, "visp-zero-patch", "0.0.3", null, null);
+
+  if (zeroPatch === null) return;
   const parent = await makeRegistryArtifact(t, "visp-graph-parent", "1.2.3", null, null, {
     dependencies: { "@visp/graph-leaf": "^2.0.0", "visp-graph-child": "^0.2.3", "visp-zero-patch": "^0.0.3" },
   });
   const commander = await makeRegistryArtifact(t, "commander", "12.1.0", null, null);
+
+  if (commander === null) return;
   const zod = await makeRegistryArtifact(t, "zod", "3.25.76", null, null);
+
+  if (zod === null) return;
   const exact = await makeRegistryArtifact(t, "visp-graph-exact", "4.5.6", null, null);
+
+  if (exact === null) return;
   const extraneous = await makeRegistryArtifact(t, "visp-graph-extraneous", "1.0.0", null, null);
+
+  if (extraneous === null) return;
   const impostor = await makeRegistryArtifact(t, "visp-graph-impostor", "0.2.9", null, null);
+
+  if (impostor === null) return;
   const cacheSource = await mkdtemp(path.join(tmpdir(), "visp populated npm cache "));
   t.after(() => rm(cacheSource, { recursive: true, force: true }));
   const cacheLogs = await mkdtemp(path.join(tmpdir(), "visp npm cache logs "));
@@ -1787,6 +1834,8 @@ test("complete laboratory output is canonical, stable, separated, and non-author
 
 test("execution output fails closed when full raw bytes contain an owned random path", async (t) => {
   const toy = await makeToyPackage(t, "path-emitting-package");
+
+  if (toy === null) return;
   await writeFile(
     path.join(toy.root, "bin", "toy-command.mjs"),
     "#!/usr/bin/env node\nprocess.stdout.write('x'.repeat(1100000)); process.stdout.write(process.cwd() + '\\n');\n",
@@ -1819,6 +1868,8 @@ test("execution output fails closed when full raw bytes contain an owned random 
 
 test("complete laboratory fails stably when an installed bin has a broken interpreter", async (t) => {
   const toy = await makeToyPackage(t, "broken-bin-package");
+
+  if (toy === null) return;
   const missingInterpreter = path.join(toy.root, "missing-interpreter");
   await writeFile(
     path.join(toy.root, "bin", "toy-command.mjs"),

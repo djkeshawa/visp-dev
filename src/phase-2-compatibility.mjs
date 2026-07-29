@@ -412,14 +412,31 @@ export async function toolVersion(command) {
 }
 
 export async function pathCommand(name) {
+  // On Windows the file on PATH is `git.exe`, not `git`. PATHEXT is the
+  // platform's own list of executable suffixes; the bare name stays first
+  // because an extensionless executable on PATH is still valid.
+  const candidates =
+    process.platform === "win32"
+      ? [
+          name,
+          ...(process.env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD")
+            .split(";")
+            .map((entry) => entry.trim())
+            .filter((entry) => entry.length > 0)
+            .map((extension) => `${name}${extension}`)
+        ]
+      : [name];
+
   for (const directory of (process.env.PATH ?? "").split(path.delimiter)) {
     if (!directory) continue;
-    const candidate = path.join(directory, name);
-    try {
-      await access(candidate);
-      return candidate;
-    } catch {
-      // Continue through the caller's executable search path.
+    for (const candidateName of candidates) {
+      const candidate = path.join(directory, candidateName);
+      try {
+        await access(candidate);
+        return candidate;
+      } catch {
+        // Continue through the caller's executable search path.
+      }
     }
   }
   throw new Error(`Required Phase 2 executable unavailable: ${name}`);

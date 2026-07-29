@@ -474,6 +474,29 @@ export async function snapshotCommit({ repositoryRoot, commit, destination }) {
   return resolved;
 }
 
+/**
+ * Names to try for a bare command, most specific first.
+ *
+ * On Windows an executable on PATH is `git.exe` or `npm.cmd`, never `git` or
+ * `npm`. Searching for the bare name found nothing, so every test that shells
+ * out reported the tool as unavailable — which reads as a broken environment
+ * rather than an unported path resolver.
+ *
+ * PATHEXT is the platform's own answer to which suffixes are executable, so it
+ * is read rather than hardcoded. The bare name stays first: an extensionless
+ * file on PATH is still valid, and Git for Windows ships one for some tools.
+ */
+function executableCandidates(command) {
+  if (process.platform !== "win32") return [command];
+
+  const extensions = (process.env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD")
+    .split(";")
+    .map((entry) => entry.trim())
+    .filter((entry) => entry.length > 0);
+
+  return [command, ...extensions.map((extension) => `${command}${extension}`)];
+}
+
 async function findExecutable(command) {
   if (path.isAbsolute(command) || command.includes(path.sep)) {
     try {
@@ -485,12 +508,14 @@ async function findExecutable(command) {
   }
   for (const directory of (process.env.PATH ?? "").split(path.delimiter)) {
     if (!directory) continue;
-    const candidate = path.join(directory, command);
-    try {
-      await access(candidate, fsConstants.X_OK);
-      return path.resolve(candidate);
-    } catch {
-      // Continue searching the explicit PATH entries.
+    for (const candidateName of executableCandidates(command)) {
+      const candidate = path.join(directory, candidateName);
+      try {
+        await access(candidate, fsConstants.X_OK);
+        return path.resolve(candidate);
+      } catch {
+        // Continue searching the explicit PATH entries.
+      }
     }
   }
   return null;

@@ -188,8 +188,21 @@ async function makePreparedToyPackage(t, { dependencyGroup = "devDependencies" }
   return { root, storeSource, commit: commit.trim(), tree: tree.trim() };
 }
 
+/**
+ * The optional-dependency absences this fixture pins are Linux-specific: the
+ * optional packages that resolve on one platform differ from another, so the
+ * recorded set is only meaningful on the lane it was calibrated for.
+ *
+ * It used to assert the platform, which turned "not applicable here" into a
+ * failure and made the whole suite red on macOS and Windows. That hid every
+ * other cross-platform result, which is the opposite of what a platform matrix
+ * is for. It skips instead, and returns null so the caller stops.
+ */
 async function makeOptionalPreparedToyPackage(t) {
-  assert.equal(process.platform, "linux", "the pinned-pnpm optional fixture is calibrated for the Linux compatibility lane");
+  if (process.platform !== "linux") {
+    t.skip("the pinned-pnpm optional fixture is calibrated for the Linux compatibility lane");
+    return null;
+  }
   const root = await mkdtemp(path.join(tmpdir(), "visp optional prepared source "));
   const seedRoot = await mkdtemp(path.join(tmpdir(), "visp optional pnpm seed "));
   const storeSource = path.join(seedRoot, "caller-store");
@@ -885,6 +898,8 @@ test("pack preparation is pinned, offline, ambient-config resistant, and repeate
 
 test("pinned pnpm records deterministic optional absences from a real offline toy graph", async (t) => {
   const toy = await makeOptionalPreparedToyPackage(t);
+
+  if (toy === null) return;
   const sourceBefore = await sourceState(toy.root);
   const storeBefore = await directoryDigest(toy.storeSource);
   const owned = await createOwnedRoot();

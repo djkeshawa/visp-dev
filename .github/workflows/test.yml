@@ -78,7 +78,6 @@ jobs:
           npm run golden-path:verify evidence/golden-path-linux-x64-node24.json
           npm run compatibility:phase-6:verify
           npm run conformance:verify
-          npm run sbom:check
           npm run conformance:fixtures:verify evidence/conformance-fixtures-linux-x64-node24.json
 
       # Standing check that the frozen pairs still describe the engine
@@ -151,6 +150,14 @@ jobs:
           node scripts/run-evidence-currency.mjs \
             --kit-repository engines/visp-kit \
             --hyper-repository engines/visp-hyper-agent
+
+      # sbom:check inventories the engine packages, so it can only run once they
+      # are checked out. It was previously in the verify step, which runs before
+      # them, and failed every Linux leg with ENOENT on ../visp-kit/package.json.
+      - name: Verify the committed SBOMs are current
+        if: matrix.manager == 'pnpm' && matrix.node == 24
+        shell: bash
+        run: node scripts/generate-sbom.mjs --check --packages-root engines
 
       - name: Produce conformance fixture evidence for this platform
         if: matrix.manager == 'pnpm' && matrix.node == 24

@@ -106,9 +106,13 @@ async function sbomFor(repositoryRoot, name) {
 
 async function main() {
   const check = process.argv.includes("--check");
+  // Where the package repositories live relative to here. Siblings on a
+  // workstation; a checkout directory in CI.
+  const rootIndex = process.argv.indexOf("--packages-root");
+  const packagesRoot = rootIndex === -1 ? ".." : process.argv[rootIndex + 1];
 
   for (const name of PACKAGES) {
-    const repositoryRoot = path.resolve(process.cwd(), "..", name);
+    const repositoryRoot = path.resolve(process.cwd(), packagesRoot, name);
     const version = JSON.parse(
       await readFile(path.join(repositoryRoot, "package.json"), "utf8")
     ).version;

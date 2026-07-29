@@ -18,18 +18,31 @@ not improvised at the moment of release.
 | Package | Version | State |
 |---|---|---|
 | `visp-kit` | `0.1.0` | **Deprecated** 2026-07-27 — predates the enforcement-hole fixes |
-| `visp-kit` | `0.2.0` | Superseded by `0.2.1`; its registry page carries the untrimmed README |
-| `visp-kit` | **`0.2.1`** | **Supported**, `latest` |
+| `visp-kit` | `0.2.0` | Superseded; its registry page carries the untrimmed README |
+| `visp-kit` | `0.2.1` | Superseded; `repository` and `homepage` still 404 |
+| `visp-kit` | **`0.2.2`** | **Supported**, `latest`. Kit `5763c18` |
 | `visp-hyper-agent` | `0.2.0`, `0.3.0` | **Both deprecated** 2026-07-27 |
-| `visp-hyper-agent` | `0.4.0` | Superseded by `0.4.1`; same README timing miss |
-| `visp-hyper-agent` | **`0.4.1`** | **Supported**, `latest` |
+| `visp-hyper-agent` | `0.4.0` | Superseded; same README timing miss |
+| `visp-hyper-agent` | `0.4.1` | Superseded; metadata pointed at private repositories |
+| `visp-hyper-agent` | **`0.4.2`** | **Supported**, `latest`. Hyper `8de5e48` |
 
 The first three were published in June 2026, before any security, licence, or
-provenance gate existed. The supported pair went out on 2026-07-29 under D-097.
+provenance gate existed. `0.2.0`/`0.4.0` went out on 2026-07-29 under D-097, and
+the supported pair on 2026-07-30 under D-098.
 
-`0.2.1` and `0.4.1` are documentation-only on top of `0.2.0` and `0.4.0`. They
-exist because publication landed minutes before a README trim, and **a published
-version can never be replaced** — so the correction had to be a new version.
+Each correction is a new version because **a published version can never be
+replaced.** `0.2.1`/`0.4.1` fixed a README that shipped minutes before it was
+trimmed; `0.2.2`/`0.4.2` fixed `repository` and `homepage` fields that pointed at
+repositories which were private and returned 404.
+
+**`0.2.2` and `0.4.2` are the first published versions the conformance fixtures
+describe.** The fixtures ran at Kit `ba27687`, one commit past `5763c18`, which
+adds only `.gitattributes` — absent from the `files` allowlist, so the packed
+content is identical. Hyper `8de5e48` is the release commit itself.
+
+Superseded is not deprecated. `0.2.1` and `0.4.1` carry broken metadata links but
+working code, and nothing has deprecated them on the registry. Whether to do so
+is an open registry action needing its own recorded decision.
 
 An npm install path may now be cited, and `compatibility.json.supportedRelease`
 is the single place that records which versions it names. Do not restate the

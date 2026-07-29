@@ -107,8 +107,8 @@
   "published": true,
   "schemaVersion": 2,
   "supportedRelease": {
-    "hyper": "0.4.1",
-    "kit": "0.2.1"
+    "hyper": "0.4.2",
+    "kit": "0.2.2"
   }
 }
 

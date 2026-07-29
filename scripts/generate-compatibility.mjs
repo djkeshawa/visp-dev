@@ -85,18 +85,23 @@ export async function buildCompatibility() {
   return {
     schemaVersion: 2,
     model: "exact-pair",
-    // A supported release exists as of 2026-07-29: visp-kit@0.2.1 and
-    // visp-hyper-agent@0.4.1, neither deprecated. This said false for as long as
-    // that was true, and saying it afterwards would have sent users to build
-    // from source when installing was the better answer.
+    // A supported release exists: visp-kit@0.2.2 and visp-hyper-agent@0.4.2,
+    // published 2026-07-30. This said false for as long as that was true, and
+    // saying it afterwards would have sent users to build from source when
+    // installing was the better answer.
     //
-    // The published versions differ from the pinned pair below by documentation
-    // commits only. The pair remains the unit that carries proof; a version
-    // number is how a user obtains it.
+    // These are the first published versions the conformance fixtures actually
+    // describe. `0.2.2` is Kit `5763c18`; the fixtures ran at `ba27687`, which
+    // adds only `.gitattributes` — absent from the `files` allowlist, so the
+    // tarballs carry identical content. `0.4.2` is Hyper `8de5e48` exactly.
+    //
+    // The phase pairs below still predate this and remain the unit that carries
+    // the protocol proof. A version number is how a user obtains Visp; a commit
+    // and a tarball hash are what any claim is pinned to.
     published: true,
     supportedRelease: {
-      kit: "0.2.1",
-      hyper: "0.4.1"
+      kit: "0.2.2",
+      hyper: "0.4.2"
     },
     generatedFrom: "evidence/",
     // Versions that exist on the registry and must never be used. Recorded here

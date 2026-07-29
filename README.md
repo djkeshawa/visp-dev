@@ -20,7 +20,7 @@ If it ever starts to, it has become a second engine and the boundary has failed.
 npm install -g visp-kit visp-hyper-agent
 ```
 
-That installs `visp-kit@0.2.1` and `visp-hyper-agent@0.4.1`, the supported
+That installs `visp-kit@0.2.2` and `visp-hyper-agent@0.4.2`, the supported
 release. Check what you actually have:
 
 ```bash
@@ -70,11 +70,11 @@ does. `inconclusive` never becomes a pass.
 Stated plainly, because a compatibility product that oversells is worse than
 none.
 
-- **The supported release is an alpha, and it is not the pinned pair.**
-  `visp-kit@0.2.1` and `visp-hyper-agent@0.4.1` are the versions to install.
-  They differ from the commits the packed evidence pins by documentation
-  commits only, so the proof describes near-identical content — not the exact
-  bytes you get from npm.
+- **The supported release is an alpha.** `visp-kit@0.2.2` and
+  `visp-hyper-agent@0.4.2` are the versions to install. The conformance fixtures
+  describe exactly this content. The *phase* compatibility pairs — which carry
+  the protocol and schema-hash proof — still pin earlier commits, so those rows
+  describe near-identical content rather than the exact bytes npm serves.
 - **Older published versions are deprecated.** `visp-kit@0.1.0` and
   `visp-hyper-agent@0.2.0`/`0.3.0` predate the current compatibility matrix. Do
   not install them; `doctor` fails if it finds one.

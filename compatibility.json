@@ -104,7 +104,11 @@
       ]
     }
   ],
-  "published": false,
-  "schemaVersion": 2
+  "published": true,
+  "schemaVersion": 2,
+  "supportedRelease": {
+    "hyper": "0.4.1",
+    "kit": "0.2.1"
+  }
 }
 

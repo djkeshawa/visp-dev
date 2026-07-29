@@ -85,10 +85,19 @@ export async function buildCompatibility() {
   return {
     schemaVersion: 2,
     model: "exact-pair",
-    // No pair here corresponds to a registry release. The only Visp versions on
-    // npm are visp-kit@0.1.0 and visp-hyper-agent@0.2.0/0.3.0, all deprecated,
-    // all predating this matrix. See docs/release-process.md.
-    published: false,
+    // A supported release exists as of 2026-07-29: visp-kit@0.2.1 and
+    // visp-hyper-agent@0.4.1, neither deprecated. This said false for as long as
+    // that was true, and saying it afterwards would have sent users to build
+    // from source when installing was the better answer.
+    //
+    // The published versions differ from the pinned pair below by documentation
+    // commits only. The pair remains the unit that carries proof; a version
+    // number is how a user obtains it.
+    published: true,
+    supportedRelease: {
+      kit: "0.2.1",
+      hyper: "0.4.1"
+    },
     generatedFrom: "evidence/",
     // Versions that exist on the registry and must never be used. Recorded here
     // so tooling can warn rather than relying on a human to remember, and so

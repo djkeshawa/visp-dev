@@ -18,25 +18,27 @@ test("the supported pair is the newest accepted end state", async () => {
   assert.match(pair.hyper.commit, /^[0-9a-f]{40}$/u);
 });
 
-test("nothing is installable while no release is published", async () => {
-  const matrix = await readCompatibility();
+test("a supported release is installable, and names how to get it", async () => {
+  const matrix = await readCompatibility(process.cwd());
   const result = installability(matrix);
 
-  // The only Visp versions on npm are deprecated. An installer that fetched
-  // them would hand the user the build this product exists to prevent.
-  assert.equal(result.installable, false);
-  assert.match(result.reason, /deprecated/u);
-  assert.ok(result.guidance.length > 0);
-});
+  // This asserted the opposite for as long as nothing supported was published.
+  // Leaving it that way after 0.2.1 and 0.4.1 shipped would have sent users to
+  // build from source when installing was the better answer.
+  assert.equal(result.installable, true);
+  assert.match(result.reason, /visp-kit@/u);
+  assert.match(result.guidance, /npm install/u);
 
-test("a published matrix would be installable", () => {
-  assert.equal(installability({ published: true }).installable, true);
+  // The unpublished path still works and still names the deprecation, because a
+  // user may already have one of those versions installed.
+  assert.equal(installability({ published: false }).installable, false);
+  assert.match(installability({ published: false }).reason, /deprecated/u);
 });
 
 test("versions reports pairs by commit and never asserts a release", async () => {
   const result = await versions(process.cwd());
 
-  assert.equal(result.published, false);
+  assert.equal(result.published, true);
   assert.ok(result.pairs.length >= 3);
   for (const pair of result.pairs) {
     assert.match(pair.kit, /^[0-9a-f]{40}$/u);

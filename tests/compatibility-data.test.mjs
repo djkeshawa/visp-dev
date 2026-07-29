@@ -24,10 +24,17 @@ test("every pair is pinned by commit and artifact hash, never by a version range
   }
 });
 
-test("the matrix does not claim anything is published", () => {
+test("the matrix records the release without letting a pair assert a version", () => {
   // The only Visp versions on a registry are deprecated and predate this
   // matrix. Claiming otherwise would point users at defective builds.
-  assert.equal(matrix.published, false);
+  // A supported release exists since 2026-07-29, so the matrix says so.
+  assert.equal(matrix.published, true);
+  assert.match(matrix.supportedRelease.kit, /^\d+\.\d+\.\d+$/u);
+  assert.match(matrix.supportedRelease.hyper, /^\d+\.\d+\.\d+$/u);
+
+  // The part that has not changed and must not: an individual pair still carries
+  // no version. Proof attaches to a commit and a tarball hash, never to a
+  // version number, and a published release does not alter that.
   for (const pair of matrix.pairs) {
     assert.equal(pair.kit.version, null, `${pair.id} kit version must not assert a release`);
     assert.equal(pair.hyper.version, null, `${pair.id} hyper version must not assert a release`);

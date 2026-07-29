@@ -52,7 +52,16 @@ export function supportedPair(matrix) {
  */
 export function installability(matrix) {
   if (matrix.published === true) {
-    return { installable: true, reason: "A published release matches the supported pair." };
+    const release = matrix.supportedRelease;
+
+    return {
+      installable: true,
+      reason:
+        release === undefined
+          ? "A published release matches the supported pair."
+          : `A supported release is published: visp-kit@${release.kit} and visp-hyper-agent@${release.hyper}.`,
+      guidance: "npm install -g visp-kit visp-hyper-agent"
+    };
   }
 
   return {

@@ -78,6 +78,7 @@ jobs:
           npm run golden-path:verify evidence/golden-path-linux-x64-node24.json
           npm run compatibility:phase-6:verify
           npm run conformance:verify
+          npm run sbom:check
           npm run conformance:fixtures:verify evidence/conformance-fixtures-linux-x64-node24.json
 
       # Standing check that the frozen pairs still describe the engine

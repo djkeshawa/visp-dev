@@ -117,28 +117,40 @@ export async function buildCompatibility() {
   };
 }
 
-const target = path.join(root, "compatibility.json");
-const built = `${canonicalStringify(await buildCompatibility())}\n`;
+// Only when invoked as a command. This body used to run on import, and
+// `tests/compatibility-data.test.mjs` imports `buildCompatibility` — so merely
+// loading the module rewrote a tracked file, taking the `else` branch because
+// the test runner's argv has no `--check`.
+//
+// `node --test` runs each file in its own process, so that write raced
+// `tests/cli.test.mjs` reading the same path. `writeFile` truncates before it
+// writes, and a read landing in that window returned "". CI failed with
+// `Unexpected end of JSON input` from `readCompatibility`, which reads as
+// corrupt data rather than as two tests fighting over a file.
+if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
+  const target = path.join(root, "compatibility.json");
+  const built = `${canonicalStringify(await buildCompatibility())}\n`;
 
-if (process.argv.includes("--check")) {
-  let current;
+  if (process.argv.includes("--check")) {
+    let current;
 
-  try {
-    current = await readFile(target, "utf8");
-  } catch {
-    process.stderr.write("compatibility.json is missing. Run: npm run compatibility:generate\n");
-    process.exit(1);
+    try {
+      current = await readFile(target, "utf8");
+    } catch {
+      process.stderr.write("compatibility.json is missing. Run: npm run compatibility:generate\n");
+      process.exit(1);
+    }
+
+    if (current !== built) {
+      process.stderr.write(
+        "compatibility.json is stale relative to evidence/. Run: npm run compatibility:generate\n"
+      );
+      process.exit(1);
+    }
+
+    process.stdout.write("compatibility.json matches the committed evidence.\n");
+  } else {
+    await writeFile(target, built);
+    process.stdout.write(`Wrote ${path.relative(root, target)}\n`);
   }
-
-  if (current !== built) {
-    process.stderr.write(
-      "compatibility.json is stale relative to evidence/. Run: npm run compatibility:generate\n"
-    );
-    process.exit(1);
-  }
-
-  process.stdout.write("compatibility.json matches the committed evidence.\n");
-} else {
-  await writeFile(target, built);
-  process.stdout.write(`Wrote ${path.relative(root, target)}\n`);
 }

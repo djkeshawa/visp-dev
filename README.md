@@ -16,9 +16,12 @@ If it ever starts to, it has become a second engine and the boundary has failed.
 
 ## Five-minute start
 
-**Nothing is installable yet.** No supported release is published — see
-[Limitations](#limitations) — so the honest version of this section is: build
-the pinned pair from source.
+```bash
+npm install -g visp-kit visp-hyper-agent
+```
+
+That installs `visp-kit@0.2.1` and `visp-hyper-agent@0.4.1`, the supported
+release. Check what you actually have:
 
 ```bash
 node scripts/visp-dev.mjs doctor     # what you have, what is missing, what to run
@@ -30,7 +33,12 @@ node scripts/visp-dev.mjs init       # the exact steps for this project
 which matters more than it sounds: `visp-kit@0.1.0` predates the fixes that
 close four policy-bypass holes.
 
-Once Kit and Hyper are built and on your PATH, the workflow is Kit's, not ours:
+A version number is how you obtain Visp; it is not what carries the proof. The
+evidence in this repository pins **commits and tarball hashes**, and the
+published versions sit a few documentation commits away from the pinned pair.
+See [Limitations](#limitations).
+
+Once Kit and Hyper are on your PATH, the workflow is Kit's, not ours:
 
 ```bash
 visp init .
@@ -62,9 +70,15 @@ does. `inconclusive` never becomes a pass.
 Stated plainly, because a compatibility product that oversells is worse than
 none.
 
-- **No supported release exists.** The only Visp versions on npm are
-  `visp-kit@0.1.0` and `visp-hyper-agent@0.2.0`/`0.3.0`, all **deprecated** and
-  all predating the current compatibility matrix. Do not install them.
+- **The supported release is an alpha, and it is not the pinned pair.**
+  `visp-kit@0.2.1` and `visp-hyper-agent@0.4.1` are the versions to install.
+  They differ from the commits the packed evidence pins by documentation
+  commits only, so the proof describes near-identical content — not the exact
+  bytes you get from npm.
+- **Older published versions are deprecated.** `visp-kit@0.1.0` and
+  `visp-hyper-agent@0.2.0`/`0.3.0` predate the current compatibility matrix. Do
+  not install them; `doctor` fails if it finds one.
+- **`visp-dev` itself is not published.** Run it from a checkout.
 - **Compatibility is exact-pair only.** Every claim is pinned to a commit and an
   artifact hash. No version range is supported, because a version string is not
   an identity — `visp-hyper-agent@0.3.0` on npm and `0.3.0` in this workspace

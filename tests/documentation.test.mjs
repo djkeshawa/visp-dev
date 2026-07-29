@@ -79,7 +79,30 @@ test("the README is outcome-first and states its limitations honestly", async ()
   assert.match(readme, /inconclusive/u);
   assert.match(readme, /No performance or review-efficiency claim/u);
 
-  // Never point a reader at an install path while nothing supported is published.
-  assert.doesNotMatch(readme, /npm i(nstall)? -g visp-kit/u);
+  // A supported release is published, so the README must name the install path
+  // and the exact versions — read from the data rather than restated here, or
+  // this assertion becomes the next thing to drift out of date. The previous
+  // version of this test asserted the *absence* of an install path, which
+  // outlived the freeze it was written for and then enforced a false claim.
+  const matrix = JSON.parse(
+    await readFile(new URL("../compatibility.json", import.meta.url), "utf8"),
+  );
+
+  assert.equal(matrix.published, true, "this assertion assumes a published release");
+  assert.match(readme, /npm install -g visp-kit visp-hyper-agent/u);
+  assert.match(readme, new RegExp(`visp-kit@${matrix.supportedRelease.kit}`, "u"));
+  assert.match(readme, new RegExp(`visp-hyper-agent@${matrix.supportedRelease.hyper}`, "u"));
+
+  // Still forbidden: `visp-dev` is `private: true` and has never been published,
+  // so an npx invocation of it would fail for every reader.
+  assert.equal(
+    JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8")).private,
+    true,
+  );
   assert.doesNotMatch(readme, /npx visp-dev/u);
+
+  // The deprecated builds must never be presented as obtainable.
+  for (const { name, version } of matrix.deprecated) {
+    assert.doesNotMatch(readme, new RegExp(`install[^\\n]*${name}@${version}`, "u"));
+  }
 });

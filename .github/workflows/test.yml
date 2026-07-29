@@ -158,8 +158,16 @@ jobs:
       # sbom:check inventories the engine packages, so it can only run once they
       # are checked out. It was previously in the verify step, which runs before
       # them, and failed every Linux leg with ENOENT on ../visp-kit/package.json.
+      #
+      # Not run on Windows. The fixtures snapshot a commit at its recorded Git
+      # modes and verify the modes applied; Windows has no POSIX mode bits, so
+      # `snapshotCommit` fails closed. That refusal is the documented finding
+      # (docs/platform-support.md), and `operating_system` in src/conformance.mjs
+      # already excludes Windows for it. Running the step there anyway turned an
+      # accepted limitation into a permanently red build, which trains everyone
+      # to ignore the colour — the opposite of what the evidence is for.
       - name: Produce conformance fixture evidence for this platform
-        if: matrix.manager == 'pnpm' && matrix.node == 24
+        if: matrix.manager == 'pnpm' && matrix.node == 24 && runner.os != 'Windows'
         shell: bash
         run: |
           set -euo pipefail
@@ -179,7 +187,7 @@ jobs:
             --output "evidence/conformance-fixtures-$platform-$arch-node24.json"
 
       - name: Upload platform conformance evidence
-        if: matrix.manager == 'pnpm' && matrix.node == 24
+        if: matrix.manager == 'pnpm' && matrix.node == 24 && runner.os != 'Windows'
         uses: actions/upload-artifact@v4
         with:
           name: conformance-fixtures-${{ matrix.os }}

@@ -13,18 +13,28 @@ the preconditions below still apply to each release.
 version. This document exists so the process is settled *before* it is needed,
 not improvised at the moment of release.
 
-## What is already public
-
-Two packages were published in June 2026, before any security, licence, or
-provenance gate existed:
+## What is public
 
 | Package | Version | State |
 |---|---|---|
-| `visp-kit` | `0.1.0` | Public, **deprecated** 2026-07-27 |
-| `visp-hyper-agent` | `0.2.0`, `0.3.0` | Public, **both deprecated** 2026-07-27 |
+| `visp-kit` | `0.1.0` | **Deprecated** 2026-07-27 — predates the enforcement-hole fixes |
+| `visp-kit` | `0.2.0` | Superseded by `0.2.1`; its registry page carries the untrimmed README |
+| `visp-kit` | **`0.2.1`** | **Supported**, `latest` |
+| `visp-hyper-agent` | `0.2.0`, `0.3.0` | **Both deprecated** 2026-07-27 |
+| `visp-hyper-agent` | `0.4.0` | Superseded by `0.4.1`; same README timing miss |
+| `visp-hyper-agent` | **`0.4.1`** | **Supported**, `latest` |
 
-Neither is a supported release. Do not cite an npm install path as a way to
-obtain Visp, and do not treat either version as representing current behaviour.
+The first three were published in June 2026, before any security, licence, or
+provenance gate existed. The supported pair went out on 2026-07-29 under D-097.
+
+`0.2.1` and `0.4.1` are documentation-only on top of `0.2.0` and `0.4.0`. They
+exist because publication landed minutes before a README trim, and **a published
+version can never be replaced** — so the correction had to be a new version.
+
+An npm install path may now be cited, and `compatibility.json.supportedRelease`
+is the single place that records which versions it names. Do not restate the
+versions in prose that has no test binding it to that file; that is how the
+README came to claim nothing was installable for a day after it was.
 
 `visp-dev` has never been published and its manifest is marked `private: true`.
 

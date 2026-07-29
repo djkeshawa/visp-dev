@@ -51,7 +51,6 @@ export const REQUIRED_FIXTURES = [
 
 /** Top-level entries a published tarball is allowed to contain. */
 const ALLOWED_TARBALL_ROOTS = new Set([
-  "AGENTS.md",
   "CONTRIBUTING.md",
   "LICENSE",
   "NOTICE",

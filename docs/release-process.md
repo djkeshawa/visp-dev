@@ -54,7 +54,10 @@ All of these, evidenced, before a package is published:
 - [ ] Dogfooding on a real repository is recorded, with outcomes.
 - [ ] The disposition of the already-published artifacts is decided and executed.
 - [x] A machine-readable SBOM exists for the artifact. `npm run sbom` in
-      visp-dev writes `sbom.json` beside each package. It inventories the packed
+      visp-dev writes `sbom.json` beside each package. Regenerate it as part of
+      cutting a release and commit the result — `npm run sbom:check` verifies it,
+      but only on the machine doing the release, because `npm pack` is not
+      byte-deterministic across machines. It inventories the packed
       tarball, not the pnpm dev tree, so it lists what ships — three components,
       not several hundred build-time ones. `npm sbom` cannot be run in these
       repositories directly; pnpm's layout makes it exit `ESBOMPROBLEMS`.

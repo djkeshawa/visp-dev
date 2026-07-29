@@ -20,6 +20,13 @@
  * failed on every run until it was taken back out. An SBOM describing an
  * artifact cannot be part of that artifact. It is committed beside the source
  * and published as a release asset instead.
+ *
+ * `--check` is a release-time check, not a CI one. The SBOM embeds a hash of
+ * the packed tarball, and `npm pack` is not byte-deterministic across machines
+ * — different npm versions and file timestamps change it. CI reported the
+ * committed file as stale on every platform, including the one that generated
+ * it. Run this before publishing, where the artifact being described is the
+ * artifact actually going out.
  */
 import { mkdtemp, readFile, rm, writeFile, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";

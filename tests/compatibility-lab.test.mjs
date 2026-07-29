@@ -389,6 +389,11 @@ async function makePreparedAliasToyPackage(
     version = "6.0.1",
   } = {},
 ) {
+  if (!snapshotFidelityAvailable()) {
+    t.skip("mode-faithful snapshots are not reproducible on this platform");
+    return null;
+  }
+
   const root = await mkdtemp(path.join(tmpdir(), "visp alias prepared source "));
   const seedRoot = await mkdtemp(path.join(tmpdir(), "visp alias pnpm seed "));
   const storeSource = path.join(seedRoot, "caller-store");
@@ -1102,6 +1107,8 @@ test("pinned pnpm accepts closed present aliases and preserves logical tree iden
   for (const fixture of cases) {
     await t.test(fixture.name, async (subtest) => {
       const alias = await makePreparedAliasToyPackage(subtest, { aliasSpec: fixture.aliasSpec });
+
+      if (alias === null) return;
       const sourceBefore = await sourceState(alias.root);
       const storeBefore = await directoryDigest(alias.storeSource);
       const owned = await createOwnedRoot();
@@ -1144,6 +1151,8 @@ test("pinned pnpm accepts closed present aliases and preserves logical tree iden
 
 test("pinned pnpm aliases fail closed on edge, target, manifest, spec, and version contradictions", async (t) => {
   const alias = await makePreparedAliasToyPackage(t);
+
+  if (alias === null) return;
   const cases = [
     { name: "undeclared logical alias rejects", scenario: "undeclared_alias" },
     { name: "raw pnpm alias target mismatch rejects", scenario: "target_mismatch" },

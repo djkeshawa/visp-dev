@@ -7,11 +7,29 @@ const protocol = JSON.parse(
 );
 const prose = readFileSync(new URL("../evaluations/protocol.md", import.meta.url), "utf8");
 
-test("the protocol is frozen but not preregistered while the freeze holds", () => {
-  // Preregistration is publication. Claiming preregistered without publishing a
-  // timestamped copy would be the exact dishonesty the protocol exists to stop.
-  assert.equal(protocol.preregistered, false);
-  assert.match(protocol.preregistrationNote, /forbids publication/u);
+test("preregistration cannot be claimed without an external record", () => {
+  // This used to assert the note mentioned the D-069 freeze. That freeze was
+  // lifted by D-097, so the test was pinning a reason that had expired while the
+  // conclusion it guarded stayed correct for a different one.
+  //
+  // The invariant is that the flag cannot be flipped on its own. Preregistration
+  // means a timestamped copy held by someone with no stake in the result, so
+  // claiming it requires naming when and where — and a commit to this repository
+  // is not that, because this project can rewrite this repository's history.
+  assert.equal(
+    protocol.preregistered,
+    protocol.preregisteredAt !== null && protocol.preregistrationLocation !== null,
+    "preregistered must agree with the record that would substantiate it",
+  );
+
+  if (protocol.preregistered === false) {
+    assert.equal(protocol.preregisteredAt, null);
+    assert.equal(protocol.preregistrationLocation, null);
+    assert.match(prose, /Frozen, not preregistered/u);
+  }
+
+  // The freeze is lifted, so nothing may still cite it as the reason.
+  assert.doesNotMatch(protocol.preregistrationNote, /freeze forbids/u);
 });
 
 test("every hypothesis has a metric and a threshold it can fail", () => {

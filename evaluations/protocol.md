@@ -1,8 +1,31 @@
 # Visp Evaluation Protocol
 
-- **Status:** Frozen 2026-07-27 under D-086. **Not preregistered** — preregistration means publishing a timestamped copy, which the D-069 freeze forbids.
+- **Status:** Frozen 2026-07-27 under D-086. **Not preregistered** — see below.
 - **Version:** 1.0
 - **Applies to:** any public claim about Visp's effect on AI-assisted development
+
+## Frozen, not preregistered
+
+The D-069 publication freeze was lifted on 2026-07-29 (D-097), and the reason
+this document previously gave — that the freeze forbade publishing a timestamped
+copy — no longer holds. The status has not changed, because that reason was
+never the binding one.
+
+`visp-dev` has been a public repository since Phase 3, and build units were
+always permitted to commit to it. If committing the protocol here counted as
+preregistration, it would have been preregistered from the day it was written.
+It was not, and the distinction is the whole point: **this project controls this
+repository.** A timestamp we can rewrite is not a commitment, it is a claim about
+one. Git history can be rebased and force-pushed; a reader auditing a later
+result cannot tell the difference from the outside.
+
+Preregistration therefore needs a record held by someone with no stake in the
+outcome — an external registry entry, or an equivalent third-party timestamp over
+this file's hash. That is a deliberate action for the product owner, not
+something a build unit can perform, and it is the only remaining step for P6-05.
+
+Until it exists, `preregistered` stays `false` and the claim ceiling below
+applies in full.
 
 ## Why this exists before any study
 

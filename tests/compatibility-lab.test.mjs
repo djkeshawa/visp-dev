@@ -769,6 +769,13 @@ test("snapshot materialization ignores hostile Git hooks, filters, attributes, a
 });
 
 test("snapshot materialization restores exact Git file modes under a restrictive umask", async (t) => {
+  // POSIX file modes and umask do not exist on Windows in the form this asserts.
+  // Skipping is honest here; the property being checked is a POSIX one.
+  if (process.platform === "win32") {
+    t.skip("POSIX file modes and umask are not meaningful on Windows");
+    return;
+  }
+
   const toy = await makeToyPackage(t);
   const owned = await createOwnedRoot();
   t.after(() => cleanupOwnedRoot({ root: owned.root }));

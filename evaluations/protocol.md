@@ -1,8 +1,19 @@
 # Visp Evaluation Protocol
 
-- **Status:** Frozen 2026-07-27 under D-086. **Not preregistered** — see below.
-- **Version:** 1.0
+- **Status:** Frozen 2026-07-27 under D-086; revised 2026-07-30 under D-101. **Not preregistered** — see below.
+- **Version:** 1.1
 - **Applies to:** any public claim about Visp's effect on AI-assisted development
+
+## Revisions
+
+| Version | Date | Change |
+|---|---|---|
+| 1.0 | 2026-07-27 | Frozen under D-086 (P6-01). |
+| 1.1 | 2026-07-30 | Repeated trials, `pass^k`, and across-trial variance added under D-101 (P6-11). **No hypothesis, threshold, exclusion, failure category, or claim condition was changed.** |
+
+A study reports the protocol version it ran under. Results produced under v1.0
+remain valid as v1.0 results — they are single-trial, and a single-trial figure
+cannot be compared against a v1.1 `pass^k` figure.
 
 ## Frozen, not preregistered
 
@@ -96,9 +107,92 @@ deliberately symmetric so the protocol can detect Visp being wrong:
 one is either perfect or not actually checking anything, and the second is far
 more likely.
 
+## Repeated trials and reliability
+
+Added in v1.1.
+
+Every metric above is computed from a task run **once per arm**. That measures
+capability. It cannot measure reliability, because one attempt cannot separate a
+task the system handles consistently from one it happened to get right and would
+fail on the next try.
+
+The gap is not small. Published agent evaluations that report both figures find
+single-attempt scores near 60% falling below 25% once the same task must succeed
+on **all eight** attempts, and practitioner reports put the four-trial figure 15
+to 25 points below the single-attempt one. A protocol that only ever runs once
+cannot see any of that, and will report the higher number in good faith.
+
+### What is measured
+
+- **`pass^k`** — the proportion of tasks that succeed on **all** *k* trials. Not
+  "succeeded at least once". A task passing 7 of 8 does not count toward it.
+- **Across-trial variance** — the spread of outcomes per task, so a mean can be
+  read against its own stability.
+
+Both are reported per arm and per condition, alongside every existing metric.
+Neither replaces an existing metric.
+
+### How many trials
+
+*k* is declared before the first run of a study and reported with its results.
+
+| Study | k |
+|---|---|
+| Pilot | 8 |
+| Main automated study | Declared from pilot variance; **minimum 3, maximum 8** |
+
+The pilot carries the higher *k* because its task set is smaller and therefore
+cheaper to repeat, and because measuring variance is already its job. If pilot
+variance shows `pass^k` has stabilised below 8, the main study uses the smaller
+value and records why. If the pilot is inconclusive on this point, the main
+study uses **k = 5**.
+
+This mirrors the rule this protocol already uses for reviewer count: declare a
+range in advance, choose from pilot variance, report which was used.
+
+### Rules that keep the number honest
+
+- **Every trial counts.** Running eight and reporting the best five is optional
+  stopping wearing a different hat, and is forbidden for the same reason.
+- **Trials are independent.** Fresh environment per trial, no state carried
+  between them, seed recorded per trial.
+- **A failed trial is not an exclusion.** The exclusion list above governs
+  unchanged. "The model did badly on run 6" is not on it and does not join it
+  because there are now more runs.
+- **Narrowing is allowed; hiding it is not.** Repeats may be applied to a defined
+  subset when cost requires it. The subset, and what was left out, are recorded
+  with the results. Silently sampling is a protocol violation.
+
+### Cost
+
+*k* trials cost *k* times as much. That is precisely why the number is a declared
+decision rather than a default, and why narrowing to a stated subset is permitted
+while quietly shrinking the task set is not.
+
+### `pass^k` is descriptive in this version, not a hypothesis
+
+It is reported, not tested. No threshold is attached to it, and **no public claim
+may be made from it** — the claim ceiling admits only a preregistered primary
+metric that met a declared threshold.
+
+Two deliberate reasons:
+
+- **No prior exists.** Nobody knows what `pass^k` looks like on Visp. A threshold
+  set today would be a number picked to be beaten rather than one that means
+  something, which is the failure this protocol exists to prevent.
+- **It would move the existing goalposts.** H1–H4 are corrected for multiplicity
+  as one family. Adding a fifth hypothesis raises the bar for the other four, so
+  a new measurement would silently change the test of four already-frozen
+  hypotheses.
+
+Whether consistency becomes a tested hypothesis is a **v1.2 decision taken after
+the pilot reports** — and never after seeing a main-study result.
+
 ## Statistical analysis
 
 - **Design:** paired, same task under both arms, order counterbalanced.
+- **Repeated trials:** each task runs *k* times per arm; see above. Every trial
+  counts toward the reported figure.
 - **Primary test:** paired comparison on the primary metric per hypothesis;
   exact test where counts are small rather than a normal approximation.
 - **Multiplicity:** four hypotheses, so the significance threshold is corrected;

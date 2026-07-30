@@ -75,3 +75,88 @@ test("dogfooding is named as engineering feedback, not evidence for a hypothesis
   // is legitimate feedback and illegitimate as a product claim.
   assert.match(prose, /illegitimate as a product claim/u);
 });
+
+test("the version matches the latest revision entry", () => {
+  // A revision that bumps the prose but not the record, or the record but not
+  // the version, produces results citing a protocol version that never existed.
+  const latest = protocol.revisions.at(-1);
+  assert.equal(protocol.version, latest.version);
+  assert.equal(protocol.revised, latest.date);
+  assert.match(prose, new RegExp(`\\*\\*Version:\\*\\* ${protocol.version}`, "u"));
+});
+
+test("repeated trials measure all-k success, not best-of-k", () => {
+  // Running k trials and reporting the best subset is optional stopping in
+  // another costume. The protocol already forbids the original; this forbids
+  // the variant that only becomes available once k > 1.
+  assert.equal(protocol.repeatedTrials.allTrialsCount, true);
+  assert.equal(protocol.analysis.bestOfTrialsSelection, false);
+  assert.equal(protocol.repeatedTrials.trialsIndependent, true);
+  assert.match(protocol.repeatedTrials.passKDefinition, /ALL k trials/u);
+});
+
+test("main-study k stays inside the declared range", () => {
+  // The range is declared in advance so the number can be chosen from pilot
+  // variance rather than from whichever value produced a nicer figure.
+  const { k } = protocol.repeatedTrials;
+  assert.ok(k.mainStudyMin >= 2, "k below 2 cannot measure consistency at all");
+  assert.ok(k.mainStudyMax >= k.mainStudyMin);
+  assert.ok(k.mainStudyDefaultIfPilotInconclusive >= k.mainStudyMin);
+  assert.ok(k.mainStudyDefaultIfPilotInconclusive <= k.mainStudyMax);
+  if (k.mainStudy !== null) {
+    assert.ok(k.mainStudy >= k.mainStudyMin && k.mainStudy <= k.mainStudyMax);
+  }
+});
+
+test("a failed trial did not quietly become an exclusion", () => {
+  // More runs per task means more chances to want a bad one dropped. The
+  // exclusion list is the thing that would have to change for that, so assert
+  // it did not.
+  assert.equal(protocol.repeatedTrials.failedTrialIsNotAnExclusion, true);
+  assert.ok(!protocol.exclusions.permitted.includes("failed_trial"));
+  assert.ok(!protocol.exclusions.permitted.includes("poor_model_performance"));
+});
+
+test("narrowing repeats to a subset must be recorded", () => {
+  // Repeats cost k times as much, so narrowing is permitted. Narrowing without
+  // saying so reads as full coverage, which is the dishonest version.
+  assert.equal(protocol.repeatedTrials.subsetPermitted, true);
+  assert.equal(protocol.repeatedTrials.subsetMustBeRecorded, true);
+});
+
+test("pass^k is descriptive and licenses no claim", () => {
+  // It is reported, not tested. If it ever becomes a hypothesis it needs a
+  // threshold like every other, and adding one to the family tightens the
+  // multiplicity correction on H1-H4 — which is a decision, not a side effect.
+  const descriptive = protocol.descriptiveMetrics.metrics;
+  assert.ok(descriptive.includes("pass_k"));
+  for (const hypothesis of protocol.hypotheses) {
+    assert.ok(
+      !descriptive.includes(hypothesis.primaryMetric),
+      `${hypothesis.id} tests a metric declared descriptive; give it a threshold or drop it from descriptiveMetrics`,
+    );
+  }
+  assert.match(prose, /## Repeated trials and reliability/u);
+});
+
+test("the v1.1 revision changed no frozen hypothesis or threshold", () => {
+  // The whole value of a frozen protocol is that a later revision cannot quietly
+  // move a threshold. Pin the four hypotheses and their thresholds as frozen at
+  // v1.0 so any future edit to them has to break a test on the way through.
+  const frozenAtV1 = {
+    H1: { primaryMetric: "out_of_scope_files_per_accepted_change", relativeReduction: 0.3 },
+    H2: { primaryMetric: "implementer_authored_passing_without_change_rate", relativeReduction: 0.3 },
+    H3: { primaryMetric: "median_task_to_decision_minutes_routine", maxMedianIncrease: 0.2 },
+    H4: { primaryMetric: "decision_agreement_and_active_review_minutes", minAgreement: 0.9, minTimeReduction: 0.2 },
+  };
+  assert.equal(protocol.hypotheses.length, 4, "a fifth hypothesis changes the correction on the other four");
+  for (const hypothesis of protocol.hypotheses) {
+    const expected = frozenAtV1[hypothesis.id];
+    assert.ok(expected, `unexpected hypothesis ${hypothesis.id}`);
+    assert.equal(hypothesis.primaryMetric, expected.primaryMetric);
+    for (const [key, value] of Object.entries(expected)) {
+      if (key === "primaryMetric") continue;
+      assert.equal(hypothesis.threshold[key], value, `${hypothesis.id}.${key} moved`);
+    }
+  }
+});

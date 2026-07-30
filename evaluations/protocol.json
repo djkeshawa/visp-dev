@@ -1,7 +1,12 @@
 {
   "schemaVersion": "visp.evaluation-protocol.v1",
-  "version": "1.0",
+  "version": "1.1",
   "frozen": "2026-07-27",
+  "revised": "2026-07-30",
+  "revisions": [
+    { "version": "1.0", "date": "2026-07-27", "decision": "D-086", "unit": "P6-01", "change": "Frozen." },
+    { "version": "1.1", "date": "2026-07-30", "decision": "D-101", "unit": "P6-11", "change": "Repeated trials, pass^k, and across-trial variance added. No hypothesis, threshold, exclusion, failure category, or claim condition changed." }
+  ],
   "preregistered": false,
   "preregistrationNote": "Preregistration needs a timestamped copy held by a party with no stake in the result. Committing here is not that: this project controls this repository, and history it can rewrite is not a commitment an outside auditor can rely on. The D-069 freeze was lifted by D-097 and is no longer the blocker; the missing external record is. No study run under this protocol may be cited publicly until it exists.",
   "preregisteredAt": null,
@@ -19,10 +24,33 @@
     "maxExclusionRate": 0.1
   },
   "failureCategories": ["true_block", "false_block", "true_pass", "false_pass", "inconclusive"],
+  "repeatedTrials": {
+    "addedIn": "1.1",
+    "rationale": "A task run once per arm measures capability, not reliability. One attempt cannot separate a task the system handles consistently from one it got right once.",
+    "k": { "pilot": 8, "mainStudy": null, "mainStudyMin": 3, "mainStudyMax": 8, "mainStudyDefaultIfPilotInconclusive": 5, "source": "declared_from_pilot_variance" },
+    "metrics": ["pass_k", "across_trial_variance"],
+    "passKDefinition": "Proportion of tasks succeeding on ALL k trials. Not succeeded-at-least-once.",
+    "allTrialsCount": true,
+    "trialsIndependent": true,
+    "failedTrialIsNotAnExclusion": true,
+    "subsetPermitted": true,
+    "subsetMustBeRecorded": true,
+    "costMultiplier": "k"
+  },
+  "descriptiveMetrics": {
+    "note": "Reported, not tested. No threshold, and no public claim may be made from them. The claim ceiling admits only a preregistered primary metric that met a declared threshold.",
+    "metrics": ["pass_k", "across_trial_variance"],
+    "whyNotAHypothesis": [
+      "no_prior_exists_so_a_threshold_would_be_chosen_to_be_beaten",
+      "a_fifth_hypothesis_would_tighten_holm_bonferroni_on_the_four_already_frozen"
+    ],
+    "reconsiderIn": "1.2, after the pilot reports and never after a main-study result"
+  },
   "analysis": {
     "design": "paired_counterbalanced",
     "multiplicityCorrection": "holm_bonferroni",
     "optionalStopping": false,
+    "bestOfTrialsSelection": false,
     "effectSizeRequired": true,
     "analysisCodeWrittenBeforeData": true
   },

@@ -115,7 +115,7 @@ try {
       environment: { node: process.version, operatingSystem: process.platform, architecture: process.arch },
       artifacts: artifacts.sort((left, right) => left.name.localeCompare(right.name)),
       knownLimitations: [
-        "A supported release is already published. Every version this candidate supersedes stays on the registry, because a published version can never be replaced.",
+        "A supported release is already published. Everything this candidate supersedes stays on the registry, including the deprecated visp-kit@0.1.0 and visp-hyper-agent@0.2.0/0.3.0, because a published version can never be replaced.",
         "Compatibility is exact-pair only, pinned by commit and artifact hash. No version range is supported.",
         "Committed evidence was produced on Linux x64 with Node 24. The CI matrix covers macOS and Windows; the evidence reports do not.",
         "Assurance verdicts are inconclusive because oracle-result mapping is incomplete. inconclusive is never a pass.",
@@ -123,7 +123,7 @@ try {
         "Dogfooding covers one real repository across three runs. That is real use, not a broad sample."
       ],
       publicationPreconditions: [
-        "This registry action has its own explicit recorded decision. The D-069 freeze was lifted by D-097; the per-action requirement outlived it.",
+        "The publication freeze is lifted (D-069 by D-097), and this registry action has its own explicit recorded decision — the per-action requirement outlived the freeze.",
         "Every artifact SHA-256 above is re-verified immediately before upload.",
         "The disposition of the versions this candidate supersedes is decided and executed.",
         "An SBOM exists for each artifact, regenerated on the machine doing the release."

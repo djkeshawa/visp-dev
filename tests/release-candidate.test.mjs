@@ -26,7 +26,20 @@ test("every artifact is identified by commit and hash, and repacks byte-identica
 test("no artifact reuses a version that already exists on the registry", () => {
   // A published version number is immutable content. The assembler refuses to
   // build over one; this asserts the outcome.
-  const taken = new Set(["visp-kit@0.1.0", "visp-hyper-agent@0.2.0", "visp-hyper-agent@0.3.0"]);
+  // Every version npm has ever served, not just the deprecated ones. The list
+  // stopped at 0.3.0 while six more releases went out, so it would not have
+  // caught a candidate reusing 0.2.2 — the exact mistake it exists to prevent.
+  const taken = new Set([
+    "visp-kit@0.1.0",
+    "visp-kit@0.2.0",
+    "visp-kit@0.2.1",
+    "visp-kit@0.2.2",
+    "visp-hyper-agent@0.2.0",
+    "visp-hyper-agent@0.3.0",
+    "visp-hyper-agent@0.4.0",
+    "visp-hyper-agent@0.4.1",
+    "visp-hyper-agent@0.4.2"
+  ]);
   for (const artifact of rc.artifacts) {
     assert.equal(taken.has(`${artifact.name}@${artifact.version}`), false);
   }

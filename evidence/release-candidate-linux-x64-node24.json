@@ -2,19 +2,19 @@
   "artifacts": [
     {
       "byteIdenticalOnRepack": true,
-      "commit": "bfe5366cc7a5dc9c74bb4806d8cf46617a7c8d0f",
+      "commit": "db3350edc3067fb317773863e6c7fd280f2a3af5",
       "name": "visp-hyper-agent",
-      "tarballSha256": "42ffcb82f02e16af0d6baccd8d128718d929d8b430c4a7d31dda20a762362cea",
-      "tree": "6e39c12b762398a5c1bbcbc8a2c836ace5f8d6d5",
-      "version": "0.4.0"
+      "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+      "tree": "b5add141fec7306eef2a6c20482922943f3a2547",
+      "version": "0.4.3"
     },
     {
       "byteIdenticalOnRepack": true,
-      "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
+      "commit": "0a48adde6f2113c840c72c196e844b84d2122584",
       "name": "visp-kit",
-      "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c",
-      "tree": "44a5e805f53c48ad64422c1ebb9261487392bb58",
-      "version": "0.2.0"
+      "tarballSha256": "1fe9c71a498507f8e2966e53393d90efa4b650351bcb12c48c528e13d654ee0a",
+      "tree": "a5c16b6940b12da53f2210e4eeb74332f32e407a",
+      "version": "0.2.3"
     }
   ],
   "environment": {
@@ -23,7 +23,7 @@
     "operatingSystem": "linux"
   },
   "knownLimitations": [
-    "No supported release is published. visp-kit@0.1.0 and visp-hyper-agent@0.2.0/0.3.0 are deprecated and predate this candidate.",
+    "A supported release is already published. Everything this candidate supersedes stays on the registry, including the deprecated visp-kit@0.1.0 and visp-hyper-agent@0.2.0/0.3.0, because a published version can never be replaced.",
     "Compatibility is exact-pair only, pinned by commit and artifact hash. No version range is supported.",
     "Committed evidence was produced on Linux x64 with Node 24. The CI matrix covers macOS and Windows; the evidence reports do not.",
     "Assurance verdicts are inconclusive because oracle-result mapping is incomplete. inconclusive is never a pass.",
@@ -32,12 +32,12 @@
   ],
   "note": "A release candidate. Nothing here has been published, and this tool has no registry write path.",
   "publicationPreconditions": [
-    "The D-069 publication freeze is lifted by an explicit recorded decision.",
+    "The publication freeze is lifted (D-069 by D-097), and this registry action has its own explicit recorded decision — the per-action requirement outlived the freeze.",
     "Every artifact SHA-256 above is re-verified immediately before upload.",
-    "The disposition of the already-published deprecated versions is executed.",
-    "An SBOM exists for each artifact."
+    "The disposition of the versions this candidate supersedes is decided and executed.",
+    "An SBOM exists for each artifact, regenerated on the machine doing the release."
   ],
-  "reportSha256": "fa1f4a5f0680d36404eee93728bf344f24dabd46a63f0cff7ba75b08a16ce4d4",
+  "reportSha256": "d445ac1360d0c2165b7340392a7a75e2b4d07f3b40a2dba1f19df30fd24a9bf3",
   "schemaVersion": "visp.release-candidate.v1",
   "status": "assembled_not_published"
 }

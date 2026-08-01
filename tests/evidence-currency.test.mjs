@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
 import {
   CRITICAL_PATHS,
@@ -17,6 +18,17 @@ const repository = (overrides) => ({
   criticalPathsTouched: [],
   ...overrides
 });
+
+const workflow = readFileSync(new URL("../.github/workflows/test.yml", import.meta.url), "utf8");
+
+function workflowStep(name) {
+  const start = workflow.indexOf(`      - name: ${name}\n`);
+
+  assert.notEqual(start, -1, `missing workflow step: ${name}`);
+  const end = workflow.indexOf("\n      - name:", start + 1);
+
+  return workflow.slice(start, end === -1 ? undefined : end);
+}
 
 test("an unmoved repository reports current", () => {
   const report = createEvidenceCurrencyReport({
@@ -86,5 +98,11 @@ test("every critical path declares a reason a reader can act on", () => {
   for (const critical of CRITICAL_PATHS) {
     assert.ok(critical.reason.length > 0, `${critical.prefix} has no reason`);
     assert.ok(["invalidating", "material"].includes(critical.severity));
+  }
+});
+
+test("the advisory currency job checks out enough engine history to reach its evidence pins", () => {
+  for (const name of ["Check out current Kit", "Check out current Hyper"]) {
+    assert.match(workflowStep(name), /^\s+fetch-depth: 0$/mu);
   }
 });

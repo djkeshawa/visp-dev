@@ -21,23 +21,16 @@ async function createNodeCommandWrapper(base) {
 
   await writeFile(
     script,
-    `${process.platform === "win32" ? "" : "#!/usr/bin/env node\n"}import { writeFileSync } from "node:fs";
+    `import { writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 const args = process.argv.slice(2);
 writeFileSync(${JSON.stringify(marker)}, JSON.stringify(args));
 const result = spawnSync(${JSON.stringify(process.execPath)}, args, { stdio: "inherit" });
 process.exit(result.status ?? 1);
-`,
-    { mode: 0o755 }
+`
   );
-  if (process.platform === "win32") {
-    const command = path.join(base, "node-wrapper.cmd");
 
-    await writeFile(command, `@"${process.execPath}" "${script}" %*\r\n`);
-    return { command, marker, options: { shell: true } };
-  }
-
-  return { command: script, marker, options: {} };
+  return { command: process.execPath, commandArgs: [script], marker };
 }
 
 test("the committed divergence evidence verifies", () => {
@@ -86,7 +79,7 @@ test("claiming diverged while the hashes match is rejected", () => {
   assert.throws(() => verifyDivergenceReport(resealed), /reports diverged but the hashes match/u);
 });
 
-test("the verifier subprocess preserves argv and paths through the platform command wrapper", async (t) => {
+test("the verifier subprocess preserves argv and paths through a real executable", async (t) => {
   const base = await mkdtemp(path.join(tmpdir(), "visp-divergence-wrapper-"));
   const fixture = path.join(base, "verification path with spaces");
   const reportPath = path.join(fixture, "divergence report.json");
@@ -99,11 +92,10 @@ test("the verifier subprocess preserves argv and paths through the platform comm
 
   await run(
     wrapper.command,
-    forwarded,
+    [...wrapper.commandArgs, ...forwarded],
     {
       cwd: new URL("..", import.meta.url),
-      maxBuffer: 8 * 1024 * 1024,
-      ...wrapper.options
+      maxBuffer: 8 * 1024 * 1024
     }
   );
   const observedArgv = JSON.parse(await readFile(wrapper.marker, "utf8"));

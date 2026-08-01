@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    name: Node ${{ matrix.node }} on ${{ matrix.os }} via ${{ matrix.manager }}
     runs-on: ${{ matrix.os }}
     strategy:
       # Do not stop the other legs on the first failure: an OS-specific or
@@ -223,12 +223,14 @@ jobs:
         with:
           repository: djkeshawa/visp-kit
           path: engines/visp-kit
+          fetch-depth: 0
 
       - name: Check out current Hyper
         uses: actions/checkout@v4
         with:
           repository: djkeshawa/visp-hyper-agent
           path: engines/visp-hyper-agent
+          fetch-depth: 0
 
       - name: Set up Node.js 24
         uses: actions/setup-node@v4

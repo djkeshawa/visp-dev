@@ -23,9 +23,16 @@ try {
   const report =
     verifyIndex !== -1
       ? await (async () => {
-          const target = argv[verifyIndex + 1] ?? COMMITTED_REPORT;
+          const explicitTarget = argv[verifyIndex + 1];
+          const target = explicitTarget ?? COMMITTED_REPORT;
           const parsed = JSON.parse(await readFile(target, "utf8"));
           verifyConformanceReport(parsed);
+          if (
+            explicitTarget === undefined &&
+            canonicalStringify(parsed) !== canonicalStringify(await runConformance())
+          ) {
+            throw new Error("Committed conformance report is stale relative to source evidence.");
+          }
           return parsed;
         })()
       : await runConformance();

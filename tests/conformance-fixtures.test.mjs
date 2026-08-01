@@ -7,10 +7,31 @@ import {
   createConformanceFixtureReport,
   verifyConformanceFixtureReport
 } from "../src/conformance-fixtures.mjs";
+import {
+  PLATFORM_RUN_IDENTITY,
+  platformReport,
+  reseal
+} from "./helpers/release-evidence-fixtures.mjs";
 
 const PACKAGES = {
-  kit: { source: { commit: "a".repeat(40) }, pack: { first: { sha256: "b".repeat(64) } } },
-  hyper: { source: { commit: "c".repeat(40) }, pack: { first: { sha256: "d".repeat(64) } } }
+  kit: {
+    source: { commit: "a".repeat(40), tree: "b".repeat(40) },
+    pack: {
+      first: {
+        package: { name: "visp-kit", version: "1.0.0" },
+        sha256: "c".repeat(64)
+      }
+    }
+  },
+  hyper: {
+    source: { commit: "d".repeat(40), tree: "e".repeat(40) },
+    pack: {
+      first: {
+        package: { name: "visp-hyper-agent", version: "2.0.0" },
+        sha256: "f".repeat(64)
+      }
+    }
+  }
 };
 const ENVIRONMENT = { architecture: "x64", node: "v24.0.0", operatingSystem: "linux" };
 
@@ -21,7 +42,8 @@ test("a report is self-hashed and stable under key reordering", () => {
   const report = createConformanceFixtureReport({
     fixtures: everyFixture("pass"),
     packages: PACKAGES,
-    environment: ENVIRONMENT
+    environment: ENVIRONMENT,
+    runIdentity: PLATFORM_RUN_IDENTITY
   });
 
   assert.equal(verifyConformanceFixtureReport(report), true);
@@ -38,7 +60,8 @@ test("a tampered report fails verification", () => {
   const report = createConformanceFixtureReport({
     fixtures: everyFixture("pass"),
     packages: PACKAGES,
-    environment: ENVIRONMENT
+    environment: ENVIRONMENT,
+    runIdentity: PLATFORM_RUN_IDENTITY
   });
   const tampered = structuredClone(report);
 
@@ -51,7 +74,8 @@ test("a report that omits a required fixture is rejected", () => {
   const report = createConformanceFixtureReport({
     fixtures: everyFixture("pass"),
     packages: PACKAGES,
-    environment: ENVIRONMENT
+    environment: ENVIRONMENT,
+    runIdentity: PLATFORM_RUN_IDENTITY
   });
   // Rehashing cannot launder a missing fixture: the check is against the
   // declared list, not the list the report happens to contain. Construction
@@ -61,9 +85,10 @@ test("a report that omits a required fixture is rejected", () => {
       createConformanceFixtureReport({
         fixtures: report.fixtures.slice(1),
         packages: PACKAGES,
-        environment: ENVIRONMENT
+        environment: ENVIRONMENT,
+        runIdentity: PLATFORM_RUN_IDENTITY
       }),
-    /omits required fixture/u
+    /exactly the required fixtures|omits required fixture/u
   );
 });
 
@@ -75,7 +100,8 @@ test("a summary that disagrees with its fixtures is rejected", () => {
   const report = createConformanceFixtureReport({
     fixtures,
     packages: PACKAGES,
-    environment: ENVIRONMENT
+    environment: ENVIRONMENT,
+    runIdentity: PLATFORM_RUN_IDENTITY
   });
 
   assert.equal(report.summary.knownDefects, 1);
@@ -95,13 +121,33 @@ test("an unknown fixture status is refused at construction", () => {
       createConformanceFixtureReport({
         fixtures: [{ ...REQUIRED_FIXTURES[0], status: "probably_fine", observed: {} }],
         packages: PACKAGES,
-        environment: ENVIRONMENT
+        environment: ENVIRONMENT,
+        runIdentity: PLATFORM_RUN_IDENTITY
       }),
-    /omits required fixture|unknown status/u
+    /exactly the required fixtures|omits required fixture|unknown status/u
   );
 });
 
-test("the committed fixture evidence verifies and records real observations", async () => {
+test("a new report preserves full identity and accepts honest rehashed observations", () => {
+  const report = platformReport({ operatingSystem: "linux", architecture: "x64" });
+
+  assert.equal(verifyConformanceFixtureReport(report), true);
+  assert.deepEqual(report.runIdentity, PLATFORM_RUN_IDENTITY);
+  assert.deepEqual(Object.keys(report.packages.kit).sort(), [
+    "commit",
+    "name",
+    "tarballSha256",
+    "tree",
+    "version"
+  ]);
+
+  const changed = structuredClone(report);
+
+  changed.packages.kit.tree = "0".repeat(40);
+  assert.equal(verifyConformanceFixtureReport(reseal(changed)), true);
+});
+
+test("legacy generated platform evidence still verifies at its legacy schema", async () => {
   const report = JSON.parse(
     await readFile(new URL("../evidence/conformance-fixtures-linux-x64-node24.json", import.meta.url), "utf8")
   );

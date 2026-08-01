@@ -5,17 +5,87 @@
         "commit": "3538457ae51f79245358321668c1f3566c5eac74",
         "name": "visp-hyper-agent",
         "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
         "version": "0.4.3"
       },
       {
         "commit": "eb70bce84568e9237690be1eea61355bbff23157",
         "name": "visp-kit",
         "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
         "version": "0.2.3"
       }
     ],
     "status": "assembled_not_published"
   },
+  "evidenceFiles": [
+    {
+      "fileSha256": "6ef49f5bac6826963d17eb00959d9f9256faaaa26abcbd04055274cd1b60d707",
+      "path": "evidence/conformance-fixtures-darwin-arm64-node24.json",
+      "present": true,
+      "reportSha256": "a36dd6a8b4381ffcc14883f5ebf20373f7b834ee610720bb0fab761bd31192f1"
+    },
+    {
+      "fileSha256": "fd0981a48dcb5a3fd49d39b37908dfa33c7f3adea147e4cf20935982d968ebb0",
+      "path": "evidence/conformance-fixtures-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "b5c886697ee7a0a417ef3d3a2dc78c9ae391eb0243e8b28698452ee007695899"
+    },
+    {
+      "fileSha256": "da0bddebf24ea289219b4d601e8ce97a9db6ab8001aafff7fecc50659cac8f12",
+      "path": "evidence/conformance-fixtures-run-30686678616.json",
+      "present": true,
+      "reportSha256": "321ab76fc5b9e14b96dab4d28ae1fcd8763ad8535c16b2fb113c7b447a8fe52e"
+    },
+    {
+      "fileSha256": "d5386c68d3309903ef148fd1791c8adc45208723152251b97711c254963a86e3",
+      "path": "evidence/golden-path-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "82c3424d1eb20c2423812e268dd4d2478c9fcf3cb3f454e4b90755f623d547d0"
+    },
+    {
+      "fileSha256": "7fa8bbcaeb29106deb0bc721f6dc352fa94ceaf47cd5746870b67d316e2abaf6",
+      "path": "evidence/phase-2-packed-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "e34a3e4f02b060a0b4ce1d896f44c73d720a39391a2294319365af589ac1d5a0"
+    },
+    {
+      "fileSha256": "4d5c5d91a5f21a02f120538d468ae61226747cf956c3d796652822012ed30564",
+      "path": "evidence/phase-3-packed-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "29f027f0ee1efdf0147a90fff4ed25ae763a6ccd65cba409f5afb3a4fd67dd83"
+    },
+    {
+      "fileSha256": "6135f802d86cba0298b6c5a0a10baa72663a3f9e8544e010e6b1e4992433b8da",
+      "path": "evidence/phase-4-host-examples-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "e2695e37cd1d18a3a1c6a24f9177633ebcebfb311eff91395f152d6ed0344d53"
+    },
+    {
+      "fileSha256": "d3929b181feaf0d0c6559fcd733c9dca97693c470c76944944f315ddb6964044",
+      "path": "evidence/phase-4-pair-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "593f49385b22e3775a328cd83e87f159595cde6174c07006de9f43414ded3252"
+    },
+    {
+      "fileSha256": "df7b4a5a6f01d34f09810d47d720dc4deb587e01293d0df392e9084e184fad7c",
+      "path": "evidence/phase-6-pair-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7"
+    },
+    {
+      "fileSha256": "df2491be9cb8b56a2be90cd0bb882284f54e89199d24905ecfa476b9b3ef9416",
+      "path": "evidence/registry-divergence-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "04112dc6ed2c637e093d843bb59100c06e1eb57d10bdadb320e7fb3ba65d5d45"
+    },
+    {
+      "fileSha256": "c4313e2d790a44a759afca8da5d1442bd1f669cbd91793894bcfae492e34751a",
+      "path": "evidence/release-candidate-linux-x64-node24.json",
+      "present": true,
+      "reportSha256": "074f01f848d72543ca951766f92abe7e52295135e543b7915da975b85128717e"
+    }
+  ],
   "families": [
     {
       "description": "WorkflowAction negotiation and schema-hash agreement across versions",
@@ -31,6 +101,11 @@
           "path": "evidence/phase-4-pair-linux-x64-node24.json",
           "present": true,
           "reportSha256": "593f49385b22e3775a328cd83e87f159595cde6174c07006de9f43414ded3252"
+        },
+        {
+          "path": "evidence/phase-6-pair-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7"
         }
       ],
       "status": "covered"
@@ -106,6 +181,16 @@
           "path": "evidence/release-candidate-linux-x64-node24.json",
           "present": true,
           "reportSha256": "074f01f848d72543ca951766f92abe7e52295135e543b7915da975b85128717e"
+        },
+        {
+          "path": "evidence/phase-6-pair-linux-x64-node24.json",
+          "present": true,
+          "reportSha256": "ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7"
+        },
+        {
+          "path": "evidence/conformance-fixtures-run-30686678616.json",
+          "present": true,
+          "reportSha256": "321ab76fc5b9e14b96dab4d28ae1fcd8763ad8535c16b2fb113c7b447a8fe52e"
         }
       ],
       "status": "covered"
@@ -118,7 +203,7 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
+          "reportSha256": "b5c886697ee7a0a417ef3d3a2dc78c9ae391eb0243e8b28698452ee007695899"
         }
       ],
       "status": "covered"
@@ -131,12 +216,17 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
+          "reportSha256": "b5c886697ee7a0a417ef3d3a2dc78c9ae391eb0243e8b28698452ee007695899"
         },
         {
           "path": "evidence/conformance-fixtures-darwin-arm64-node24.json",
           "present": true,
-          "reportSha256": "7de671149acec8af5d6ad2e3746096b992c09814fb2b15cecd6b5b604cfc041e"
+          "reportSha256": "a36dd6a8b4381ffcc14883f5ebf20373f7b834ee610720bb0fab761bd31192f1"
+        },
+        {
+          "path": "evidence/conformance-fixtures-run-30686678616.json",
+          "present": true,
+          "reportSha256": "321ab76fc5b9e14b96dab4d28ae1fcd8763ad8535c16b2fb113c7b447a8fe52e"
         }
       ],
       "status": "covered"
@@ -149,7 +239,7 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
+          "reportSha256": "b5c886697ee7a0a417ef3d3a2dc78c9ae391eb0243e8b28698452ee007695899"
         }
       ],
       "status": "covered"
@@ -162,15 +252,110 @@
         {
           "path": "evidence/conformance-fixtures-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "9da311535fe48fe3ddd62ee35e96ddfcc367c1b8495e04448a305581e5bbcec7"
+          "reportSha256": "b5c886697ee7a0a417ef3d3a2dc78c9ae391eb0243e8b28698452ee007695899"
         }
       ],
       "status": "covered"
     }
   ],
   "note": "Families are declared independently of the evidence that happens to exist, so a gap reports as a gap.",
-  "reportSha256": "ec7cd8ed257cf21dbb68b664d32992a842a2cd80ead411537ca0546866e40b36",
-  "schemaVersion": "visp.conformance.v1",
+  "releaseEvidence": {
+    "eligible": true,
+    "expectedPackages": {
+      "hyper": {
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+        "name": "visp-hyper-agent",
+        "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+        "version": "0.4.3"
+      },
+      "kit": {
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+        "name": "visp-kit",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+        "version": "0.2.3"
+      }
+    },
+    "identities": {
+      "candidate": {
+        "hyper": {
+          "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+          "name": "visp-hyper-agent",
+          "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+          "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+          "version": "0.4.3"
+        },
+        "kit": {
+          "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+          "name": "visp-kit",
+          "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+          "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+          "version": "0.2.3"
+        }
+      },
+      "darwin": {
+        "hyper": {
+          "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+          "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2"
+        },
+        "kit": {
+          "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+          "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538"
+        }
+      },
+      "linux": {
+        "hyper": {
+          "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+          "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2"
+        },
+        "kit": {
+          "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+          "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538"
+        }
+      },
+      "phase6": {
+        "hyper": {
+          "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+          "name": "visp-hyper-agent",
+          "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+          "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+          "version": "0.4.3"
+        },
+        "kit": {
+          "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+          "name": "visp-kit",
+          "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+          "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+          "version": "0.2.3"
+        }
+      }
+    },
+    "issues": [],
+    "platformRunIdentity": {
+      "provider": "github-actions",
+      "runAttempt": "1",
+      "runId": "30686678616"
+    },
+    "resolvedPackages": {
+      "hyper": {
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+        "name": "visp-hyper-agent",
+        "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+        "version": "0.4.3"
+      },
+      "kit": {
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+        "name": "visp-kit",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+        "version": "0.2.3"
+      }
+    }
+  },
+  "reportSha256": "83e79cb80c06860164d64bd6655fba09911cdcd792b9ad0127187603aa8fe046",
+  "schemaVersion": "visp.conformance.v2",
   "summary": {
     "covered": 10,
     "gapIds": [],

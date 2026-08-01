@@ -102,13 +102,64 @@
         "3.1",
         "3.2"
       ]
+    },
+    {
+      "evidence": "evidence/phase-6-pair-linux-x64-node24.json",
+      "evidenceSha256": "ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7",
+      "hyper": {
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+        "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+        "version": null
+      },
+      "id": "phase-6",
+      "kit": {
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+        "version": null
+      },
+      "negotiated": "3.2",
+      "node": ">=22",
+      "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+      "workflowActionProtocols": [
+        "2.0",
+        "3.0",
+        "3.1",
+        "3.2"
+      ]
     }
   ],
   "published": true,
+  "releaseEvidence": {
+    "eligible": true,
+    "issues": [],
+    "platformRunIdentity": {
+      "provider": "github-actions",
+      "runAttempt": "1",
+      "runId": "30686678616"
+    },
+    "resolvedPackages": {
+      "hyper": {
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+        "name": "visp-hyper-agent",
+        "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+        "version": "0.4.3"
+      },
+      "kit": {
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+        "name": "visp-kit",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+        "version": "0.2.3"
+      }
+    }
+  },
   "schemaVersion": 2,
   "supportedRelease": {
-    "hyper": "0.4.2",
-    "kit": "0.2.2"
+    "hyper": "0.4.3",
+    "kit": "0.2.3"
   }
 }
 

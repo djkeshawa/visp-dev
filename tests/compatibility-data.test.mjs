@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 
 import { buildCompatibility } from "../scripts/generate-compatibility.mjs";
+import { PHASE_6_COMPATIBILITY_DEFINITION } from "../src/phase-6-compatibility.mjs";
 
 const matrix = JSON.parse(readFileSync(new URL("../compatibility.json", import.meta.url), "utf8"));
 
@@ -25,9 +26,8 @@ test("every pair is pinned by commit and artifact hash, never by a version range
 });
 
 test("the matrix records the release without letting a pair assert a version", () => {
-  // The only Visp versions on a registry are deprecated and predate this
-  // matrix. Claiming otherwise would point users at defective builds.
-  // A supported release exists since 2026-07-29, so the matrix says so.
+  // A supported release exists, but proof still attaches to the exact commit
+  // and tarball rather than treating a version as a compatibility range.
   assert.equal(matrix.published, true);
   assert.match(matrix.supportedRelease.kit, /^\d+\.\d+\.\d+$/u);
   assert.match(matrix.supportedRelease.hyper, /^\d+\.\d+\.\d+$/u);
@@ -39,6 +39,39 @@ test("the matrix records the release without letting a pair assert a version", (
     assert.equal(pair.kit.version, null, `${pair.id} kit version must not assert a release`);
     assert.equal(pair.hyper.version, null, `${pair.id} hyper version must not assert a release`);
   }
+});
+
+test("the newest pair is the exact pair npm serves", () => {
+  const pair = matrix.pairs.at(-1);
+  const { kitFixed, hyperCurrent } = PHASE_6_COMPATIBILITY_DEFINITION.packages;
+
+  assert.equal(pair.id, "phase-6");
+  assert.deepEqual(
+    {
+      commit: pair.kit.commit,
+      tarballSha256: pair.kit.tarballSha256,
+      tree: pair.kit.tree
+    },
+    {
+      commit: kitFixed.commit,
+      tarballSha256: kitFixed.tarballSha256,
+      tree: kitFixed.tree
+    }
+  );
+  assert.deepEqual(
+    {
+      commit: pair.hyper.commit,
+      tarballSha256: pair.hyper.tarballSha256,
+      tree: pair.hyper.tree
+    },
+    {
+      commit: hyperCurrent.commit,
+      tarballSha256: hyperCurrent.tarballSha256,
+      tree: hyperCurrent.tree
+    }
+  );
+  assert.equal(matrix.supportedRelease.kit, kitFixed.version);
+  assert.equal(matrix.supportedRelease.hyper, hyperCurrent.version);
 });
 
 test("each pair names the evidence file that proves it", () => {

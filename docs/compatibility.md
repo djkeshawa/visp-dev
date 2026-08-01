@@ -197,3 +197,72 @@ hashes, verdicts, next commands, and hotspots, but not a compatibility row's
 builds. Phase 4 therefore freezes the verdict and next command and binds the
 action ID through within-run cross-surface equality. This remains exact-pair
 evidence and does not establish a package-version support window.
+
+## Phase 6 — exact published pair
+
+Phase 6 re-establishes the additive compatibility claim at the exact artifacts
+npm serves:
+
+- Kit `visp-kit@0.2.3`: commit
+  `eb70bce84568e9237690be1eea61355bbff23157`, tree
+  `c1cef391194a20a57704bfaa6ed36c7f1b163756`, tarball SHA-256
+  `1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538`;
+- Hyper `visp-hyper-agent@0.4.3`: commit
+  `3538457ae51f79245358321668c1f3566c5eac74`, tree
+  `55ca7ea10865630119f792eb227c9634e0fee8f9`, tarball SHA-256
+  `27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2`.
+
+The additive and differential boundaries also pin prior Kit
+`19d5ffb3276e52462a945c66043f48e31cd6b38f`, tree
+`44a5e805f53c48ad64422c1ebb9261487392bb58`, tarball SHA-256
+`7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c`;
+and prior Hyper `61858199d90bffafb062bde61453f5def6357efa`, tree
+`a7be744b06510443fe97a06b6aa5c214b1bad0f1`, tarball SHA-256
+`0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55`.
+
+The Linux x64, Node `v24.15.0` packed run passed all three exact pairs and all
+six surfaces per pair for one routine accepted fixture. Every surface negotiated
+WorkflowAction 3.2 against schema
+`sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9`.
+The corrected and previous Kit views were identical on the healthy project
+after excluding the per-run `actionId`, so the fail-closed corrections remain
+confined to damaged, incomplete, or unusual input.
+
+The canonical inner report SHA-256 is
+`ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7`;
+the raw report-file SHA-256 is
+`df7b4a5a6f01d34f09810d47d720dc4deb587e01293d0df392e9084e184fad7c`;
+the frozen definition SHA-256 is
+`155bdf2cc0930acd507c1f64103ed980119180465e231f3aa03795b4d3d08daa`.
+Re-verify it offline with `pnpm compatibility:phase-6:verify`.
+
+Linux x64 and macOS arm64 platform fixtures came from GitHub Actions run
+`30686678616`, attempt `1`. The provenance sidecar binds the reviewed artifact
+IDs, API digests, exact archive members, raw file hashes, and inner report
+hashes. Its self-hash protects the captured attestation from unnoticed edits;
+it does not independently authenticate GitHub.
+
+The strict C1 aggregate uses `visp.conformance.v2`. The verifier retains an
+integrity-only path for historical `visp.conformance.v1` reports, which predate
+full tree identity and the release-evidence gate. A valid v1 report records its
+historical coverage verdict; it cannot establish C1 release eligibility.
+
+Version 2 also carries a closed `evidenceFiles` source manifest. Each required
+family is bound to its exact declared path set and each present source is bound
+to both its canonical inner report hash and its reviewed raw-file SHA-256. The
+C1 review derives and freezes the committed release-candidate file identity as
+raw SHA-256
+`c4313e2d790a44a759afca8da5d1442bd1f669cbd91793894bcfae492e34751a`
+and inner SHA-256
+`074f01f848d72543ca951766f92abe7e52295135e543b7915da975b85128717e`.
+The platform provenance sidecar is independently bound as raw SHA-256
+`da0bddebf24ea289219b4d601e8ce97a9db6ab8001aafff7fecc50659cac8f12`
+and inner SHA-256
+`321ab76fc5b9e14b96dab4d28ae1fcd8763ad8535c16b2fb113c7b447a8fe52e`.
+These source identities complement the Phase 6 and platform raw hashes above;
+relabeling and rehashing an aggregate cannot substitute another evidence file.
+
+The version numbers identify how to obtain these bytes; they do not establish
+a SemVer compatibility range. The claim remains bound to the commits, trees,
+and tarball hashes above. The routine-fixture differential does not prove
+equivalence for damaged, incomplete, or unusual input.

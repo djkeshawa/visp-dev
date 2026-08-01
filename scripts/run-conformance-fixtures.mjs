@@ -67,7 +67,12 @@ async function main() {
     kitCommit: options.kitCommit,
     kitTree: options.kitTree,
     hyperCommit: options.hyperCommit,
-    hyperTree: options.hyperTree
+    hyperTree: options.hyperTree,
+    runIdentity: {
+      provider: options.runProvider,
+      runId: options.runId,
+      runAttempt: options.runAttempt
+    }
   });
   const serialized = `${canonicalStringify(report)}\n`;
 

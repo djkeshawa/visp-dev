@@ -1,13 +1,16 @@
 # Release Process
 
-## Current status: published
+## Current status: publication freeze active
 
-The publication freeze was lifted on 2026-07-29. `visp-kit` and
-`visp-hyper-agent` are published, and both source repositories are public.
+Historical decisions D-097 and D-107 authorized the already-published
+`visp-kit` and `visp-hyper-agent` artifacts recorded below. Both source
+repositories are public.
 
-The freeze is gone; the discipline is not. Every registry action — a publish, a
-dist-tag move, a deprecation — still needs an explicit recorded decision, and
-the preconditions below still apply to each release.
+The controlling D-110 publication freeze is active. C1 authorizes local
+implementation, verification, and evidence reconciliation only. It authorizes
+no push, tag, pull request, publish, dist-tag, deprecation, or visibility
+change. Any future registry or repository action requires a separate explicit
+recorded decision, and the preconditions below still apply to each release.
 
 **A published version can never be replaced.** Every correction is a new
 version. This document exists so the process is settled *before* it is needed,
@@ -20,25 +23,31 @@ not improvised at the moment of release.
 | `visp-kit` | `0.1.0` | **Deprecated** 2026-07-27 — predates the enforcement-hole fixes |
 | `visp-kit` | `0.2.0` | Superseded; its registry page carries the untrimmed README |
 | `visp-kit` | `0.2.1` | Superseded; `repository` and `homepage` still 404 |
-| `visp-kit` | **`0.2.2`** | **Supported**, `latest`. Kit `5763c18` |
+| `visp-kit` | `0.2.2` | Superseded; first metadata-correct published Kit |
+| `visp-kit` | **`0.2.3`** | **Supported**, exact D-107 artifact at `eb70bce` |
 | `visp-hyper-agent` | `0.2.0`, `0.3.0` | **Both deprecated** 2026-07-27 |
 | `visp-hyper-agent` | `0.4.0` | Superseded; same README timing miss |
 | `visp-hyper-agent` | `0.4.1` | Superseded; metadata pointed at private repositories |
-| `visp-hyper-agent` | **`0.4.2`** | **Supported**, `latest`. Hyper `8de5e48` |
+| `visp-hyper-agent` | `0.4.2` | Superseded; first metadata-correct published Hyper |
+| `visp-hyper-agent` | **`0.4.3`** | **Supported**, exact D-107 artifact at `3538457` |
 
 The first three were published in June 2026, before any security, licence, or
 provenance gate existed. `0.2.0`/`0.4.0` went out on 2026-07-29 under D-097, and
-the supported pair on 2026-07-30 under D-098.
+the first metadata-correct pair on 2026-07-30 under D-098. The current D-107
+pair is identified by the exact five-field identities recorded below.
 
 Each correction is a new version because **a published version can never be
 replaced.** `0.2.1`/`0.4.1` fixed a README that shipped minutes before it was
 trimmed; `0.2.2`/`0.4.2` fixed `repository` and `homepage` fields that pointed at
 repositories which were private and returned 404.
 
-**`0.2.2` and `0.4.2` are the first published versions the conformance fixtures
-describe.** The fixtures ran at Kit `ba27687`, one commit past `5763c18`, which
-adds only `.gitattributes` — absent from the `files` allowlist, so the packed
-content is identical. Hyper `8de5e48` is the release commit itself.
+**`0.2.2` and `0.4.2` were the first published versions the earlier conformance
+fixtures and compatibility pair described exactly.** The Kit version bump landed
+at `5763c18`, but npm published from `ba27687` after the platform-independent LF
+checkout pin; the registry records `ba27687` as `gitHead`. That final commit
+adds only `.gitattributes`, absent from the `files` allowlist. Hyper `8de5e48`
+is both the version-bump and published `gitHead`. Those anchors remain
+historical evidence; they are not the current recommendation.
 
 Superseded is not deprecated. `0.2.1` and `0.4.1` carry broken metadata links but
 working code, and nothing has deprecated them on the registry. Whether to do so

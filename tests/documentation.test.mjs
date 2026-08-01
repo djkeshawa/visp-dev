@@ -8,6 +8,10 @@ import {
 } from "../src/compatibility-matrix.mjs";
 import { PHASE_3_COMPATIBILITY_DEFINITION } from "../src/phase-3-compatibility.mjs";
 import { PHASE_4_COMPATIBILITY_DEFINITION } from "../src/phase-4-compatibility.mjs";
+import {
+  PHASE_6_COMPATIBILITY_DEFINITION,
+  PHASE_6_COMPATIBILITY_SHA256,
+} from "../src/phase-6-compatibility.mjs";
 
 test("public compatibility documentation matches the frozen exact-pair matrix", async () => {
   const [readme, report] = await Promise.all([
@@ -33,6 +37,10 @@ test("public compatibility documentation matches the frozen exact-pair matrix", 
   assert.match(report, /does not establish a package-version support window|not a package-version support\s+window/u);
   assert.match(readme, /exact compatibility and migration report/u);
   assert.match(readme, /run-phase-3-compatibility\.mjs/u);
+  assert.match(
+    readme,
+    /run-phase-6-compatibility\.mjs[\s\S]*?--package-manager[\s\S]*?--npm[\s\S]*?--run-provider local[\s\S]*?--run-id <stable-local-run-id>[\s\S]*?--run-attempt 1[\s\S]*?--output <new-phase-6-report-path>/u
+  );
   assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.packages.kitNew.commit, "u"));
   assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.packages.hyperNew.commit, "u"));
   assert.match(report, new RegExp(PHASE_3_COMPATIBILITY_DEFINITION.schemaHash, "u"));
@@ -57,6 +65,27 @@ test("published Phase 4 evidence names the exact corrected-Kit pair", async () =
   );
   assert.match(report, /all three rows negotiated 3\.2/iu);
   assert.match(report, /exact-pair\s+evidence\s+and\s+does\s+not\s+establish\s+a\s+package-version\s+support\s+window/u);
+});
+
+test("published Phase 6 evidence names the exact npm artifacts", async () => {
+  const report = await readFile(new URL("../docs/compatibility.md", import.meta.url), "utf8");
+
+  for (const id of ["kitFixed", "kitPrevious", "hyperCurrent", "hyperPrevious"]) {
+    const expected = PHASE_6_COMPATIBILITY_DEFINITION.packages[id];
+
+    assert.match(report, new RegExp(expected.commit, "u"), `missing Phase 6 ${id} commit`);
+    assert.match(
+      report,
+      new RegExp(expected.tarballSha256, "u"),
+      `missing Phase 6 ${id} tarball hash`,
+    );
+  }
+  assert.match(report, new RegExp(PHASE_6_COMPATIBILITY_DEFINITION.schemaHash, "u"));
+  assert.match(report, new RegExp(PHASE_6_COMPATIBILITY_SHA256, "u"));
+  assert.match(report, /exact published pair/iu);
+  assert.match(report, /do not establish\s+a SemVer compatibility range/iu);
+  assert.match(report, /strict C1 aggregate uses `visp\.conformance\.v2`/u);
+  assert.match(report, /valid v1 report[\s\S]*cannot establish C1 release eligibility/u);
 });
 
 test("the README is outcome-first and states its limitations honestly", async () => {
@@ -89,7 +118,13 @@ test("the README is outcome-first and states its limitations honestly", async ()
   );
 
   assert.equal(matrix.published, true, "this assertion assumes a published release");
-  assert.match(readme, /npm install -g visp-kit visp-hyper-agent/u);
+  assert.match(
+    readme,
+    new RegExp(
+      `npm install -g visp-kit@${matrix.supportedRelease.kit} visp-hyper-agent@${matrix.supportedRelease.hyper}`,
+      "u"
+    )
+  );
   assert.match(readme, new RegExp(`visp-kit@${matrix.supportedRelease.kit}`, "u"));
   assert.match(readme, new RegExp(`visp-hyper-agent@${matrix.supportedRelease.hyper}`, "u"));
 
@@ -105,4 +140,20 @@ test("the README is outcome-first and states its limitations honestly", async ()
   for (const { name, version } of matrix.deprecated) {
     assert.doesNotMatch(readme, new RegExp(`install[^\\n]*${name}@${version}`, "u"));
   }
+});
+
+test("release documentation preserves history without weakening the active publication freeze", async () => {
+  const releaseProcess = await readFile(
+    new URL("../docs/release-process.md", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(releaseProcess, /Current status: publication freeze active/u);
+  assert.match(releaseProcess, /Historical decisions D-097 and D-107 authorized/u);
+  assert.match(releaseProcess, /controlling D-110 publication freeze is active/u);
+  assert.match(
+    releaseProcess,
+    /no push, tag, pull request, publish, dist-tag, deprecation, or visibility\s+change/u
+  );
+  assert.doesNotMatch(releaseProcess, /The freeze is gone/u);
 });

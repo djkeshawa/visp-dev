@@ -47,7 +47,12 @@ async function main() {
     offlineStoreSource: options.offlineStore,
     offlineCacheSource: options.offlineCache,
     packageManagerCommand: options.packageManager ?? "pnpm",
-    npmCommand: options.npm ?? "npm"
+    npmCommand: options.npm ?? "npm",
+    runIdentity: {
+      provider: options.runProvider,
+      runId: options.runId,
+      runAttempt: options.runAttempt
+    }
   });
   const serialized = `${canonicalStringify(report)}\n`;
 

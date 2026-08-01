@@ -180,6 +180,8 @@ export function verifyDivergenceReport(report) {
     throw new Error("Registry divergence report hash does not match its content.");
   }
 
+  const scratchRoots = new Set();
+
   for (const entry of report.packages) {
     if (!["diverged", "identical", "unavailable"].includes(entry.status)) {
       throw new Error(`Unknown divergence status for ${entry.packageName}.`);
@@ -189,6 +191,17 @@ export function verifyDivergenceReport(report) {
       if (entry.status !== "identical") {
         throw new Error(`${entry.packageName} reports diverged but the hashes match.`);
       }
+    }
+
+    if (report.packages.length > 1) {
+      if (
+        typeof entry.scratchRootSha256 !== "string" ||
+        !/^[0-9a-f]{64}$/u.test(entry.scratchRootSha256) ||
+        scratchRoots.has(entry.scratchRootSha256)
+      ) {
+        throw new Error("Multi-package divergence evidence requires one distinct owned scratch root per package.");
+      }
+      scratchRoots.add(entry.scratchRootSha256);
     }
   }
 

@@ -7,7 +7,14 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
-import { canonicalStringify, createOwnedRoot, cleanupOwnedRoot, packPackageTwice } from "../src/compatibility-lab.mjs";
+import {
+  canonicalStringify,
+  createOwnedRoot,
+  cleanupOwnedRoot,
+  packPackageTwice,
+  runProcess,
+  sha256Hex
+} from "../src/compatibility-lab.mjs";
 import {
   createDivergenceReport,
   measureDivergence,
@@ -68,30 +75,48 @@ try {
       const packages = [];
 
       for (const target of parsed.input.targets) {
+        const packageRoot = await createOwnedRoot({ baseDirectory: owned.root });
         const manifest = JSON.parse(
           await readFile(path.join(target.repositoryPath, "package.json"), "utf8")
         );
-        const head = await import("node:child_process").then((cp) =>
-          cp.execFileSync("git", ["-C", target.repositoryPath, "rev-parse", "HEAD"]).toString().trim()
+        const headResult = await runProcess(
+          "git",
+          ["-C", target.repositoryPath, "rev-parse", "HEAD"],
+          { timeoutMs: 15_000 }
         );
-        const packed = await packPackageTwice({
-          repositoryRoot: target.repositoryPath,
-          commit: head,
-          ownedRoot: owned.root,
-          offlineStoreSource: parsed.input.offlineStoreSource,
-          packageManagerCommand: parsed.input.packageManagerCommand,
-          npmCommand: parsed.input.npmCommand
-        });
-
-        packages.push({
-          ...(await measureDivergence({
-            packageName: manifest.name,
-            version: manifest.version,
-            localTarball: packed.tarballPath,
+        if (headResult.spawnError || headResult.timedOut || headResult.exitCode !== 0) {
+          throw new Error(`Could not resolve ${target.name} HEAD`);
+        }
+        const head = headResult.stdout.text.trim();
+        try {
+          const preparation =
+            typeof manifest.packageManager === "string"
+              ? {
+                  offlineStoreSource: parsed.input.offlineStoreSource,
+                  packageManagerCommand: parsed.input.packageManagerCommand
+                }
+              : {};
+          const packed = await packPackageTwice({
+            repositoryRoot: target.repositoryPath,
+            commit: head,
+            ownedRoot: packageRoot.root,
+            ...preparation,
             npmCommand: parsed.input.npmCommand
-          })),
-          localCommit: head
-        });
+          });
+
+          packages.push({
+            ...(await measureDivergence({
+              packageName: manifest.name,
+              version: manifest.version,
+              localTarball: packed.tarballPath,
+              npmCommand: parsed.input.npmCommand
+            })),
+            localCommit: head,
+            scratchRootSha256: sha256Hex(packageRoot.root)
+          });
+        } finally {
+          await cleanupOwnedRoot({ root: packageRoot.root });
+        }
       }
 
       report = createDivergenceReport({ packages });

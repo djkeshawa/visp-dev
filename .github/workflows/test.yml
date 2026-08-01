@@ -83,116 +83,8 @@ jobs:
           npm run compatibility:phase-6:verify
           npm run conformance:verify
           npm run conformance:fixtures:verify evidence/conformance-fixtures-linux-x64-node24.json
-
-      # Standing check that the frozen pairs still describe the engine
-      # repositories. Exits non-zero only when the gap reaches the wire schema
-      # or integration surface, so documentation churn does not fail the build.
-
-      # The operating_system conformance family cannot be closed from a Linux
-      # workstation. These legs are the only place macOS and Windows evidence can
-      # come from, so the report is produced here rather than asserted locally.
-      #
-      # This was previously a no-op. It checked for the engine repositories,
-      # found them private, and exited zero — and even with them present it
-      # would have thrown, because it passed five of the eleven arguments the
-      # runner requires. `continue-on-error` hid both problems.
-      - name: Check out visp-kit
-        if: matrix.manager == 'pnpm' && matrix.node == 24
-        uses: actions/checkout@v4
-        with:
-          repository: djkeshawa/visp-kit
-          path: engines/visp-kit
-
-      - name: Check out visp-hyper-agent
-        if: matrix.manager == 'pnpm' && matrix.node == 24
-        uses: actions/checkout@v4
-        with:
-          repository: djkeshawa/visp-hyper-agent
-          path: engines/visp-hyper-agent
-
-      # The fixtures install from a local store rather than the network, so the
-      # evidence describes a hermetic install. Building that store is fiddly in
-      # three documented ways; see docs/release-process.md.
-      - name: Build the offline store and cache
-        if: matrix.manager == 'pnpm' && matrix.node == 24
-        shell: bash
-        run: |
-          set -euo pipefail
-          STORE="$RUNNER_TEMP/visp-store"
-          CACHE="$RUNNER_TEMP/visp-cache"
-          mkdir -p "$STORE" "$CACHE"
-
-          # pnpm fetch purges node_modules, so it runs against throwaway copies
-          # of the lockfiles rather than the checkouts themselves.
-          for repo in visp-kit visp-hyper-agent; do
-            work="$RUNNER_TEMP/fetch-$repo"
-            mkdir -p "$work"
-            cp "engines/$repo/package.json" "engines/$repo/pnpm-lock.yaml" "$work/"
-            (cd "$work" && pnpm fetch --store-dir "$STORE")
-          done
-
-          # pnpm leaves a link back to the directory it fetched from, which
-          # escapes the store root and the harness refuses it — correctly, since
-          # an escaping link means the snapshot is not self-contained.
-          find "$STORE" -type l -delete
-
-          # The npm cache needs a real install. A lockfile-only run leaves the
-          # tarball install failing ENOTCACHED on the runtime dependencies.
-          build="$RUNNER_TEMP/cache-build"
-          mkdir -p "$build"
-          echo '{"name":"c","version":"1.0.0","private":true}' > "$build/package.json"
-          (cd "$build" && npm install commander@^12.1.0 zod@^3.25.76 --cache "$CACHE" --no-audit --no-fund)
-
-      # Standing check that the frozen pair still describes the engine
-      # repositories. Non-blocking: it reports a gap, and whether that gap
-      # matters is a judgement the report itself explains.
-      - name: Measure how far the frozen pair lags the engine repositories
-        if: matrix.manager == 'pnpm' && matrix.node == 24
-        shell: bash
-        continue-on-error: true
-        run: |
-          node scripts/run-evidence-currency.mjs \
-            --kit-repository engines/visp-kit \
-            --hyper-repository engines/visp-hyper-agent
-
-      # sbom:check inventories the engine packages, so it can only run once they
-      # are checked out. It was previously in the verify step, which runs before
-      # them, and failed every Linux leg with ENOENT on ../visp-kit/package.json.
-      #
-      # Not run on Windows. The fixtures snapshot a commit at its recorded Git
-      # modes and verify the modes applied; Windows has no POSIX mode bits, so
-      # `snapshotCommit` fails closed. That refusal is the documented finding
-      # (docs/platform-support.md), and `operating_system` in src/conformance.mjs
-      # already excludes Windows for it. Running the step there anyway turned an
-      # accepted limitation into a permanently red build, which trains everyone
-      # to ignore the colour — the opposite of what the evidence is for.
-      - name: Produce conformance fixture evidence for this platform
-        if: matrix.manager == 'pnpm' && matrix.node == 24 && runner.os != 'Windows'
-        shell: bash
-        run: |
-          set -euo pipefail
-          platform=$(node -p 'process.platform')
-          arch=$(node -p 'process.arch')
-
-          node scripts/run-conformance-fixtures.mjs \
-            --kit-repository engines/visp-kit \
-            --hyper-repository engines/visp-hyper-agent \
-            --offline-store "$RUNNER_TEMP/visp-store" \
-            --offline-cache "$RUNNER_TEMP/visp-cache" \
-            --package-manager pnpm --npm npm \
-            --kit-commit "$(git -C engines/visp-kit rev-parse HEAD)" \
-            --kit-tree "$(git -C engines/visp-kit rev-parse 'HEAD^{tree}')" \
-            --hyper-commit "$(git -C engines/visp-hyper-agent rev-parse HEAD)" \
-            --hyper-tree "$(git -C engines/visp-hyper-agent rev-parse 'HEAD^{tree}')" \
-            --output "evidence/conformance-fixtures-$platform-$arch-node24.json"
-
-      - name: Upload platform conformance evidence
-        if: matrix.manager == 'pnpm' && matrix.node == 24 && runner.os != 'Windows'
-        uses: actions/upload-artifact@v4
-        with:
-          name: conformance-fixtures-${{ matrix.os }}
-          path: evidence/conformance-fixtures-*.json
-          if-no-files-found: error
+          npm run conformance:fixtures:verify evidence/conformance-fixtures-darwin-arm64-node24.json
+          npm run conformance:provenance:verify
 
       - name: Confirm nothing was published by this run
         shell: bash
@@ -204,3 +96,147 @@ jobs:
             echo "package.json is no longer marked private; publication is gated."
             exit 1
           fi
+
+  platform-evidence:
+    name: D-107 evidence on ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: linux-x64
+            os: ubuntu-latest
+            platform: linux
+            architecture: x64
+            filename: conformance-fixtures-linux-x64-node24.json
+            artifact: conformance-fixtures-ubuntu-latest
+          - label: darwin-arm64
+            os: macos-15
+            platform: darwin
+            architecture: arm64
+            filename: conformance-fixtures-darwin-arm64-node24.json
+            artifact: conformance-fixtures-macos-latest
+    steps:
+      - name: Check out Visp Dev
+        uses: actions/checkout@v4
+
+      - name: Check out exact D-107 Kit
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          ref: eb70bce84568e9237690be1eea61355bbff23157
+          path: engines/visp-kit
+
+      - name: Check out exact D-107 Hyper
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          ref: 3538457ae51f79245358321668c1f3566c5eac74
+          path: engines/visp-hyper-agent
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable pnpm 11.3.0
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+
+      - name: Assert exact source and runner identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C engines/visp-kit rev-parse HEAD)" = eb70bce84568e9237690be1eea61355bbff23157
+          test "$(git -C engines/visp-kit rev-parse 'HEAD^{tree}')" = c1cef391194a20a57704bfaa6ed36c7f1b163756
+          test "$(git -C engines/visp-hyper-agent rev-parse HEAD)" = 3538457ae51f79245358321668c1f3566c5eac74
+          test "$(git -C engines/visp-hyper-agent rev-parse 'HEAD^{tree}')" = 55ca7ea10865630119f792eb227c9634e0fee8f9
+          test "$(node -p 'process.platform')" = "${{ matrix.platform }}"
+          test "$(node -p 'process.arch')" = "${{ matrix.architecture }}"
+          test "$(node -p 'process.versions.node.split(`.`)[0]')" = 24
+
+      - name: Build hermetic package inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/visp-store" "$RUNNER_TEMP/visp-cache"
+          for repo in visp-kit visp-hyper-agent; do
+            work="$RUNNER_TEMP/fetch-$repo"
+            mkdir -p "$work"
+            cp "engines/$repo/package.json" "engines/$repo/pnpm-lock.yaml" "$work/"
+            (cd "$work" && pnpm fetch --store-dir "$RUNNER_TEMP/visp-store")
+          done
+          find "$RUNNER_TEMP/visp-store" -type l -delete
+          build="$RUNNER_TEMP/cache-build"
+          mkdir -p "$build"
+          echo '{"name":"c","version":"1.0.0","private":true}' > "$build/package.json"
+          (cd "$build" && npm install commander@^12.1.0 zod@^3.25.76 --cache "$RUNNER_TEMP/visp-cache" --no-audit --no-fund)
+
+      - name: Produce exact platform report
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/run-conformance-fixtures.mjs \
+            --kit-repository engines/visp-kit \
+            --hyper-repository engines/visp-hyper-agent \
+            --offline-store "$RUNNER_TEMP/visp-store" \
+            --offline-cache "$RUNNER_TEMP/visp-cache" \
+            --package-manager pnpm --npm npm \
+            --kit-commit eb70bce84568e9237690be1eea61355bbff23157 \
+            --kit-tree c1cef391194a20a57704bfaa6ed36c7f1b163756 \
+            --hyper-commit 3538457ae51f79245358321668c1f3566c5eac74 \
+            --hyper-tree 55ca7ea10865630119f792eb227c9634e0fee8f9 \
+            --run-provider github-actions \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --output "evidence/${{ matrix.filename }}"
+
+      - name: Upload exact Linux member
+        if: matrix.platform == 'linux'
+        id: linux-upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: evidence/conformance-fixtures-linux-x64-node24.json
+          if-no-files-found: error
+
+      - name: Upload exact macOS member
+        if: matrix.platform == 'darwin'
+        id: macos-upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: evidence/conformance-fixtures-darwin-arm64-node24.json
+          if-no-files-found: error
+
+  evidence-currency:
+    name: Advisory evidence currency
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Check out Visp Dev
+        uses: actions/checkout@v4
+
+      - name: Check out current Kit
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          path: engines/visp-kit
+
+      - name: Check out current Hyper
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          path: engines/visp-hyper-agent
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Measure drift from the frozen evidence identities
+        run: |
+          node scripts/run-evidence-currency.mjs \
+            --kit-repository engines/visp-kit \
+            --hyper-repository engines/visp-hyper-agent

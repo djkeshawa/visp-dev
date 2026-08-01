@@ -12,7 +12,8 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-import { canonicalStringify } from "../src/compatibility-lab.mjs";
+import { canonicalStringify, sha256Hex } from "../src/compatibility-lab.mjs";
+import { evaluateReleaseEvidence } from "../src/release-evidence.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -48,12 +49,29 @@ async function readJson(relative) {
   return JSON.parse(await readFile(path.join(root, relative), "utf8"));
 }
 
+async function readEvidence(relative) {
+  const bytes = await readFile(path.join(root, relative));
+
+  return { fileSha256: sha256Hex(bytes), report: JSON.parse(bytes.toString("utf8")) };
+}
+
 function component(pkg, version) {
+  const source = pkg.source ?? pkg;
+  const tarballSha256 = pkg.pack?.first?.sha256 ?? pkg.tarballSha256;
+
+  if (
+    typeof source.commit !== "string" ||
+    typeof source.tree !== "string" ||
+    typeof tarballSha256 !== "string"
+  ) {
+    throw new Error("Compatibility evidence package identity is incomplete");
+  }
+
   return {
-    commit: pkg.source.commit,
-    tree: pkg.source.tree,
+    commit: source.commit,
+    tree: source.tree,
     version,
-    tarballSha256: pkg.pack.first.sha256
+    tarballSha256
   };
 }
 
@@ -82,26 +100,55 @@ export async function buildCompatibility() {
     });
   }
 
+  const evidence = {
+    candidate: await readEvidence("evidence/release-candidate-linux-x64-node24.json"),
+    darwin: await readEvidence("evidence/conformance-fixtures-darwin-arm64-node24.json"),
+    linux: await readEvidence("evidence/conformance-fixtures-linux-x64-node24.json"),
+    phase6: await readEvidence("evidence/phase-6-pair-linux-x64-node24.json"),
+    platformProvenance: await readEvidence("evidence/conformance-fixtures-run-30686678616.json")
+  };
+  const releaseEvidence = evaluateReleaseEvidence({
+    candidate: evidence.candidate.report,
+    darwin: evidence.darwin.report,
+    darwinFileSha256: evidence.darwin.fileSha256,
+    linux: evidence.linux.report,
+    linuxFileSha256: evidence.linux.fileSha256,
+    phase6: evidence.phase6.report,
+    phase6FileSha256: evidence.phase6.fileSha256,
+    platformProvenance: evidence.platformProvenance.report
+  });
+
+  if (releaseEvidence.eligible) {
+    const phase6 = evidence.phase6.report;
+
+    pairs.push({
+      id: "phase-6",
+      kit: component(phase6.packages.kitFixed, null),
+      hyper: component(phase6.packages.hyperCurrent, null),
+      workflowActionProtocols: ["2.0", "3.0", "3.1", "3.2"],
+      negotiated: "3.2",
+      schemaHash: phase6.schemaHash,
+      node: ">=22",
+      evidence: "evidence/phase-6-pair-linux-x64-node24.json",
+      evidenceSha256: phase6.reportSha256
+    });
+  }
+
   return {
     schemaVersion: 2,
     model: "exact-pair",
-    // A supported release exists: visp-kit@0.2.2 and visp-hyper-agent@0.4.2,
-    // published 2026-07-30. This said false for as long as that was true, and
-    // saying it afterwards would have sent users to build from source when
-    // installing was the better answer.
-    //
-    // These are the first published versions the conformance fixtures actually
-    // describe. `0.2.2` is Kit `5763c18`; the fixtures ran at `ba27687`, which
-    // adds only `.gitattributes` — absent from the `files` allowlist, so the
-    // tarballs carry identical content. `0.4.2` is Hyper `8de5e48` exactly.
-    //
-    // The phase pairs below still predate this and remain the unit that carries
-    // the protocol proof. A version number is how a user obtains Visp; a commit
-    // and a tarball hash are what any claim is pinned to.
+    // Registry existence is a separate fact from support. The release is
+    // recommended only when the shared fail-closed evaluator accepts the exact
+    // candidate, genuine packed Phase 6 report, and same-run platform reports.
     published: true,
-    supportedRelease: {
-      kit: "0.2.2",
-      hyper: "0.4.2"
+    supportedRelease: releaseEvidence.eligible
+      ? { kit: releaseEvidence.expectedPackages.kit.version, hyper: releaseEvidence.expectedPackages.hyper.version }
+      : null,
+    releaseEvidence: {
+      eligible: releaseEvidence.eligible,
+      issues: releaseEvidence.issues,
+      platformRunIdentity: releaseEvidence.platformRunIdentity,
+      resolvedPackages: releaseEvidence.resolvedPackages
     },
     generatedFrom: "evidence/",
     // Versions that exist on the registry and must never be used. Recorded here

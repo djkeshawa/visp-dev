@@ -35,11 +35,40 @@ export async function readCompatibility() {
 /**
  * The pair a user should target.
  *
- * The matrix is ordered oldest to newest and every pair is an accepted end
- * state, so the last entry is the current recommendation.
+ * A historical pair is evidence, not a recommendation. Only the exact pair
+ * named by supportedRelease is eligible for user-facing guidance.
  */
 export function supportedPair(matrix) {
-  return matrix.pairs.at(-1) ?? null;
+  const release = matrix.supportedRelease;
+
+  if (
+    release === null ||
+    release === undefined ||
+    matrix.releaseEvidence?.eligible !== true ||
+    !Array.isArray(matrix.releaseEvidence.issues) ||
+    matrix.releaseEvidence.issues.length !== 0 ||
+    !Array.isArray(matrix.pairs)
+  ) return null;
+
+  return (
+    matrix.pairs.find(
+      (pair) => {
+        const resolved = matrix.releaseEvidence.resolvedPackages;
+        const anchored = (component, identity) =>
+          component?.commit === identity?.commit &&
+          component?.tree === identity?.tree &&
+          component?.tarballSha256 === identity?.tarballSha256;
+
+        return (
+          pair.id === "phase-6" &&
+          resolved?.kit?.version === release.kit &&
+          resolved?.hyper?.version === release.hyper &&
+          anchored(pair.kit, resolved.kit) &&
+          anchored(pair.hyper, resolved.hyper)
+        );
+      }
+    ) ?? null
+  );
 }
 
 /**
@@ -51,25 +80,37 @@ export function supportedPair(matrix) {
  * product exists to prevent.
  */
 export function installability(matrix) {
-  if (matrix.published === true) {
-    const release = matrix.supportedRelease;
+  const release = matrix.supportedRelease;
+  const pair = supportedPair(matrix);
 
+  if (matrix.published === true && release !== null && release !== undefined && pair !== null) {
     return {
       installable: true,
-      reason:
-        release === undefined
-          ? "A published release matches the supported pair."
-          : `A supported release is published: visp-kit@${release.kit} and visp-hyper-agent@${release.hyper}.`,
-      guidance: "npm install -g visp-kit visp-hyper-agent"
+      reason: `A supported release is published: visp-kit@${release.kit} and visp-hyper-agent@${release.hyper}.`,
+      guidance: `npm install -g visp-kit@${release.kit} visp-hyper-agent@${release.hyper}`
     };
   }
 
   return {
     installable: false,
     reason:
-      "No supported release is published. The only Visp versions on npm are deprecated and predate this compatibility matrix, so installing from the registry would obtain a build that is not supported.",
+      matrix.published === true
+        ? "Registry packages exist, but no release is supported by the complete candidate, Phase 6, and same-run platform evidence yet."
+        : "No supported release is published. The only Visp versions on npm are deprecated and predate this compatibility matrix, so installing from the registry would obtain a build that is not supported.",
     guidance: "Build Kit and Hyper from source at the pinned commits below, or wait for a release."
   };
+}
+
+export function releaseInstallRecovery(install, environment) {
+  const missingSupportedBinary = environment.kit === null || environment.hyper === null;
+
+  return !install.installable || missingSupportedBinary ? [install.guidance] : [];
+}
+
+export function deprecatedInstallRecovery(packageName, version, install) {
+  return install.installable
+    ? `Uninstall ${packageName}@${version}; it is deprecated and unsupported. Then run: ${install.guidance}`
+    : `Uninstall ${packageName}@${version}; it is deprecated and unsupported. ${install.guidance}`;
 }
 
 export async function collectEnvironment(projectPath) {
@@ -159,13 +200,11 @@ export async function doctor(projectPath) {
     });
 
     if (deprecated !== undefined) {
-      recovery.push(
-        `Uninstall ${packageName}@${value}; it is deprecated and unsupported. Build the supported commit from source instead.`
-      );
+      recovery.push(deprecatedInstallRecovery(packageName, value, install));
     }
   }
 
-  if (!install.installable) recovery.push(install.guidance);
+  recovery.push(...releaseInstallRecovery(install, environment));
 
   // A deprecated build in use is a failure: it is the specific defect the
   // product exists to prevent, and reporting it as a warning would understate it.
@@ -175,18 +214,28 @@ export async function doctor(projectPath) {
       ? "blocked"
       : "ok";
 
-  return { status, checks, recovery, pair, install, environment };
+  return {
+    status,
+    checks,
+    recovery,
+    pair,
+    supportedRelease: pair === null ? null : matrix.supportedRelease,
+    install,
+    environment
+  };
 }
 
 export async function versions(projectPath) {
   const matrix = await readCompatibility();
   const environment = await collectEnvironment(projectPath);
+  const pair = supportedPair(matrix);
 
   return {
     product: "visp-dev",
     published: matrix.published,
+    supportedRelease: pair === null ? null : matrix.supportedRelease,
     installed: { kit: environment.kit, hyper: environment.hyper, node: environment.node },
-    supported: supportedPair(matrix),
+    supported: pair,
     pairs: matrix.pairs.map((pair) => ({
       id: pair.id,
       kit: pair.kit.commit,
@@ -239,7 +288,12 @@ export async function init(projectPath) {
 }
 
 export function formatDoctor(report) {
-  const lines = [`visp-dev doctor: ${report.status}`, ""];
+  const release = report.supportedRelease ?? null;
+  const lines = [
+    `visp-dev doctor: ${report.status}`,
+    `supported release: ${release === null ? "none (evidence incomplete)" : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
+    ""
+  ];
 
   for (const check of report.checks) {
     lines.push(`  [${check.status}] ${check.name}: ${check.value}`);
@@ -267,9 +321,11 @@ export function formatInit(result) {
 }
 
 export function formatVersions(result) {
+  const release = result.supportedRelease;
   const lines = [
     `visp-dev`,
     `  published release: ${result.published ? "yes" : "none"}`,
+    `  supported release: ${release === null ? "none (evidence incomplete)" : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
     `  installed kit:     ${result.installed.kit ?? "not installed"}`,
     `  installed hyper:   ${result.installed.hyper ?? "not installed"}`,
     `  node:              ${result.installed.node}`,

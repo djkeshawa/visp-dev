@@ -1,0 +1,48 @@
+{
+  "artifacts": [
+    {
+      "archiveMemberPath": "conformance-fixtures-darwin-arm64-node24.json",
+      "artifactDigestSha256": "cc154da53ce76ba48c2522d968935830d95c7cd03899b95ee9319b3c478ff115",
+      "artifactId": "8814222958",
+      "artifactName": "conformance-fixtures-macos-latest",
+      "artifactUrl": "https://api.github.com/repos/djkeshawa/visp-dev/actions/artifacts/8814222958",
+      "destinationPath": "evidence/conformance-fixtures-darwin-arm64-node24.json",
+      "expectedArchitecture": "arm64",
+      "expectedNodeMajor": 24,
+      "expectedOperatingSystem": "darwin",
+      "headSha": "7662be94de9a0c707c9ad28d64a6c1a845d163f8",
+      "rawFileSha256": "6ef49f5bac6826963d17eb00959d9f9256faaaa26abcbd04055274cd1b60d707",
+      "reportSha256": "a36dd6a8b4381ffcc14883f5ebf20373f7b834ee610720bb0fab761bd31192f1",
+      "workflowRunId": "30686678616"
+    },
+    {
+      "archiveMemberPath": "conformance-fixtures-linux-x64-node24.json",
+      "artifactDigestSha256": "d8892c09b9e3731af5dfff1b690baddd20e5ea8565883faaa1f446dd11cee371",
+      "artifactId": "8814234301",
+      "artifactName": "conformance-fixtures-ubuntu-latest",
+      "artifactUrl": "https://api.github.com/repos/djkeshawa/visp-dev/actions/artifacts/8814234301",
+      "destinationPath": "evidence/conformance-fixtures-linux-x64-node24.json",
+      "expectedArchitecture": "x64",
+      "expectedNodeMajor": 24,
+      "expectedOperatingSystem": "linux",
+      "headSha": "7662be94de9a0c707c9ad28d64a6c1a845d163f8",
+      "rawFileSha256": "fd0981a48dcb5a3fd49d39b37908dfa33c7f3adea147e4cf20935982d968ebb0",
+      "reportSha256": "b5c886697ee7a0a417ef3d3a2dc78c9ae391eb0243e8b28698452ee007695899",
+      "workflowRunId": "30686678616"
+    }
+  ],
+  "note": "Captured provenance binding exact unmodified platform-report members to one GitHub Actions run. The self-hash protects this captured attestation; it is not proof of GitHub authenticity.",
+  "reportSha256": "321ab76fc5b9e14b96dab4d28ae1fcd8763ad8535c16b2fb113c7b447a8fe52e",
+  "run": {
+    "conclusion": "success",
+    "event": "push",
+    "headSha": "7662be94de9a0c707c9ad28d64a6c1a845d163f8",
+    "provider": "github-actions",
+    "repository": "djkeshawa/visp-dev",
+    "runAttempt": "1",
+    "runId": "30686678616",
+    "url": "https://github.com/djkeshawa/visp-dev/actions/runs/30686678616",
+    "workflowPath": ".github/workflows/test.yml"
+  },
+  "schemaVersion": "visp.platform-evidence-provenance.v1"
+}

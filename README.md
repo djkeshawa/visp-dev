@@ -17,10 +17,10 @@ If it ever starts to, it has become a second engine and the boundary has failed.
 ## Five-minute start
 
 ```bash
-npm install -g visp-kit visp-hyper-agent
+npm install -g visp-kit@0.2.3 visp-hyper-agent@0.4.3
 ```
 
-That installs `visp-kit@0.2.2` and `visp-hyper-agent@0.4.2`, the supported
+That installs `visp-kit@0.2.3` and `visp-hyper-agent@0.4.3`, the supported
 release. Check what you actually have:
 
 ```bash
@@ -35,8 +35,8 @@ close four policy-bypass holes.
 
 A version number is how you obtain Visp; it is not what carries the proof. The
 evidence in this repository pins **commits and tarball hashes**, and the
-published versions sit a few documentation commits away from the pinned pair.
-See [Limitations](#limitations).
+current Phase 6 row pins the exact commits and tarball bytes npm serves. See
+[Limitations](#limitations).
 
 Once Kit and Hyper are on your PATH, the workflow is Kit's, not ours:
 
@@ -70,11 +70,10 @@ does. `inconclusive` never becomes a pass.
 Stated plainly, because a compatibility product that oversells is worse than
 none.
 
-- **The supported release is an alpha.** `visp-kit@0.2.2` and
-  `visp-hyper-agent@0.4.2` are the versions to install. The conformance fixtures
-  describe exactly this content. The *phase* compatibility pairs — which carry
-  the protocol and schema-hash proof — still pin earlier commits, so those rows
-  describe near-identical content rather than the exact bytes npm serves.
+- **The supported release is an alpha.** `visp-kit@0.2.3` and
+  `visp-hyper-agent@0.4.3` are the versions to install. The Phase 6
+  compatibility row and the Linux/macOS conformance fixtures describe exactly
+  this content, including the tarball SHA-256 values npm serves.
 - **Older published versions are deprecated.** `visp-kit@0.1.0` and
   `visp-hyper-agent@0.2.0`/`0.3.0` predate the current compatibility matrix. Do
   not install them; `doctor` fails if it finds one.
@@ -88,8 +87,9 @@ none.
   them — the fixtures verify Git file modes a snapshot restored, and Windows has
   no POSIX mode bits — so no claim about installing on Windows is supported. The
   test suite itself does run there. See [docs/platform-support.md](docs/platform-support.md).
-- **The phase compatibility evidence is Linux x64, Node 24.** Those reports pin
-  historical pairs and were produced on one platform.
+- **The phase compatibility evidence is Linux x64, Node 24.** It includes the
+  current published pair and historical additive boundaries, but was produced
+  on one platform.
 - **Assurance verdicts are currently `inconclusive`.** Oracle-result mapping is
   incomplete, so the honest verdict is not `passed`.
 - **No performance or review-efficiency claim is made.** Those need the Phase 6
@@ -126,6 +126,12 @@ flows: routine accepted, behavioral rejected, critical stale, and critical
 inconclusive. It also exercises the additive 3.1 boundary with the prior Kit
 and Hyper producers. Visp Dev records and compares Kit-authored facts; it does
 not calculate acceptance, decision freshness, or PR readiness.
+
+The Phase 6 row pins the exact published `visp-kit@0.2.3` /
+`visp-hyper-agent@0.4.3` bytes. All three exact pairs negotiate WorkflowAction
+3.2 across `run`, `next`, `resume`, checkpoint, `guard`, and MCP. The corrected
+and previous Kit views remain identical on one routine accepted fixture, so the
+fail-closed corrections stay confined to input that was already broken.
 
 The Phase 4 host example runner clean-installs a packed Hyper CLI with lifecycle
 scripts disabled, then runs `init`, Git/CI fallback installation, and `doctor`
@@ -166,6 +172,20 @@ node scripts/run-phase-3-compatibility.mjs \
   --output <new-phase-3-report-path>
 
 node scripts/run-phase-3-compatibility.mjs --verify <phase-3-report-path>
+
+node scripts/run-phase-6-compatibility.mjs \
+  --kit-repository ../visp-kit \
+  --hyper-repository ../visp-hyper-agent \
+  --offline-store <pnpm-store-snapshot> \
+  --offline-cache <npm-cache-snapshot> \
+  --package-manager "$(command -v pnpm)" \
+  --npm "$(command -v npm)" \
+  --run-provider local \
+  --run-id <stable-local-run-id> \
+  --run-attempt 1 \
+  --output <new-phase-6-report-path>
+
+node scripts/run-phase-6-compatibility.mjs --verify <phase-6-report-path>
 
 node scripts/run-phase-4-host-examples.mjs \
   --repository ../visp-hyper-agent \

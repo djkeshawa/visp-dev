@@ -6,7 +6,7 @@
         {
           "id": "run",
           "view": {
-            "actionId": "sha256:d6ed8520957f4ca07437f520501f6ad9618da9a167bfc8c14a549b1f4feeb22d",
+            "actionId": "sha256:72ba4904fa0bd1daa0138949b886bbdab1b7710fd6924af82bd529c7d7243c7b",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -17,7 +17,7 @@
         {
           "id": "next",
           "view": {
-            "actionId": "sha256:d6ed8520957f4ca07437f520501f6ad9618da9a167bfc8c14a549b1f4feeb22d",
+            "actionId": "sha256:72ba4904fa0bd1daa0138949b886bbdab1b7710fd6924af82bd529c7d7243c7b",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -28,7 +28,7 @@
         {
           "id": "resume",
           "view": {
-            "actionId": "sha256:d6ed8520957f4ca07437f520501f6ad9618da9a167bfc8c14a549b1f4feeb22d",
+            "actionId": "sha256:72ba4904fa0bd1daa0138949b886bbdab1b7710fd6924af82bd529c7d7243c7b",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -39,7 +39,7 @@
         {
           "id": "checkpoint",
           "view": {
-            "actionId": "sha256:d6ed8520957f4ca07437f520501f6ad9618da9a167bfc8c14a549b1f4feeb22d",
+            "actionId": "sha256:72ba4904fa0bd1daa0138949b886bbdab1b7710fd6924af82bd529c7d7243c7b",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -50,7 +50,7 @@
         {
           "id": "guard",
           "view": {
-            "actionId": "sha256:d6ed8520957f4ca07437f520501f6ad9618da9a167bfc8c14a549b1f4feeb22d",
+            "actionId": "sha256:72ba4904fa0bd1daa0138949b886bbdab1b7710fd6924af82bd529c7d7243c7b",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -61,7 +61,7 @@
         {
           "id": "mcp",
           "view": {
-            "actionId": "sha256:d6ed8520957f4ca07437f520501f6ad9618da9a167bfc8c14a549b1f4feeb22d",
+            "actionId": "sha256:72ba4904fa0bd1daa0138949b886bbdab1b7710fd6924af82bd529c7d7243c7b",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -77,7 +77,7 @@
         {
           "id": "run",
           "view": {
-            "actionId": "sha256:eec7e120dab055caed3915b797d8285da1573700ddcae59049bef4b402383382",
+            "actionId": "sha256:6fb3bd1aa94430941f58a1dc93092b23851ef4016d48322031714c30cff4aff2",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -88,7 +88,7 @@
         {
           "id": "next",
           "view": {
-            "actionId": "sha256:eec7e120dab055caed3915b797d8285da1573700ddcae59049bef4b402383382",
+            "actionId": "sha256:6fb3bd1aa94430941f58a1dc93092b23851ef4016d48322031714c30cff4aff2",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -99,7 +99,7 @@
         {
           "id": "resume",
           "view": {
-            "actionId": "sha256:eec7e120dab055caed3915b797d8285da1573700ddcae59049bef4b402383382",
+            "actionId": "sha256:6fb3bd1aa94430941f58a1dc93092b23851ef4016d48322031714c30cff4aff2",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -110,7 +110,7 @@
         {
           "id": "checkpoint",
           "view": {
-            "actionId": "sha256:eec7e120dab055caed3915b797d8285da1573700ddcae59049bef4b402383382",
+            "actionId": "sha256:6fb3bd1aa94430941f58a1dc93092b23851ef4016d48322031714c30cff4aff2",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -121,7 +121,7 @@
         {
           "id": "guard",
           "view": {
-            "actionId": "sha256:eec7e120dab055caed3915b797d8285da1573700ddcae59049bef4b402383382",
+            "actionId": "sha256:6fb3bd1aa94430941f58a1dc93092b23851ef4016d48322031714c30cff4aff2",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -132,7 +132,7 @@
         {
           "id": "mcp",
           "view": {
-            "actionId": "sha256:eec7e120dab055caed3915b797d8285da1573700ddcae59049bef4b402383382",
+            "actionId": "sha256:6fb3bd1aa94430941f58a1dc93092b23851ef4016d48322031714c30cff4aff2",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -148,7 +148,7 @@
         {
           "id": "run",
           "view": {
-            "actionId": "sha256:4760d9d269061539ee72014853be15ad943bea2a64919d0766d8d90192bf8f5b",
+            "actionId": "sha256:3d61de8776fcb8ddbc31c4af933bd834ae9e47fad57389579bbd2c0a0ff2b2a1",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -159,7 +159,7 @@
         {
           "id": "next",
           "view": {
-            "actionId": "sha256:4760d9d269061539ee72014853be15ad943bea2a64919d0766d8d90192bf8f5b",
+            "actionId": "sha256:3d61de8776fcb8ddbc31c4af933bd834ae9e47fad57389579bbd2c0a0ff2b2a1",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -170,7 +170,7 @@
         {
           "id": "resume",
           "view": {
-            "actionId": "sha256:4760d9d269061539ee72014853be15ad943bea2a64919d0766d8d90192bf8f5b",
+            "actionId": "sha256:3d61de8776fcb8ddbc31c4af933bd834ae9e47fad57389579bbd2c0a0ff2b2a1",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -181,7 +181,7 @@
         {
           "id": "checkpoint",
           "view": {
-            "actionId": "sha256:4760d9d269061539ee72014853be15ad943bea2a64919d0766d8d90192bf8f5b",
+            "actionId": "sha256:3d61de8776fcb8ddbc31c4af933bd834ae9e47fad57389579bbd2c0a0ff2b2a1",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -192,7 +192,7 @@
         {
           "id": "guard",
           "view": {
-            "actionId": "sha256:4760d9d269061539ee72014853be15ad943bea2a64919d0766d8d90192bf8f5b",
+            "actionId": "sha256:3d61de8776fcb8ddbc31c4af933bd834ae9e47fad57389579bbd2c0a0ff2b2a1",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -203,7 +203,7 @@
         {
           "id": "mcp",
           "view": {
-            "actionId": "sha256:4760d9d269061539ee72014853be15ad943bea2a64919d0766d8d90192bf8f5b",
+            "actionId": "sha256:3d61de8776fcb8ddbc31c4af933bd834ae9e47fad57389579bbd2c0a0ff2b2a1",
             "actionVerdict": "ready",
             "nextCommand": "visp verify --task T001",
             "protocolVersion": "3.2",
@@ -214,7 +214,7 @@
       ]
     }
   ],
-  "definitionSha256": "b708d4314a0f346f8ca60229423701e699a8d41b4d10b6b8b366956661fc2edf",
+  "definitionSha256": "155bdf2cc0930acd507c1f64103ed980119180465e231f3aa03795b4d3d08daa",
   "differential": {
     "baseline": "previous_kit_current_hyper",
     "corrected": "fixed_kit_current_hyper",
@@ -228,30 +228,45 @@
     "operatingSystem": "linux",
     "pnpm": "11.3.0"
   },
-  "note": "Pins the pair carrying the F-C1 and F-C2 fail-closed corrections. The differential row proves the behaviour change is confined to input that was already broken.",
+  "note": "Exercises one routine accepted fixture across exactly six WorkflowAction 3.2 surfaces for the published visp-kit@0.2.3 and visp-hyper-agent@0.4.3 artifacts. It does not prove equivalence for damaged, incomplete, or unusual input.",
   "packages": {
     "hyperCurrent": {
-      "commit": "ea68409abffcf299f23120bb5ffb57287710917d",
-      "tarballSha256": "dd57c4929d27655b3f2cc4a0a787f509dd21846c24e8b33843c08fef72643b4c",
-      "tree": "7ed507752b8c39980f67f623e3517775ae1240a9"
+      "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+      "name": "visp-hyper-agent",
+      "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+      "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+      "version": "0.4.3"
     },
     "hyperPrevious": {
       "commit": "61858199d90bffafb062bde61453f5def6357efa",
+      "name": "visp-hyper-agent",
       "tarballSha256": "0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55",
-      "tree": "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
+      "tree": "a7be744b06510443fe97a06b6aa5c214b1bad0f1",
+      "version": "0.3.0"
     },
     "kitFixed": {
-      "commit": "7aa5fa3fdadb00c6a0144be5e61e4d4e0c5f940c",
-      "tarballSha256": "c31942cbf04696dd36e82a48a10f75135bb97e20f7de750e84af19d06ee578ed",
-      "tree": "a34ab232be3495ffce3b96f7d5cfe2316b46010e"
+      "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+      "name": "visp-kit",
+      "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+      "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+      "version": "0.2.3"
     },
     "kitPrevious": {
       "commit": "19d5ffb3276e52462a945c66043f48e31cd6b38f",
+      "name": "visp-kit",
       "tarballSha256": "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c",
-      "tree": "44a5e805f53c48ad64422c1ebb9261487392bb58"
+      "tree": "44a5e805f53c48ad64422c1ebb9261487392bb58",
+      "version": "0.2.0"
     }
   },
-  "reportSha256": "da18fca20eca5344263a648914840300a606cf6651dc0ebfc595f19b3b355644",
-  "schemaVersion": "visp.phase-6-compatibility.v1"
+  "producer": "packed-runner",
+  "reportSha256": "ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7",
+  "runIdentity": {
+    "provider": "local",
+    "runAttempt": "1",
+    "runId": "c1-d107-phase6-20260801"
+  },
+  "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+  "schemaVersion": "visp.phase-6-compatibility.v2"
 }
 

@@ -17,29 +17,33 @@
  *     lives in the hashed schema and adding a field there would break the very
  *     claim these rows exist to make.
  *
- * Hyper moved too, for packaging and documentation only (`ea68409`). Its
- * `package.json` counts as material because the `files` allowlist decides what
- * ships, even when no source changed.
+ * Beyond `7aa5fa3` the range includes release packaging, metadata, and later
+ * correctness changes culminating in the exact D-107 Kit `0.2.3` identity.
+ * Package metadata remains material because the `files` allowlist decides what
+ * ships even when no wire-schema source changes. Hyper likewise advanced to
+ * the exact D-107 `0.4.3` identity.
  *
- * Each changes behaviour on damaged, incomplete, or unusual input, which is
- * exactly the kind of change that can break a host relying on the old silence.
- * `schemas/` and `src/integration/` are untouched across the whole range, so
- * every row expects the unchanged WorkflowAction 3.2 schema hash. Proving that
- * is the point: corrections of this kind must be additive at the wire contract.
+ * The behavioural changes alter what Kit says on damaged, incomplete, or
+ * unusual input, which is exactly the kind of change that can break a host
+ * relying on the old silence. `schemas/` and `src/integration/` are untouched
+ * across the whole range, so every row expects the unchanged WorkflowAction 3.2
+ * schema hash. Proving that is the point: corrections of this kind must be
+ * additive at the wire contract.
  *
- * The pin was moved here deliberately rather than left at `2fd30d3`. Two of the
- * three changes landed after that commit and the evidence-currency check
- * classified them as material, meaning they can change observable behaviour.
- * Leaving the pin would have kept evidence that no longer described the Kit in
- * the tree. This is not chasing HEAD — it is re-establishing proof after a
- * change the tooling flagged as capable of invalidating it.
+ * The current pin describes the D-107 published artifacts by the full
+ * five-field identity: package name, version, commit, tree, and tarball hash.
+ * Earlier published identities remain historical evidence, not a current
+ * recommendation.
  *
- * The differential row is the one that matters. It asserts that the corrected
- * Kit and the previous Kit produce **identical** action views on a healthy
- * project — so the behaviour change is confined to input that was already
- * broken, and an integrator running healthy projects observes nothing new.
+ * The pin was moved here after the evidence-currency check flagged both engines
+ * as material — the D-094 rule. This is not chasing HEAD: leaving the pin would
+ * have kept evidence describing a Kit nobody installs, one commit after the
+ * registry started serving this one.
+ *
+ * This is deliberately a narrow claim. The differential observes one routine,
+ * accepted project across the six configured WorkflowAction surfaces. It does
+ * not prove equivalence for damaged, incomplete, or unusual input.
  */
-import path from "node:path";
 import process from "node:process";
 
 import {
@@ -50,9 +54,14 @@ import {
 } from "./compatibility-lab.mjs";
 import { packAndInstall, toolVersion } from "./phase-2-compatibility.mjs";
 import { runPairCompatibilityJourney } from "./phase-4-compatibility.mjs";
+import { verifyRunIdentity } from "./evidence-identity.mjs";
 
 const COMMIT = /^[0-9a-f]{40}$/u;
+const HASH = /^[0-9a-f]{64}$/u;
 const PREFIXED_HASH = /^sha256:[0-9a-f]{64}$/u;
+const REPORT_NOTE =
+  "Exercises one routine accepted fixture across exactly six WorkflowAction 3.2 surfaces for the published visp-kit@0.2.3 and visp-hyper-agent@0.4.3 artifacts. It does not prove equivalence for damaged, incomplete, or unusual input.";
+const PACKED_RUN_TOKEN = Symbol("packed Phase 6 run");
 
 function deepFreeze(value) {
   if (value && typeof value === "object") {
@@ -60,6 +69,33 @@ function deepFreeze(value) {
     Object.freeze(value);
   }
   return value;
+}
+
+function plain(value, label) {
+  if (
+    value === null ||
+    typeof value !== "object" ||
+    Array.isArray(value) ||
+    Object.getPrototypeOf(value) !== Object.prototype
+  ) {
+    throw new TypeError(`${label} must be a plain object`);
+  }
+
+  return value;
+}
+
+function exactKeys(value, keys, label) {
+  plain(value, label);
+
+  if (canonicalStringify(Object.keys(value).sort()) !== canonicalStringify([...keys].sort())) {
+    throw new Error(`${label} has an unexpected field set`);
+  }
+}
+
+function exactValue(actual, expected, label) {
+  if (canonicalStringify(actual) !== canonicalStringify(expected)) {
+    throw new Error(`${label} drifted from the frozen Phase 6 definition`);
+  }
 }
 
 const SCHEMA_HASH =
@@ -94,20 +130,32 @@ export const PHASE_6_COMPATIBILITY_DEFINITION = deepFreeze({
   ],
   packages: {
     hyperCurrent: {
-      commit: "ea68409abffcf299f23120bb5ffb57287710917d",
-      tree: "7ed507752b8c39980f67f623e3517775ae1240a9"
+      commit: "3538457ae51f79245358321668c1f3566c5eac74",
+      name: "visp-hyper-agent",
+      tarballSha256: "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+      tree: "55ca7ea10865630119f792eb227c9634e0fee8f9",
+      version: "0.4.3"
     },
     hyperPrevious: {
       commit: "61858199d90bffafb062bde61453f5def6357efa",
-      tree: "a7be744b06510443fe97a06b6aa5c214b1bad0f1"
+      name: "visp-hyper-agent",
+      tarballSha256: "0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55",
+      tree: "a7be744b06510443fe97a06b6aa5c214b1bad0f1",
+      version: "0.3.0"
     },
     kitFixed: {
-      commit: "7aa5fa3fdadb00c6a0144be5e61e4d4e0c5f940c",
-      tree: "a34ab232be3495ffce3b96f7d5cfe2316b46010e"
+      commit: "eb70bce84568e9237690be1eea61355bbff23157",
+      name: "visp-kit",
+      tarballSha256: "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+      tree: "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+      version: "0.2.3"
     },
     kitPrevious: {
       commit: "19d5ffb3276e52462a945c66043f48e31cd6b38f",
-      tree: "44a5e805f53c48ad64422c1ebb9261487392bb58"
+      name: "visp-kit",
+      tarballSha256: "7118b04daf8ec5adaf0a7a67ddac6d4dc4782a5b59a442f5e458442558b3dc5c",
+      tree: "44a5e805f53c48ad64422c1ebb9261487392bb58",
+      version: "0.2.0"
     }
   },
   /**
@@ -118,6 +166,11 @@ export const PHASE_6_COMPATIBILITY_DEFINITION = deepFreeze({
   differential: {
     baseline: "previous_kit_current_hyper",
     corrected: "fixed_kit_current_hyper"
+  },
+  expectedView: {
+    actionVerdict: "ready",
+    nextCommand: "visp verify --task T001",
+    selectionMode: "advertised"
   },
   scenario: {
     assuranceVerdict: "inconclusive",
@@ -154,6 +207,7 @@ export async function runPackedPhase6Compatibility(input) {
       throw new TypeError(`${field} must be a non-empty path`);
     }
   }
+  verifyRunIdentity(input.runIdentity, "Phase 6 run identity");
 
   const owned = await createOwnedRoot();
 
@@ -205,8 +259,9 @@ export async function runPackedPhase6Compatibility(input) {
       },
       packages: Object.fromEntries(
         Object.entries(packages).map(([id, value]) => [id, value.report])
-      )
-    });
+      ),
+      runIdentity: input.runIdentity
+    }, PACKED_RUN_TOKEN);
   } finally {
     await cleanupOwnedRoot({ root: owned.root });
   }
@@ -234,7 +289,7 @@ function surfaceViews(row) {
   );
 }
 
-export function createPhase6CompatibilityReport(input) {
+export function createPhase6CompatibilityReport(input, producerToken = null) {
   const { baseline, corrected } = PHASE_6_COMPATIBILITY_DEFINITION.differential;
   const baselineRow = input.compatibility.find((row) => row.id === baseline);
   const correctedRow = input.compatibility.find((row) => row.id === corrected);
@@ -244,14 +299,22 @@ export function createPhase6CompatibilityReport(input) {
   }
 
   const report = {
-    schemaVersion: "visp.phase-6-compatibility.v1",
-    note: "Pins the pair carrying the F-C1 and F-C2 fail-closed corrections. The differential row proves the behaviour change is confined to input that was already broken.",
+    schemaVersion: "visp.phase-6-compatibility.v2",
+    note: REPORT_NOTE,
     definitionSha256: PHASE_6_COMPATIBILITY_SHA256,
     environment: input.environment,
+    producer: producerToken === PACKED_RUN_TOKEN ? "packed-runner" : "synthetic-constructor",
+    runIdentity: structuredClone(input.runIdentity),
     packages: Object.fromEntries(
       Object.entries(input.packages).map(([id, value]) => [
         id,
-        { commit: value.source.commit, tree: value.source.tree, tarballSha256: value.pack.first.sha256 }
+        {
+          commit: value.source.commit,
+          name: value.pack.first.package.name,
+          tarballSha256: value.pack.first.sha256,
+          tree: value.source.tree,
+          version: value.pack.first.package.version
+        }
       ])
     ),
     compatibility: input.compatibility,
@@ -264,7 +327,8 @@ export function createPhase6CompatibilityReport(input) {
       identical:
         canonicalStringify(surfaceViews(baselineRow)) ===
         canonicalStringify(surfaceViews(correctedRow))
-    }
+    },
+    schemaHash: PHASE_6_COMPATIBILITY_DEFINITION.schemaHash
   };
 
   report.reportSha256 = sha256Hex(canonicalStringify(report));
@@ -274,13 +338,37 @@ export function createPhase6CompatibilityReport(input) {
 }
 
 export function verifyPhase6CompatibilityReport(report) {
-  if (report.schemaVersion !== "visp.phase-6-compatibility.v1") {
-    throw new Error("Phase 6 report has an unexpected schema version.");
-  }
+  exactKeys(
+    report,
+    [
+      "compatibility",
+      "definitionSha256",
+      "differential",
+      "environment",
+      "note",
+      "packages",
+      "producer",
+      "reportSha256",
+      "runIdentity",
+      "schemaHash",
+      "schemaVersion"
+    ],
+    "Phase 6 report"
+  );
 
-  if (report.definitionSha256 !== PHASE_6_COMPATIBILITY_SHA256) {
-    throw new Error("Phase 6 report was produced against a different frozen definition.");
+  if (
+    report.schemaVersion !== "visp.phase-6-compatibility.v2" ||
+    report.definitionSha256 !== PHASE_6_COMPATIBILITY_SHA256 ||
+    report.schemaHash !== PHASE_6_COMPATIBILITY_DEFINITION.schemaHash ||
+    report.note !== REPORT_NOTE ||
+    !HASH.test(report.reportSha256)
+  ) {
+    throw new Error("Phase 6 report identity is invalid.");
   }
+  if (!["packed-runner", "synthetic-constructor"].includes(report.producer)) {
+    throw new Error("Phase 6 report producer is invalid.");
+  }
+  verifyRunIdentity(report.runIdentity, "Phase 6 run identity");
 
   const unhashed = structuredClone(report);
 
@@ -290,49 +378,151 @@ export function verifyPhase6CompatibilityReport(report) {
     throw new Error("Phase 6 report hash does not match its content.");
   }
 
-  for (const [id, observed] of Object.entries(report.packages)) {
-    const pinned = PHASE_6_COMPATIBILITY_DEFINITION.packages[id];
+  exactKeys(
+    report.packages,
+    Object.keys(PHASE_6_COMPATIBILITY_DEFINITION.packages),
+    "Phase 6 packages"
+  );
 
-    if (pinned === undefined) throw new Error(`Phase 6 report contains unpinned package ${id}.`);
-    if (!COMMIT.test(observed.commit)) throw new Error(`Phase 6 ${id} commit is malformed.`);
-    if (observed.commit !== pinned.commit || observed.tree !== pinned.tree) {
-      throw new Error(`Phase 6 ${id} drifted from the frozen pair.`);
+  for (const [id, pinned] of Object.entries(PHASE_6_COMPATIBILITY_DEFINITION.packages)) {
+    const observed = report.packages[id];
+
+    exactKeys(
+      observed,
+      ["commit", "name", "tarballSha256", "tree", "version"],
+      `Phase 6 package ${id}`
+    );
+
+    if (
+      !COMMIT.test(observed.commit) ||
+      !COMMIT.test(observed.tree) ||
+      !HASH.test(observed.tarballSha256)
+    ) {
+      throw new Error(`Phase 6 ${id} package identity is malformed.`);
     }
+
+    exactValue(observed, pinned, `Phase 6 package ${id}`);
   }
 
-  const expected = PHASE_6_COMPATIBILITY_DEFINITION.compatibility.map((row) => row.id);
-  const observed = report.compatibility.map((row) => row.id);
+  exactKeys(
+    report.environment,
+    ["architecture", "git", "node", "npm", "operatingSystem", "pnpm"],
+    "Phase 6 environment"
+  );
 
-  if (canonicalStringify(observed) !== canonicalStringify(expected)) {
+  if (
+    Object.values(report.environment).some(
+      (value) => typeof value !== "string" || value.length === 0
+    )
+  ) {
+    throw new Error("Phase 6 environment is incomplete.");
+  }
+
+  if (
+    !Array.isArray(report.compatibility) ||
+    report.compatibility.length !== PHASE_6_COMPATIBILITY_DEFINITION.compatibility.length
+  ) {
     throw new Error("Phase 6 report does not contain exactly the frozen compatibility rows.");
   }
 
-  for (const row of report.compatibility) {
-    const pinned = PHASE_6_COMPATIBILITY_DEFINITION.compatibility.find(
-      (entry) => entry.id === row.id
-    );
+  report.compatibility.forEach((row, rowIndex) => {
+    const pinned = PHASE_6_COMPATIBILITY_DEFINITION.compatibility[rowIndex];
 
-    for (const surface of row.surfaces) {
-      if (surface.view.protocolVersion !== pinned.expectedProtocol) {
-        throw new Error(`Phase 6 ${row.id}/${surface.id} negotiated an unexpected protocol.`);
-      }
+    exactKeys(row, ["id", "surfaces"], `Phase 6 compatibility ${pinned.id}`);
 
-      if (!PREFIXED_HASH.test(surface.view.schemaHash)) {
-        throw new Error(`Phase 6 ${row.id}/${surface.id} reported a malformed schema hash.`);
-      }
-
-      if (surface.view.schemaHash !== pinned.expectedSchemaHash) {
-        throw new Error(`Phase 6 ${row.id}/${surface.id} changed the WorkflowAction schema hash.`);
-      }
+    if (
+      row.id !== pinned.id ||
+      !Array.isArray(row.surfaces) ||
+      row.surfaces.length !== PHASE_6_COMPATIBILITY_DEFINITION.surfaces.length
+    ) {
+      throw new Error(`Phase 6 compatibility ${pinned.id} drifted.`);
     }
+
+    let rowView;
+
+    row.surfaces.forEach((surface, surfaceIndex) => {
+      const expectedSurfaceId = PHASE_6_COMPATIBILITY_DEFINITION.surfaces[surfaceIndex];
+
+      exactKeys(surface, ["id", "view"], `Phase 6 compatibility ${pinned.id} surface`);
+      exactKeys(
+        surface.view,
+        [
+          "actionId",
+          "actionVerdict",
+          "nextCommand",
+          "protocolVersion",
+          "schemaHash",
+          "selectionMode"
+        ],
+        `Phase 6 compatibility ${pinned.id}/${expectedSurfaceId}`
+      );
+
+      if (
+        surface.id !== expectedSurfaceId ||
+        !PREFIXED_HASH.test(surface.view.actionId) ||
+        surface.view.protocolVersion !== pinned.expectedProtocol ||
+        surface.view.schemaHash !== pinned.expectedSchemaHash
+      ) {
+        throw new Error(`Phase 6 compatibility ${pinned.id}/${expectedSurfaceId} drifted.`);
+      }
+
+      exactValue(
+        {
+          actionVerdict: surface.view.actionVerdict,
+          nextCommand: surface.view.nextCommand,
+          selectionMode: surface.view.selectionMode
+        },
+        PHASE_6_COMPATIBILITY_DEFINITION.expectedView,
+        `Phase 6 compatibility ${pinned.id}/${expectedSurfaceId} semantic observation`
+      );
+
+      rowView ??= surface.view;
+      exactValue(
+        surface.view,
+        rowView,
+        `Phase 6 compatibility ${pinned.id}/${expectedSurfaceId} surface equality`
+      );
+    });
+  });
+
+  exactKeys(report.differential, ["baseline", "corrected", "identical"], "Phase 6 differential");
+  exactValue(
+    {
+      baseline: report.differential.baseline,
+      corrected: report.differential.corrected
+    },
+    PHASE_6_COMPATIBILITY_DEFINITION.differential,
+    "Phase 6 differential identity"
+  );
+
+  const baselineRow = report.compatibility.find(
+    (row) => row.id === report.differential.baseline
+  );
+  const correctedRow = report.compatibility.find(
+    (row) => row.id === report.differential.corrected
+  );
+  const observedIdentical =
+    canonicalStringify(surfaceViews(baselineRow)) ===
+    canonicalStringify(surfaceViews(correctedRow));
+
+  if (report.differential.identical !== observedIdentical) {
+    throw new Error("Phase 6 differential result does not match the reported rows.");
   }
 
   // The whole reason this phase exists. A report claiming the corrections were
   // additive while the differential rows disagree is the failure to catch.
-  if (report.differential.identical !== true) {
+  if (observedIdentical !== true) {
     throw new Error(
       "Phase 6 differential failed: the corrected Kit and the previous Kit disagree on a healthy project."
     );
+  }
+
+  if (
+    /visp-compatibility-lab-|timestamp|generatedAt|checkedAt|duration|\/tmp\//iu.test(
+      canonicalStringify(report)
+    )
+  ) {
+    throw new Error("Phase 6 report contains unstable runtime content.");
   }
 
   return true;

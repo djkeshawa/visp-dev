@@ -2,18 +2,18 @@
   "artifacts": [
     {
       "byteIdenticalOnRepack": true,
-      "commit": "db3350edc3067fb317773863e6c7fd280f2a3af5",
+      "commit": "3538457ae51f79245358321668c1f3566c5eac74",
       "name": "visp-hyper-agent",
       "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
-      "tree": "b5add141fec7306eef2a6c20482922943f3a2547",
+      "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
       "version": "0.4.3"
     },
     {
       "byteIdenticalOnRepack": true,
-      "commit": "0a48adde6f2113c840c72c196e844b84d2122584",
+      "commit": "eb70bce84568e9237690be1eea61355bbff23157",
       "name": "visp-kit",
-      "tarballSha256": "1fe9c71a498507f8e2966e53393d90efa4b650351bcb12c48c528e13d654ee0a",
-      "tree": "a5c16b6940b12da53f2210e4eeb74332f32e407a",
+      "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+      "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
       "version": "0.2.3"
     }
   ],
@@ -37,7 +37,7 @@
     "The disposition of the versions this candidate supersedes is decided and executed.",
     "An SBOM exists for each artifact, regenerated on the machine doing the release."
   ],
-  "reportSha256": "d445ac1360d0c2165b7340392a7a75e2b4d07f3b40a2dba1f19df30fd24a9bf3",
+  "reportSha256": "074f01f848d72543ca951766f92abe7e52295135e543b7915da975b85128717e",
   "schemaVersion": "visp.release-candidate.v1",
   "status": "assembled_not_published"
 }

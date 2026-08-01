@@ -2,15 +2,15 @@
   "candidate": {
     "artifacts": [
       {
-        "commit": "db3350edc3067fb317773863e6c7fd280f2a3af5",
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
         "name": "visp-hyper-agent",
         "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
         "version": "0.4.3"
       },
       {
-        "commit": "0a48adde6f2113c840c72c196e844b84d2122584",
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
         "name": "visp-kit",
-        "tarballSha256": "1fe9c71a498507f8e2966e53393d90efa4b650351bcb12c48c528e13d654ee0a",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
         "version": "0.2.3"
       }
     ],
@@ -105,7 +105,7 @@
         {
           "path": "evidence/release-candidate-linux-x64-node24.json",
           "present": true,
-          "reportSha256": "d445ac1360d0c2165b7340392a7a75e2b4d07f3b40a2dba1f19df30fd24a9bf3"
+          "reportSha256": "074f01f848d72543ca951766f92abe7e52295135e543b7915da975b85128717e"
         }
       ],
       "status": "covered"
@@ -169,7 +169,7 @@
     }
   ],
   "note": "Families are declared independently of the evidence that happens to exist, so a gap reports as a gap.",
-  "reportSha256": "48db842167046a3cebc3262d74236ac9640216d1dbd24255ca757fd30dbca022",
+  "reportSha256": "ec7cd8ed257cf21dbb68b664d32992a842a2cd80ead411537ca0546866e40b36",
   "schemaVersion": "visp.conformance.v1",
   "summary": {
     "covered": 10,

@@ -128,11 +128,13 @@ test("the README is outcome-first and states its limitations honestly", async ()
   assert.match(readme, new RegExp(`visp-kit@${matrix.supportedRelease.kit}`, "u"));
   assert.match(readme, new RegExp(`visp-hyper-agent@${matrix.supportedRelease.hyper}`, "u"));
 
-  // Still forbidden: `visp-dev` is `private: true` and has never been published,
-  // so an npx invocation of it would fail for every reader.
+  // P10-US-08 / D-118: visp-dev 0.1.0 is public-ready (private flipped off);
+  // publication itself remains the owner's explicit step. Until the registry
+  // actually carries it, an npx invocation would still fail for every reader,
+  // so the README keeps not suggesting one.
   assert.equal(
     JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8")).private,
-    true,
+    false,
   );
   assert.doesNotMatch(readme, /npx visp-dev/u);
 

@@ -114,14 +114,19 @@ export function deprecatedInstallRecovery(packageName, version, install) {
 }
 
 export async function collectEnvironment(projectPath) {
-  const [node, npm, pnpm, git, kit, hyper] = await Promise.all([
+  const [node, npm, pnpm, git, kitRenamed, kitLegacy, hyper] = await Promise.all([
     Promise.resolve(process.version),
     detectTool("npm"),
     detectTool("pnpm"),
     detectTool("git"),
+    // P10-US-04: Kit's binary is `visp-kit` from 0.4.0; `visp` is the
+    // pre-rename Kit (or, post-cutover, the Hyper dispatcher — which is why
+    // the renamed probe wins when both answer).
+    detectTool("visp-kit"),
     detectTool("visp"),
     detectTool("visp-hyper")
   ]);
+  const kit = kitRenamed ?? kitLegacy;
 
   const insideWorkTree = await runProcess("git", ["rev-parse", "--is-inside-work-tree"], {
     cwd: projectPath,

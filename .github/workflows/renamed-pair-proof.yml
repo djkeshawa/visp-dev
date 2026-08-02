@@ -1,0 +1,116 @@
+# P10-US-09 / D-120: one green run, both platforms, the same exact artifacts.
+#
+# A single pack job builds the Kit and Hyper tarballs ONCE and records their
+# SHA-256. The Linux and macOS consumer jobs download those same files — never
+# re-packing per platform — verify the hashes before proving anything, and run
+# the renamed-pair proof. The completion record cites this run's ID and the
+# tarball hashes, which must equal the hashes of the locally packed accepted
+# commits.
+
+name: renamed-pair-proof
+
+on:
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+    inputs:
+      kit_ref:
+        description: visp-kit ref to pack
+        default: develop
+      hyper_ref:
+        description: visp-hyper-agent ref to pack
+        default: develop
+
+jobs:
+  pack:
+    name: Pack the exact pair once
+    runs-on: ubuntu-latest
+    outputs:
+      kit_sha: ${{ steps.hash.outputs.kit_sha }}
+      hyper_sha: ${{ steps.hash.outputs.hyper_sha }}
+    steps:
+      - name: Check out visp-kit
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          ref: ${{ github.event.inputs.kit_ref || 'develop' }}
+          path: visp-kit
+      - name: Check out visp-hyper-agent
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          ref: ${{ github.event.inputs.hyper_ref || 'develop' }}
+          path: visp-hyper-agent
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Build and pack visp-kit
+        run: |
+          cd visp-kit
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
+      - name: Build and pack visp-hyper-agent
+        run: |
+          cd visp-hyper-agent
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm pack --pack-destination "$GITHUB_WORKSPACE/artifacts"
+      - name: Record tarball identities
+        id: hash
+        run: |
+          cd artifacts
+          KIT_TGZ=$(ls visp-kit-*.tgz)
+          HYPER_TGZ=$(ls visp-hyper-agent-*.tgz)
+          KIT_SHA=$(sha256sum "$KIT_TGZ" | cut -d' ' -f1)
+          HYPER_SHA=$(sha256sum "$HYPER_TGZ" | cut -d' ' -f1)
+          echo "kit_sha=$KIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "hyper_sha=$HYPER_SHA" >> "$GITHUB_OUTPUT"
+          echo "visp-kit: $KIT_TGZ sha256:$KIT_SHA"
+          echo "visp-hyper-agent: $HYPER_TGZ sha256:$HYPER_SHA"
+      - name: Upload the pair
+        uses: actions/upload-artifact@v4
+        with:
+          name: renamed-pair
+          path: artifacts/*.tgz
+          if-no-files-found: error
+
+  prove:
+    name: Prove on ${{ matrix.os }}
+    needs: pack
+    strategy:
+      # Both platforms must report; hiding one behind the other's failure
+      # would make "which platforms does this hold on" unanswerable.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out visp-dev
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download the exact pair
+        uses: actions/download-artifact@v4
+        with:
+          name: renamed-pair
+          path: artifacts
+      - name: Run the renamed-pair proof against the recorded identities
+        run: |
+          KIT_TGZ=$(ls artifacts/visp-kit-*.tgz)
+          HYPER_TGZ=$(ls artifacts/visp-hyper-agent-*.tgz)
+          node scripts/run-renamed-pair-proof.mjs \
+            --kit "$KIT_TGZ" \
+            --hyper "$HYPER_TGZ" \
+            --expect-kit-sha "${{ needs.pack.outputs.kit_sha }}" \
+            --expect-hyper-sha "${{ needs.pack.outputs.hyper_sha }}" \
+            --out "proof-${{ matrix.os }}.json"
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-${{ matrix.os }}
+          path: proof-*.json

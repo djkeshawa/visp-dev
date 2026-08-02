@@ -1,0 +1,63 @@
+{
+  "proof": "renamed-pair",
+  "platform": "linux",
+  "node": "v24.15.0",
+  "tarballs": {
+    "visp-kit": {
+      "path": "/tmp/claude-1000/-home-dinethj-Documents-projects-code-automation-llm/6f7bf3ed-629f-45fa-a454-e3df31bd4783/scratchpad/visp-kit-0.4.0.tgz",
+      "sha256": "f2bb0ef928a9fed496895e1d41904abdce849152c8983a16eaa76a08240004f4"
+    },
+    "visp-hyper-agent": {
+      "path": "/tmp/claude-1000/-home-dinethj-Documents-projects-code-automation-llm/6f7bf3ed-629f-45fa-a454-e3df31bd4783/scratchpad/visp-hyper-agent-0.7.0.tgz",
+      "sha256": "958fed4fb3ec4b00832b5dd4ff02fb4a40c5c6309c87ae8ed569cff79841c827"
+    }
+  },
+  "cases": [
+    {
+      "id": "install-pair",
+      "passed": true,
+      "detail": "npm install -g exit codes kit=0 hyper=0"
+    },
+    {
+      "id": "binary-identities",
+      "passed": true,
+      "detail": "visp-kit=0.4.0 visp=0.7.0 visp-hyper=0.7.0"
+    },
+    {
+      "id": "kit-init-scan",
+      "passed": true,
+      "detail": "init=0 scan=0"
+    },
+    {
+      "id": "contract-advertises-3.4",
+      "passed": true,
+      "detail": "integration contract lists protocol 3.4"
+    },
+    {
+      "id": "hyper-drives-kit",
+      "passed": true,
+      "detail": "visp status exit=0"
+    },
+    {
+      "id": "self-invocation-guard",
+      "passed": true,
+      "detail": "exit=1"
+    },
+    {
+      "id": "recall-refuses-visibly",
+      "passed": true,
+      "detail": "exit=1"
+    },
+    {
+      "id": "zero-command-evidence-closed",
+      "passed": true,
+      "detail": "verify with zero executed commands does not report success"
+    },
+    {
+      "id": "generated-ci-new-vocabulary",
+      "passed": true,
+      "detail": "hooks ci renders visp-kit commands only"
+    }
+  ],
+  "passed": true
+}

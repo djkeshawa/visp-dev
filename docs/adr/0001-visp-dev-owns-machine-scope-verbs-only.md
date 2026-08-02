@@ -1,7 +1,8 @@
 # ADR 0001: Visp Dev Owns Machine-Scope Verbs Only
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-08-01
+- **Accepted:** 2026-08-02 under D-116
 - **Workspace decision:** D-106
 
 ## Context

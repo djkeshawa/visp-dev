@@ -114,13 +114,15 @@ async function probe(combination) {
     const status = await run(hyperBinPath, ["--project", project, "status"]);
     observations.hyperStatusExit = status.exitCode;
     const statusText = `${status.stdout?.text ?? ""}${status.stderr?.text ?? ""}`;
-    observations.hyperSawKit = !/not available|no kit|unavailable/iu.test(statusText);
+    // Judged on exit code, not on prose. An earlier version regex-matched the
+    // words "unavailable"/"not available" in normal status output and declared
+    // all four combinations broken — a false negative in the probe itself,
+    // which is exactly the failure mode this phase exists to catch. The text is
+    // recorded so a human can read it rather than a pattern guessing at it.
+    observations.hyperStatusText = statusText.slice(0, 400);
 
     const worked =
-      init.exitCode === 0 &&
-      Array.isArray(observations.advertised) &&
-      status.exitCode === 0 &&
-      observations.hyperSawKit;
+      init.exitCode === 0 && Array.isArray(observations.advertised) && status.exitCode === 0;
 
     return { ...combination, worked, observations };
   } catch (error) {

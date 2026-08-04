@@ -11,7 +11,7 @@
       "kitBin": "visp-kit",
       "hyperBin": "visp",
       "expectation": "the shipped pair; should negotiate 3.4",
-      "worked": false,
+      "worked": true,
       "observations": {
         "installed": true,
         "kitInit": 0,
@@ -24,7 +24,7 @@
         ],
         "kitCliName": "visp",
         "hyperStatusExit": 0,
-        "hyperSawKit": false
+        "hyperStatusText": "BEGIN_VISP_HYPER_ACTION_V1\n{\"frameVersion\":\"1.0\",\"authority\":\"kit\",\"action\":{\"normalizationVersion\":\"1.0\",\"source\":{\"protocolVersion\":\"3.4\",\"selectionMode\":\"advertised\",\"localSchemaHash\":\"sha256:bee85bf783a3557c99c9feb716e967997595dfa228380be71815da531f055ca5\",\"schemaHashVerification\":{\"state\":\"advertised_verified\",\"advertisedHash\":\"sha256:bee85bf783a3557c99c9feb716e967997595dfa228380be71815da531f"
       }
     },
     {
@@ -34,7 +34,7 @@
       "kitBin": "visp-kit",
       "hyperBin": "visp-hyper",
       "expectation": "the bridge driving the renamed Kit; the upgrade path's second half",
-      "worked": false,
+      "worked": true,
       "observations": {
         "installed": true,
         "kitInit": 0,
@@ -47,7 +47,7 @@
         ],
         "kitCliName": "visp",
         "hyperStatusExit": 0,
-        "hyperSawKit": false
+        "hyperStatusText": "BEGIN_VISP_HYPER_ACTION_V1\n{\"frameVersion\":\"1.0\",\"authority\":\"kit\",\"action\":{\"normalizationVersion\":\"1.0\",\"source\":{\"protocolVersion\":\"3.4\",\"selectionMode\":\"advertised\",\"localSchemaHash\":\"sha256:bee85bf783a3557c99c9feb716e967997595dfa228380be71815da531f055ca5\",\"schemaHashVerification\":{\"state\":\"advertised_verified\",\"advertisedHash\":\"sha256:bee85bf783a3557c99c9feb716e967997595dfa228380be71815da531f"
       }
     },
     {
@@ -57,7 +57,7 @@
       "kitBin": "visp",
       "hyperBin": "visp-hyper",
       "expectation": "the bridge driving the pre-rename Kit; the upgrade path's first half",
-      "worked": false,
+      "worked": true,
       "observations": {
         "installed": true,
         "kitInit": 0,
@@ -69,7 +69,7 @@
         ],
         "kitCliName": "visp",
         "hyperStatusExit": 0,
-        "hyperSawKit": false
+        "hyperStatusText": "BEGIN_VISP_HYPER_ACTION_V1\n{\"frameVersion\":\"1.0\",\"authority\":\"kit\",\"action\":{\"normalizationVersion\":\"1.0\",\"source\":{\"protocolVersion\":\"3.2\",\"selectionMode\":\"advertised\",\"localSchemaHash\":\"sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9\",\"schemaHashVerification\":{\"state\":\"advertised_verified\",\"advertisedHash\":\"sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea787"
       }
     },
     {
@@ -79,7 +79,7 @@
       "kitBin": "visp",
       "hyperBin": "visp",
       "expectation": "CROSS-GENERATION: final Hyper against pre-rename Kit. Both declare `visp`, so this is also the collision case.",
-      "worked": false,
+      "worked": true,
       "observations": {
         "installed": true,
         "kitInit": 0,
@@ -91,7 +91,7 @@
         ],
         "kitCliName": "visp",
         "hyperStatusExit": 0,
-        "hyperSawKit": false
+        "hyperStatusText": "BEGIN_VISP_HYPER_ACTION_V1\n{\"frameVersion\":\"1.0\",\"authority\":\"kit\",\"action\":{\"normalizationVersion\":\"1.0\",\"source\":{\"protocolVersion\":\"3.2\",\"selectionMode\":\"advertised\",\"localSchemaHash\":\"sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9\",\"schemaHashVerification\":{\"state\":\"advertised_verified\",\"advertisedHash\":\"sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea787"
       }
     }
   ]

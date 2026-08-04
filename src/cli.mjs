@@ -102,6 +102,13 @@ export function installability(matrix) {
 
   if (registry?.supersedesEvidencedPair === true) {
     const npm = registry.npm ?? {};
+    // Guidance must be an ACTION. This previously returned only the hazard —
+    // a sentence saying what not to install — while every other branch of this
+    // function returns a real command, and while `visp-dev --help` promises to
+    // tell you "the exact next command". Two independent evaluators followed
+    // the recovery section and still did not know what to run. Withholding a
+    // support claim is honest; withholding the command is just unhelpful.
+    const install = `npm install -g visp-kit@${npm["visp-kit"]} visp-hyper-agent@${npm["visp-hyper-agent"]}`;
     return {
       installable: false,
       reason:
@@ -109,7 +116,11 @@ export function installability(matrix) {
         `visp-kit@${npm["visp-kit"]} and visp-hyper-agent@${npm["visp-hyper-agent"]}. ` +
         `This matrix has not re-run its evidence pipeline against that pair, so it makes ` +
         `no support claim about it — and it will not recommend the older pair it did prove.`,
-      guidance: registry.hazard ?? "Do not install the superseded pair alongside the current one."
+      guidance: [
+        `To install what npm currently serves: ${install}`,
+        "This matrix makes no support claim about that pair; it is what the README recommends.",
+        registry.hazard ?? "Do not install the superseded pair alongside the current one."
+      ].join(" ")
     };
   }
 
@@ -204,7 +215,11 @@ export async function doctor(projectPath) {
 
     checks.push({
       name,
-      value: value ?? "not installed",
+      // "not found on PATH" is what was actually observed. detectTool spawns the
+      // binary, so absence means unreachable from this shell — not that the
+      // package is missing from the machine. A user who installed under a
+      // prefix not on PATH was previously told a falsehood about their disk.
+      value: value ?? "not found on PATH",
       // Present is not the same as correct. A detected binary cannot be matched
       // to the supported pair, because the pair is pinned by commit and a
       // binary on PATH does not report one. Saying "ok" here would bless an

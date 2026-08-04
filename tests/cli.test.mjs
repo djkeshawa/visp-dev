@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  doctor,
   formatDoctor,
   formatVersions,
   installability,
@@ -213,4 +214,40 @@ test("a detected binary is never reported as verified", async () => {
 
   assert.match(source, /"unverified"/u);
   assert.doesNotMatch(source, /status:\s*"ok",\s*\n\s*detail:\s*"detected on PATH"/u);
+});
+
+test("superseded guidance names a command to run, not only one to avoid", async () => {
+  // Two independent weak-model evaluators followed the recovery section of a
+  // superseded-state doctor report and still did not know what to install:
+  // guidance returned only the hazard. Every other branch of installability()
+  // returns a real command, and --help promises "the exact next command".
+  // Withholding the support claim is honest; withholding the command is not.
+  const matrix = await readCompatibility();
+  if (matrix.registryState?.supersedesEvidencedPair !== true) return;
+
+  const result = installability(matrix);
+
+  assert.equal(result.installable, false);
+  assert.match(result.guidance, /npm install -g/u, "guidance must contain a runnable command");
+  assert.match(result.guidance, /visp-kit@\d+\.\d+\.\d+/u);
+  assert.match(result.guidance, /visp-hyper-agent@\d+\.\d+\.\d+/u);
+  // And it must still carry the hazard, not trade one omission for another.
+  assert.match(result.guidance, /Do not install/u);
+  // It must not overclaim: no support is being asserted for that pair.
+  assert.match(result.guidance, /no support claim/iu);
+});
+
+test("doctor reports what it observed, not a claim about the disk", async () => {
+  // detectTool spawns the binary, so absence means "not reachable from this
+  // shell". Reporting "not installed" asserted something about the machine
+  // that this tool never checked — a user who installed under a prefix off
+  // PATH was told a falsehood.
+  const report = await doctor(process.cwd());
+  for (const check of report.checks) {
+    assert.doesNotMatch(
+      String(check.value ?? ""),
+      /^not installed$/u,
+      `${check.name} must not claim absence it did not verify`
+    );
+  }
 });

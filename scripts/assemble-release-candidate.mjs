@@ -9,7 +9,8 @@
  * project and shipping an unreviewed build.
  */
 import { execFileSync } from "node:child_process";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
 
@@ -20,6 +21,36 @@ import {
   packPackageTwice,
   sha256Hex
 } from "../src/compatibility-lab.mjs";
+
+
+/**
+ * Download exactly what the registry serves and digest it. Nothing here trusts
+ * the registry's own reported hash: npm's `dist.integrity` is the registry's
+ * claim about its bytes, and the point of this check is to compare OUR bytes to
+ * THEIR bytes independently.
+ */
+async function registryTarballDigest({ manifest, npmCommand, scratchRoot }) {
+  const spec = `${manifest.name}@${manifest.version}`;
+  const url = execFileSync(npmCommand, ["view", spec, "dist.tarball"], {
+    stdio: ["ignore", "pipe", "ignore"]
+  })
+    .toString()
+    .trim();
+  if (!/^https:\/\/[^\s]+\.tgz$/u.test(url)) {
+    throw new Error(`Registry returned an unusable tarball URL for ${spec}: ${url}`);
+  }
+  const scratch = await mkdtemp(path.join(scratchRoot, "registry-compare-"));
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Downloading ${spec} failed with HTTP ${response.status}`);
+    }
+    const bytes = Buffer.from(await response.arrayBuffer());
+    return createHash("sha256").update(bytes).digest("hex");
+  } finally {
+    await rm(scratch, { recursive: true, force: true });
+  }
+}
 
 function parseArguments(argv) {
   const input = { targets: [] };
@@ -37,6 +68,7 @@ function parseArguments(argv) {
     } else if (flag === "--offline-store") input.offlineStoreSource = take(index++, flag);
     else if (flag === "--package-manager") input.packageManagerCommand = take(index++, flag);
     else if (flag === "--npm") input.npmCommand = take(index++, flag);
+    else if (flag === "--released") input.released = true;
     else if (flag === "--output") outputPath = take(index++, flag);
     else throw new TypeError(`Unknown argument: ${flag}`);
   }
@@ -90,11 +122,45 @@ try {
         }
       })();
 
-      // Never assemble a candidate whose version already exists: a published
-      // version number is immutable content.
+      // Two different questions, and they need different answers.
+      //
+      // PRE-PUBLICATION (default): never assemble a candidate whose version
+      // already exists. A published version number is immutable content, and a
+      // candidate that shadows one is a mistake waiting to be uploaded.
+      //
+      // POST-PUBLICATION (--released): the pair is already on the registry and
+      // we want evidence ABOUT what it serves. Refusing here would be the wrong
+      // answer to the right question; claiming "assembled_not_published" about
+      // published artifacts would be a false statement inside an evidence
+      // record. So we assert something stronger and PROVE it: the bytes we
+      // packed from this commit are byte-identical to the bytes the registry
+      // serves. If they differ, this source does not reproduce the published
+      // artifact and the run fails — that divergence is exactly what an
+      // evidence tool exists to catch.
+      let registryTarballSha256 = null;
       if (published !== null) {
+        if (!input.released) {
+          throw new Error(
+            `${manifest.name}@${manifest.version} already exists on the registry; bump before assembling, ` +
+              "or pass --released to record evidence about the published artifact instead"
+          );
+        }
+        registryTarballSha256 = await registryTarballDigest({
+          manifest,
+          npmCommand: input.npmCommand,
+          scratchRoot: input.offlineStoreSource
+        });
+        if (registryTarballSha256 !== packed.first.sha256) {
+          throw new Error(
+            `${manifest.name}@${manifest.version} does not reproduce: this commit packs ` +
+              `${packed.first.sha256} but the registry serves ${registryTarballSha256}. ` +
+              "The published artifact was not built from this source."
+          );
+        }
+      } else if (input.released) {
         throw new Error(
-          `${manifest.name}@${manifest.version} already exists on the registry; bump before assembling`
+          `--released was passed but ${manifest.name}@${manifest.version} is not on the registry. ` +
+            "Assemble a candidate without --released, or publish first."
         );
       }
 
@@ -104,14 +170,23 @@ try {
         commit,
         tree: git(target.repositoryPath, ["rev-parse", "HEAD^{tree}"]),
         tarballSha256: packed.first.sha256,
-        byteIdenticalOnRepack: packed.first.sha256 === packed.second.sha256
+        byteIdenticalOnRepack: packed.first.sha256 === packed.second.sha256,
+        ...(registryTarballSha256 === null
+          ? {}
+          : { registryTarballSha256, byteIdenticalToRegistry: true })
       });
     }
 
+    const released = input.released === true;
     const report = {
-      schemaVersion: "visp.release-candidate.v1",
-      status: "assembled_not_published",
-      note: "A release candidate. Nothing here has been published, and this tool has no registry write path.",
+      // v2 exists so a report can describe a PUBLISHED pair without lying about
+      // it. v1 reports remain valid and are still verified; they simply cannot
+      // express this state.
+      schemaVersion: released ? "visp.release-candidate.v2" : "visp.release-candidate.v1",
+      status: released ? "released_and_byte_identical" : "assembled_not_published",
+      note: released
+        ? "Evidence about an ALREADY PUBLISHED pair. Every artifact below was packed from the named commit and independently verified byte-identical to the tarball the registry serves. This tool has no registry write path."
+        : "A release candidate. Nothing here has been published, and this tool has no registry write path.",
       environment: { node: process.version, operatingSystem: process.platform, architecture: process.arch },
       artifacts: artifacts.sort((left, right) => left.name.localeCompare(right.name)),
       knownLimitations: [
@@ -122,7 +197,19 @@ try {
         "No performance or review-efficiency claim is made; the Phase 6 evaluation gates have not run.",
         "Dogfooding covers one real repository across three runs. That is real use, not a broad sample."
       ],
-      publicationPreconditions: [
+      ...(released
+        ? {
+            // A published pair has no publication preconditions left; stating
+            // them would imply an upload that already happened.
+            registryVerification: [
+              "Each artifact's tarball was downloaded from the registry and digested independently; the registry's own reported integrity was not trusted as the comparison.",
+              "A mismatch fails this assembly rather than being recorded, because a source that does not reproduce the published artifact is the defect this check exists to find."
+            ]
+          }
+        : {}),
+      publicationPreconditions: released
+        ? ["Not applicable: these artifacts are already published."]
+        : [
         "The publication freeze is lifted (D-069 by D-097), and this registry action has its own explicit recorded decision — the per-action requirement outlived the freeze.",
         "Every artifact SHA-256 above is re-verified immediately before upload.",
         "The disposition of the versions this candidate supersedes is decided and executed.",

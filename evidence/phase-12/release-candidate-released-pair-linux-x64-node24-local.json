@@ -1,0 +1,48 @@
+{
+  "artifacts": [
+    {
+      "byteIdenticalOnRepack": true,
+      "byteIdenticalToRegistry": true,
+      "commit": "e9a75ee62d32a6bed45e66cd3d4cda0bd2628a4c",
+      "name": "visp-hyper-agent",
+      "registryTarballSha256": "ac0b38c7ae70b3ecdd83b7c5b9ca13e46b51b54033b581c4cf38512cd5aa3d23",
+      "tarballSha256": "ac0b38c7ae70b3ecdd83b7c5b9ca13e46b51b54033b581c4cf38512cd5aa3d23",
+      "tree": "6c016e89647787605537b9815e24dda96dd37635",
+      "version": "0.7.0"
+    },
+    {
+      "byteIdenticalOnRepack": true,
+      "byteIdenticalToRegistry": true,
+      "commit": "a6d79f31fde8597bf87b4d2fefc3dfe1c6f38b89",
+      "name": "visp-kit",
+      "registryTarballSha256": "a4192d3d4eca4b2fb64501cdd99eb37e089d3865ec4cdf965b6441dbe4a7d911",
+      "tarballSha256": "a4192d3d4eca4b2fb64501cdd99eb37e089d3865ec4cdf965b6441dbe4a7d911",
+      "tree": "180c66716df1edc8f7960daa8c180a84ebc3918b",
+      "version": "0.4.0"
+    }
+  ],
+  "environment": {
+    "architecture": "x64",
+    "node": "v24.15.0",
+    "operatingSystem": "linux"
+  },
+  "knownLimitations": [
+    "A supported release is already published. Everything this candidate supersedes stays on the registry, including the deprecated visp-kit@0.1.0 and visp-hyper-agent@0.2.0/0.3.0, because a published version can never be replaced.",
+    "Compatibility is exact-pair only, pinned by commit and artifact hash. No version range is supported.",
+    "Committed evidence was produced on Linux x64 with Node 24. The CI matrix covers macOS and Windows; the evidence reports do not.",
+    "Assurance verdicts are inconclusive because oracle-result mapping is incomplete. inconclusive is never a pass.",
+    "No performance or review-efficiency claim is made; the Phase 6 evaluation gates have not run.",
+    "Dogfooding covers one real repository across three runs. That is real use, not a broad sample."
+  ],
+  "note": "Evidence about an ALREADY PUBLISHED pair. Every artifact below was packed from the named commit and independently verified byte-identical to the tarball the registry serves. This tool has no registry write path.",
+  "publicationPreconditions": [
+    "Not applicable: these artifacts are already published."
+  ],
+  "registryVerification": [
+    "Each artifact's tarball was downloaded from the registry and digested independently; the registry's own reported integrity was not trusted as the comparison.",
+    "A mismatch fails this assembly rather than being recorded, because a source that does not reproduce the published artifact is the defect this check exists to find."
+  ],
+  "reportSha256": "f5c25ae90eddea3eac95d89150d42035027d6d15d6ff8d44599f9345c5f70a43",
+  "schemaVersion": "visp.release-candidate.v2",
+  "status": "released_and_byte_identical"
+}

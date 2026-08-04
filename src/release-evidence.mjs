@@ -100,10 +100,20 @@ export const D107_PHASE_6_EVIDENCE = deepFreeze({
 export function verifyReleaseCandidateReport(report) {
   plainObject(report, "Release candidate report");
 
-  if (
-    report.schemaVersion !== "visp.release-candidate.v1" ||
-    report.status !== "assembled_not_published"
-  ) {
+  // Two report generations, and the distinction is load-bearing:
+  //   v1 / assembled_not_published   — a candidate for a pair NOT yet published.
+  //   v2 / released_and_byte_identical — evidence ABOUT a published pair, where
+  //        every artifact was proven byte-identical to what the registry serves.
+  // A v2 report must never claim the v1 status, and vice versa: that pairing is
+  // the whole reason a published pair can be described without lying about it.
+  const released =
+    report.schemaVersion === "visp.release-candidate.v2" &&
+    report.status === "released_and_byte_identical";
+  const candidate =
+    report.schemaVersion === "visp.release-candidate.v1" &&
+    report.status === "assembled_not_published";
+
+  if (!released && !candidate) {
     throw new Error("Release candidate report identity is invalid");
   }
 
@@ -122,7 +132,18 @@ export function verifyReleaseCandidateReport(report) {
   for (const artifact of report.artifacts) {
     exactKeys(
       artifact,
-      ["byteIdenticalOnRepack", "commit", "name", "tarballSha256", "tree", "version"],
+      released
+        ? [
+            "byteIdenticalOnRepack",
+            "byteIdenticalToRegistry",
+            "commit",
+            "name",
+            "registryTarballSha256",
+            "tarballSha256",
+            "tree",
+            "version"
+          ]
+        : ["byteIdenticalOnRepack", "commit", "name", "tarballSha256", "tree", "version"],
       "Release candidate artifact"
     );
     verifyPackageIdentity(
@@ -137,6 +158,20 @@ export function verifyReleaseCandidateReport(report) {
     );
     if (artifact.byteIdenticalOnRepack !== true || names.has(artifact.name)) {
       throw new Error("Release candidate artifact identity is contradictory");
+    }
+    if (released) {
+      // The claim and the numbers must agree. A report asserting byte-identity
+      // whose two hashes differ is worse than no report: it launders a
+      // divergence into an attestation.
+      verifyHash(artifact.registryTarballSha256, `Registry tarball hash for ${artifact.name}`);
+      if (
+        artifact.byteIdenticalToRegistry !== true ||
+        artifact.registryTarballSha256 !== artifact.tarballSha256
+      ) {
+        throw new Error(
+          `Released artifact ${artifact.name} claims registry byte-identity that its own hashes contradict`
+        );
+      }
     }
     names.add(artifact.name);
   }
@@ -287,11 +322,17 @@ export function verifyPlatformProvenanceReport(report) {
   return true;
 }
 
-export function verifyReviewedPlatformProvenanceReport(report) {
+/**
+ * A provenance report is only "reviewed" if it matches a run a human actually
+ * reviewed. The pin is a parameter so a later review can be recorded, but it
+ * DEFAULTS to the D-107 set: an omitted argument can never mean "accept
+ * anything", which is the failure mode that would quietly retire this control.
+ */
+export function verifyReviewedPlatformProvenanceReport(report, reviewedProvenance = D107_PLATFORM_PROVENANCE) {
   verifyPlatformProvenanceReport(report);
   if (
     canonicalStringify({ artifacts: report.artifacts, run: report.run }) !==
-    canonicalStringify(D107_PLATFORM_PROVENANCE)
+    canonicalStringify(reviewedProvenance)
   ) {
     throw new Error("Platform provenance does not match the reviewed D-107 run and artifacts");
   }
@@ -381,7 +422,29 @@ function exactPlatformPackageAnchors(observed, expected) {
   );
 }
 
+/**
+ * The reviewed-evidence pins.
+ *
+ * These exist to stop an arbitrary CI run self-certifying: a human reviewed one
+ * specific run and one specific compatibility report, and froze them. That
+ * control is real and is kept. What changes here is only that the pins are
+ * DATA rather than module constants — previously the evaluator could validate
+ * exactly one historical pair for all time, so the product could never
+ * recommend anything again without a code change. A new pair now needs a
+ * recorded review, which is the intended cost, rather than an edit to this
+ * file, which was an accident of implementation.
+ */
+export const D107_REVIEWED = Object.freeze({
+  packages: D107_PACKAGES,
+  platformProvenance: D107_PLATFORM_PROVENANCE,
+  phase6Evidence: D107_PHASE_6_EVIDENCE
+});
+
 export function evaluateReleaseEvidence(input) {
+  const reviewed = input.reviewed ?? D107_REVIEWED;
+  const reviewedPackages = reviewed.packages;
+  const reviewedProvenance = reviewed.platformProvenance;
+  const reviewedPairEvidence = reviewed.phase6Evidence;
   const issues = [];
   const valid = {
     candidate: verifyInto(issues, "candidate", input.candidate, verifyReleaseCandidateReport),
@@ -429,7 +492,7 @@ export function evaluateReleaseEvidence(input) {
     canonicalStringify({
       artifacts: input.platformProvenance.artifacts,
       run: input.platformProvenance.run
-    }) !== canonicalStringify(D107_PLATFORM_PROVENANCE)
+    }) !== canonicalStringify(reviewedProvenance)
   ) {
     addIssue(
       issues,
@@ -449,10 +512,10 @@ export function evaluateReleaseEvidence(input) {
   }
   if (
     valid.phase6 &&
-    (input.phase6FileSha256 !== D107_PHASE_6_EVIDENCE.fileSha256 ||
-      input.phase6.reportSha256 !== D107_PHASE_6_EVIDENCE.reportSha256 ||
+    (input.phase6FileSha256 !== reviewedPairEvidence.fileSha256 ||
+      input.phase6.reportSha256 !== reviewedPairEvidence.reportSha256 ||
       canonicalStringify(input.phase6.runIdentity) !==
-        canonicalStringify(D107_PHASE_6_EVIDENCE.runIdentity))
+        canonicalStringify(reviewedPairEvidence.runIdentity))
   ) {
     addIssue(
       issues,
@@ -465,7 +528,7 @@ export function evaluateReleaseEvidence(input) {
   for (const [reportName, report] of [["linux", input.linux], ["darwin", input.darwin]]) {
     if (
       valid[reportName] &&
-      !exactPlatformPackageAnchors(report.packages, D107_PACKAGES)
+      !exactPlatformPackageAnchors(report.packages, reviewedPackages)
     ) {
       addIssue(
         issues,
@@ -485,7 +548,7 @@ export function evaluateReleaseEvidence(input) {
   })) {
     if (packages === null) continue;
     for (const id of ["kit", "hyper"]) {
-      if (!packageIdentityEqual(packages[id], D107_PACKAGES[id])) {
+      if (!packageIdentityEqual(packages[id], reviewedPackages[id])) {
         addIssue(
           issues,
           "package_identity_mismatch",
@@ -499,10 +562,10 @@ export function evaluateReleaseEvidence(input) {
   const fullIdentitiesAgree = [identities.candidate, identities.phase6].every(
     (packages) =>
       packages !== null &&
-      ["kit", "hyper"].every((id) => packageIdentityEqual(packages[id], D107_PACKAGES[id]))
+      ["kit", "hyper"].every((id) => packageIdentityEqual(packages[id], reviewedPackages[id]))
   );
   const platformAnchorsAgree = [identities.linux, identities.darwin].every(
-    (packages) => packages !== null && exactPlatformPackageAnchors(packages, D107_PACKAGES)
+    (packages) => packages !== null && exactPlatformPackageAnchors(packages, reviewedPackages)
   );
   const resolvedPackages =
     fullIdentitiesAgree && platformAnchorsAgree ? structuredClone(D107_PACKAGES) : null;

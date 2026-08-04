@@ -380,6 +380,38 @@ test("a coherently resealed fake GitHub run is not reviewed platform provenance"
   assert.ok(result.issues.some((issue) => issue.code === "provenance_not_reviewed"));
 });
 
+test("making the reviewed pin a parameter did not create an accept-anything default", () => {
+  // P12: the reviewed pins became data so a NEW pair can be reviewed without a
+  // code change. The hazard in that refactor is the obvious one — an omitted
+  // argument silently meaning "no pin, accept anything". These assertions exist
+  // so that hole cannot open unnoticed.
+  const provenance = readEvidence("conformance-fixtures-run-30686678616.json").report;
+  const fake = structuredClone(provenance);
+  fake.run.runId = "424242";
+  fake.run.url = "https://github.com/djkeshawa/visp-dev/actions/runs/424242";
+  fake.artifacts.forEach((artifact) => {
+    artifact.workflowRunId = fake.run.runId;
+  });
+  const resealed = reseal(fake);
+
+  // Called with NO reviewed pin at all: must still reject.
+  assert.throws(() => verifyReviewedPlatformProvenanceReport(resealed), /reviewed D-107/u);
+
+  // The genuine article still passes with no pin supplied, so the default is
+  // the real D-107 set rather than a permissive stub.
+  assert.equal(verifyReviewedPlatformProvenanceReport(provenance), true);
+
+  // And an explicitly supplied pin is honoured: reviewing a different run is
+  // possible, which is the entire point of the refactor.
+  assert.equal(
+    verifyReviewedPlatformProvenanceReport(resealed, {
+      artifacts: resealed.artifacts,
+      run: resealed.run
+    }),
+    true
+  );
+});
+
 test("required families are declared independently of the evidence that exists", () => {
   // If families were derived from the evidence, every gap would vanish by
   // construction and the report would always read complete.

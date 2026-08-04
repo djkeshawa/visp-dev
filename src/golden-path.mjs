@@ -21,6 +21,7 @@ import {
 } from "./compatibility-lab.mjs";
 import {
   createRealProject,
+  defaultBinName,
   packAndInstall,
   parseJson,
   runExact,
@@ -85,16 +86,23 @@ export async function runGoldenPath(input) {
       ownedRoot: owned.root,
       packageManagerCommand: input.packageManagerCommand
     };
+    // Which command each side installs, and which protocol the pair speaks —
+    // both are properties of the pair under test, not constants of the product.
+    const kitBin = input.kitBinName ?? defaultBinName("kit");
+    const hyperBin = input.hyperBinName ?? defaultBinName("hyper");
+    const protocol = input.protocol ?? "3.2";
     const kit = await packAndInstall({
       ...common,
       definition: { commit: input.kitCommit, tree: input.kitTree },
       kind: "kit",
+      binName: kitBin,
       repositoryRoot: input.kitRepositoryRoot
     });
     const hyper = await packAndInstall({
       ...common,
       definition: { commit: input.hyperCommit, tree: input.hyperTree },
       kind: "hyper",
+      binName: hyperBin,
       repositoryRoot: input.hyperRepositoryRoot
     });
 
@@ -110,7 +118,7 @@ export async function runGoldenPath(input) {
 
     const action = parseJson(
       await context.runKit(
-        ["next", context.project, "--format", "json", "--protocol", "3.2"],
+        ["next", context.project, "--format", "json", "--protocol", protocol],
         "golden path canonical action"
       ),
       "golden path canonical action"

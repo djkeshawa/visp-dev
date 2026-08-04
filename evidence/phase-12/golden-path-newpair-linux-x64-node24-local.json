@@ -1,0 +1,76 @@
+{
+  "environment": {
+    "architecture": "x64",
+    "git": "git version 2.34.1",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "operatingSystem": "linux",
+    "pnpm": "11.3.0"
+  },
+  "note": "An executable demonstration. A written walkthrough drifts from the product; this records what the packed binaries actually did.",
+  "packages": {
+    "hyper": {
+      "commit": "e9a75ee62d32a6bed45e66cd3d4cda0bd2628a4c",
+      "tarballSha256": "ac0b38c7ae70b3ecdd83b7c5b9ca13e46b51b54033b581c4cf38512cd5aa3d23"
+    },
+    "kit": {
+      "commit": "a6d79f31fde8597bf87b4d2fefc3dfe1c6f38b89",
+      "tarballSha256": "a4192d3d4eca4b2fb64501cdd99eb37e089d3865ec4cdf965b6441dbe4a7d911"
+    }
+  },
+  "reportSha256": "7f0adbd3546ba9dead0263c9259f74460342fb77a075bb8a1851f5fb66464d63",
+  "schemaVersion": "visp.golden-path.v1",
+  "steps": [
+    {
+      "id": "scoped_task_authorized",
+      "observed": {
+        "scope": "the task declared an exact allowed-file list before any edit was made"
+      }
+    },
+    {
+      "id": "evidence_passes",
+      "observed": {
+        "nextCommand": "visp-kit verify --task T001",
+        "verdict": "ready"
+      }
+    },
+    {
+      "id": "assurance_case_produced",
+      "observed": {
+        "categories": [
+          "inconclusive_evidence",
+          "unmapped_change",
+          "validation_command_change"
+        ],
+        "mandatoryHotspots": 3,
+        "verdict": "inconclusive"
+      }
+    },
+    {
+      "id": "human_decision_recorded",
+      "observed": {
+        "boundToCase": true,
+        "status": "current"
+      }
+    },
+    {
+      "id": "out_of_scope_change_blocked",
+      "observed": {
+        "scopeFindings": 1,
+        "titles": [
+          "Out-of-scope file changed"
+        ]
+      }
+    },
+    {
+      "id": "scope_corrected",
+      "observed": {
+        "correction": "reverted the out-of-scope file rather than widening the task scope"
+      }
+    }
+  ],
+  "summary": {
+    "stepsCompleted": 6,
+    "stepsRequired": 6
+  }
+}

@@ -25,6 +25,9 @@ function parseArguments(argv) {
     else if (flag === "--offline-cache") input.offlineCacheSource = take(index++, flag);
     else if (flag === "--package-manager") input.packageManagerCommand = take(index++, flag);
     else if (flag === "--npm") input.npmCommand = take(index++, flag);
+    else if (flag === "--kit-bin") input.kitBinName = take(index++, flag);
+    else if (flag === "--hyper-bin") input.hyperBinName = take(index++, flag);
+    else if (flag === "--protocol") input.protocol = take(index++, flag);
     else if (flag === "--output") outputPath = take(index++, flag);
     else if (flag === "--verify") verifyPath = take(index++, flag);
     else throw new TypeError(`Unknown argument: ${flag}`);

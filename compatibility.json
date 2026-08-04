@@ -131,6 +131,24 @@
     }
   ],
   "published": true,
+  "registryState": {
+    "hazard": "Do not install visp-kit@0.2.3 while visp-hyper-agent@0.7.0 is present. visp-kit@0.2.3 declares the `visp` binary that visp-hyper-agent@0.7.0 now provides, so whichever installs last silently wins the name.",
+    "npm": {
+      "visp-dev": "0.1.0",
+      "visp-hyper-agent": "0.7.0",
+      "visp-kit": "0.4.0"
+    },
+    "observedAt": "2026-08-05",
+    "provenance": {
+      "note": "That proof covers the published pair, but it is a different report shape than this matrix's evidence pipeline consumes. Until that pipeline is re-run, this matrix makes no support claim about the published pair.",
+      "renamedPairProof": "github-actions run 30769693959 (linux + macos, identical artifacts)"
+    },
+    "pypi": {
+      "visp-memory": "0.4.0"
+    },
+    "reason": "The Phase 10 unified-surface release train (D-118, published under D-123/D-124/D-125) replaced the evidenced 0.2.3/0.4.3 pair. The evidence for that older pair remains valid and is retained; it is simply no longer the pair a user should install.",
+    "supersedesEvidencedPair": true
+  },
   "releaseEvidence": {
     "eligible": true,
     "issues": [],
@@ -157,9 +175,6 @@
     }
   },
   "schemaVersion": 2,
-  "supportedRelease": {
-    "hyper": "0.4.3",
-    "kit": "0.2.3"
-  }
+  "supportedRelease": null
 }
 

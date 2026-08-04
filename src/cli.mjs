@@ -91,6 +91,24 @@ export function installability(matrix) {
     };
   }
 
+  // Superseded is a different situation from never-proven, and conflating them
+  // produces actively harmful advice: it would point a user at an older pair
+  // that now contends for the `visp` binary with what the registry serves.
+  const registry = matrix.registryState;
+
+  if (registry?.supersedesEvidencedPair === true) {
+    const npm = registry.npm ?? {};
+    return {
+      installable: false,
+      reason:
+        `The evidenced pair has been superseded on the registry. npm currently serves ` +
+        `visp-kit@${npm["visp-kit"]} and visp-hyper-agent@${npm["visp-hyper-agent"]}. ` +
+        `This matrix has not re-run its evidence pipeline against that pair, so it makes ` +
+        `no support claim about it — and it will not recommend the older pair it did prove.`,
+      guidance: registry.hazard ?? "Do not install the superseded pair alongside the current one."
+    };
+  }
+
   return {
     installable: false,
     reason:
@@ -224,6 +242,7 @@ export async function doctor(projectPath) {
     checks,
     recovery,
     pair,
+    registryState: matrix.registryState ?? null,
     supportedRelease: pair === null ? null : matrix.supportedRelease,
     install,
     environment
@@ -238,6 +257,7 @@ export async function versions(projectPath) {
   return {
     product: "visp-dev",
     published: matrix.published,
+    registryState: matrix.registryState ?? null,
     supportedRelease: pair === null ? null : matrix.supportedRelease,
     installed: { kit: environment.kit, hyper: environment.hyper, node: environment.node },
     supported: pair,
@@ -292,11 +312,22 @@ export async function init(projectPath) {
   return { status: report.status, steps, doctor: report };
 }
 
+/**
+ * Why no release is named. A withheld recommendation after a registry
+ * supersession is a different state from missing evidence, and saying
+ * "incomplete" there would misdescribe evidence that is complete and valid.
+ */
+function noReleaseReason(report) {
+  return report?.registryState?.supersedesEvidencedPair === true
+    ? "none (evidenced pair superseded on the registry)"
+    : "none (evidence incomplete)";
+}
+
 export function formatDoctor(report) {
   const release = report.supportedRelease ?? null;
   const lines = [
     `visp-dev doctor: ${report.status}`,
-    `supported release: ${release === null ? "none (evidence incomplete)" : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
+    `supported release: ${release === null ? noReleaseReason(report) : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
     ""
   ];
 
@@ -330,7 +361,7 @@ export function formatVersions(result) {
   const lines = [
     `visp-dev`,
     `  published release: ${result.published ? "yes" : "none"}`,
-    `  supported release: ${release === null ? "none (evidence incomplete)" : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
+    `  supported release: ${release === null ? noReleaseReason(result) : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
     `  installed kit:     ${result.installed.kit ?? "not installed"}`,
     `  installed hyper:   ${result.installed.hyper ?? "not installed"}`,
     `  node:              ${result.installed.node}`,

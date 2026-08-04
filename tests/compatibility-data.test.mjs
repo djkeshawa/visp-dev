@@ -26,11 +26,16 @@ test("every pair is pinned by commit and artifact hash, never by a version range
 });
 
 test("the matrix records the release without letting a pair assert a version", () => {
-  // A supported release exists, but proof still attaches to the exact commit
-  // and tarball rather than treating a version as a compatibility range.
+  // Registry existence is a separate fact from support. When the evidenced
+  // pair has been superseded on the registry, no release is recommended —
+  // proof of an older pair is not a reason to install it.
   assert.equal(matrix.published, true);
-  assert.match(matrix.supportedRelease.kit, /^\d+\.\d+\.\d+$/u);
-  assert.match(matrix.supportedRelease.hyper, /^\d+\.\d+\.\d+$/u);
+  if (matrix.registryState?.supersedesEvidencedPair === true) {
+    assert.equal(matrix.supportedRelease, null);
+  } else {
+    assert.match(matrix.supportedRelease.kit, /^\d+\.\d+\.\d+$/u);
+    assert.match(matrix.supportedRelease.hyper, /^\d+\.\d+\.\d+$/u);
+  }
 
   // The part that has not changed and must not: an individual pair still carries
   // no version. Proof attaches to a commit and a tarball hash, never to a
@@ -70,8 +75,29 @@ test("the newest pair is the exact pair npm serves", () => {
       tree: hyperCurrent.tree
     }
   );
-  assert.equal(matrix.supportedRelease.kit, kitFixed.version);
-  assert.equal(matrix.supportedRelease.hyper, hyperCurrent.version);
+  // The evidence still resolves to the exact packages it proved, whether or
+  // not that pair is currently recommended.
+  assert.equal(matrix.releaseEvidence.resolvedPackages.kit.version, kitFixed.version);
+  assert.equal(matrix.releaseEvidence.resolvedPackages.hyper.version, hyperCurrent.version);
+  if (matrix.supportedRelease !== null) {
+    assert.equal(matrix.supportedRelease.kit, kitFixed.version);
+    assert.equal(matrix.supportedRelease.hyper, hyperCurrent.version);
+  }
+});
+
+test("a superseded registry state withholds the recommendation and names the hazard", () => {
+  const registry = matrix.registryState;
+  assert.ok(registry, "the matrix must record what the registries serve");
+  if (registry.supersedesEvidencedPair !== true) return;
+
+  // Withheld, not falsified: the older pair's evidence stays eligible.
+  assert.equal(matrix.supportedRelease, null);
+  assert.equal(matrix.releaseEvidence.eligible, true);
+  // The hazard must be concrete enough to act on, not a shrug.
+  assert.match(registry.hazard, /visp-kit@[\d.]+/u);
+  assert.match(registry.hazard, /visp-hyper-agent@[\d.]+/u);
+  assert.match(registry.npm["visp-kit"], /^\d+\.\d+\.\d+$/u);
+  assert.match(registry.npm["visp-hyper-agent"], /^\d+\.\d+\.\d+$/u);
 });
 
 test("each pair names the evidence file that proves it", () => {

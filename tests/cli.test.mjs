@@ -81,17 +81,30 @@ test("a published pair is recommended only when supportedRelease is eligible", a
   assert.match(installability({ published: false }).reason, /deprecated/u);
 });
 
-test("versions reports the eligible release and keeps every pair pinned by commit", async () => {
+test("versions keeps every pair pinned by commit and names a release only when one is recommended", async () => {
   const result = await versions(process.cwd());
 
   assert.equal(result.published, true);
-  assert.deepEqual(result.supportedRelease, { kit: "0.2.3", hyper: "0.4.3" });
   assert.ok(result.pairs.length >= 3);
   for (const pair of result.pairs) {
     assert.match(pair.kit, /^[0-9a-f]{40}$/u);
     assert.match(pair.hyper, /^[0-9a-f]{40}$/u);
   }
-  assert.match(formatVersions(result), /supported release:\s+visp-kit@0\.2\.3 \+ visp-hyper-agent@0\.4\.3/u);
+
+  // Once the evidenced pair is superseded on the registry, `versions` must not
+  // print a supported release at all — printing the older one is the failure
+  // mode this guards.
+  if (result.supportedRelease === null) {
+    assert.doesNotMatch(formatVersions(result), /supported release:\s+visp-kit@/u);
+  } else {
+    assert.match(
+      formatVersions(result),
+      new RegExp(
+        `supported release:\\s+visp-kit@${result.supportedRelease.kit} \\+ visp-hyper-agent@${result.supportedRelease.hyper}`,
+        "u"
+      )
+    );
+  }
 });
 
 test("missing supported binaries yield the exact pinned install recovery once", () => {
@@ -165,11 +178,25 @@ test("doctor reports a deprecated install as failed, not ok", async () => {
   assert.match(text, /supported release: visp-kit@0\.2\.3 \+ visp-hyper-agent@0\.4\.3/u);
 });
 
-test("doctor formatting never names a release when eligibility is incomplete", () => {
-  const text = formatDoctor({ status: "blocked", checks: [], recovery: [], supportedRelease: null });
+test("doctor formatting never names a release when none is recommended", () => {
+  const incomplete = formatDoctor({ status: "blocked", checks: [], recovery: [], supportedRelease: null });
 
-  assert.match(text, /supported release: none \(evidence incomplete\)/u);
-  assert.doesNotMatch(text, /0\.2\.3|0\.4\.3/u);
+  assert.match(incomplete, /supported release: none \(evidence incomplete\)/u);
+  assert.doesNotMatch(incomplete, /0\.2\.3|0\.4\.3/u);
+
+  // A superseded pair is a distinct state: the evidence is complete and valid,
+  // it just no longer describes what a user should install. Calling that
+  // "incomplete" would misdescribe it.
+  const superseded = formatDoctor({
+    status: "blocked",
+    checks: [],
+    recovery: [],
+    supportedRelease: null,
+    registryState: { supersedesEvidencedPair: true }
+  });
+
+  assert.match(superseded, /supported release: none \(evidenced pair superseded on the registry\)/u);
+  assert.doesNotMatch(superseded, /0\.2\.3|0\.4\.3/u);
 });
 
 test("a detected binary is never reported as verified", async () => {

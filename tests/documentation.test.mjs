@@ -118,15 +118,31 @@ test("the README is outcome-first and states its limitations honestly", async ()
   );
 
   assert.equal(matrix.published, true, "this assertion assumes a published release");
-  assert.match(
-    readme,
-    new RegExp(
-      `npm install -g visp-kit@${matrix.supportedRelease.kit} visp-hyper-agent@${matrix.supportedRelease.hyper}`,
-      "u"
-    )
-  );
-  assert.match(readme, new RegExp(`visp-kit@${matrix.supportedRelease.kit}`, "u"));
-  assert.match(readme, new RegExp(`visp-hyper-agent@${matrix.supportedRelease.hyper}`, "u"));
+
+  if (matrix.supportedRelease === null) {
+    // No recommendation exists, so the README must not print an install line
+    // that pins the superseded pair — that command is the hazard itself.
+    const superseded = matrix.releaseEvidence.resolvedPackages;
+    assert.doesNotMatch(
+      readme,
+      new RegExp(
+        `npm install -g visp-kit@${superseded.kit.version} visp-hyper-agent@${superseded.hyper.version}`,
+        "u"
+      )
+    );
+    // And it must say plainly that nothing is recommended.
+    assert.match(readme, /no support claim|No release is currently recommended/iu);
+  } else {
+    assert.match(
+      readme,
+      new RegExp(
+        `npm install -g visp-kit@${matrix.supportedRelease.kit} visp-hyper-agent@${matrix.supportedRelease.hyper}`,
+        "u"
+      )
+    );
+    assert.match(readme, new RegExp(`visp-kit@${matrix.supportedRelease.kit}`, "u"));
+    assert.match(readme, new RegExp(`visp-hyper-agent@${matrix.supportedRelease.hyper}`, "u"));
+  }
 
   // P10-US-08 / D-118: visp-dev 0.1.0 is public-ready (private flipped off);
   // publication itself remains the owner's explicit step. Until the registry

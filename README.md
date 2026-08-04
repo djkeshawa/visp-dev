@@ -17,11 +17,20 @@ If it ever starts to, it has become a second engine and the boundary has failed.
 ## Five-minute start
 
 ```bash
-npm install -g visp-kit@0.2.3 visp-hyper-agent@0.4.3
+npm install -g visp-kit visp-hyper-agent
 ```
 
-That installs `visp-kit@0.2.3` and `visp-hyper-agent@0.4.3`, the supported
-release. Check what you actually have:
+That installs what npm currently serves: `visp-kit@0.4.0` and
+`visp-hyper-agent@0.7.0`, the unified-surface pair. **Do not pin the older
+`visp-kit@0.2.3`** — it declares the `visp` command that
+`visp-hyper-agent@0.7.0` now provides, and whichever installs last silently
+wins the name. If you have an older pair installed globally, remove it first
+with `npm uninstall -g visp-kit visp-hyper-agent`.
+
+This matrix has not re-run its evidence pipeline against the 0.4.0 / 0.7.0
+pair, so it makes **no support claim** about it and `doctor` will not
+recommend a release. What it will do is refuse to point you at the superseded
+pair. Check what you actually have:
 
 ```bash
 node scripts/visp-dev.mjs doctor     # what you have, what is missing, what to run
@@ -70,14 +79,18 @@ does. `inconclusive` never becomes a pass.
 Stated plainly, because a compatibility product that oversells is worse than
 none.
 
-- **The supported release is an alpha.** `visp-kit@0.2.3` and
-  `visp-hyper-agent@0.4.3` are the versions to install. The Phase 6
-  compatibility row and the Linux/macOS conformance fixtures describe exactly
-  this content, including the tarball SHA-256 values npm serves.
+- **No release is currently recommended.** The evidenced pair
+  (`visp-kit@0.2.3` / `visp-hyper-agent@0.4.3`) was superseded on the registry
+  by the unified-surface train, and this matrix will not recommend a pair it
+  has not re-proven. The older pair's evidence remains valid and is retained —
+  evidence-eligible is not the same as recommended, and recommending a
+  superseded pair here would hand you a binary collision.
 - **Older published versions are deprecated.** `visp-kit@0.1.0` and
   `visp-hyper-agent@0.2.0`/`0.3.0` predate the current compatibility matrix. Do
   not install them; `doctor` fails if it finds one.
-- **`visp-dev` itself is not published.** Run it from a checkout.
+- **`visp-dev` is published as `0.1.0`.** Its bundled matrix describes the
+  superseded pair; that is why this version withholds a recommendation rather
+  than making one.
 - **Compatibility is exact-pair only.** Every claim is pinned to a commit and an
   artifact hash. No version range is supported, because a version string is not
   an identity — `visp-hyper-agent@0.3.0` on npm and `0.3.0` in this workspace
@@ -127,8 +140,8 @@ inconclusive. It also exercises the additive 3.1 boundary with the prior Kit
 and Hyper producers. Visp Dev records and compares Kit-authored facts; it does
 not calculate acceptance, decision freshness, or PR readiness.
 
-The Phase 6 row pins the exact published `visp-kit@0.2.3` /
-`visp-hyper-agent@0.4.3` bytes. All three exact pairs negotiate WorkflowAction
+The Phase 6 row pins the exact `visp-kit@0.2.3` / `visp-hyper-agent@0.4.3`
+bytes it proved — a historical record, no longer an install recommendation. All three exact pairs negotiate WorkflowAction
 3.2 across `run`, `next`, `resume`, checkpoint, `guard`, and MCP. The corrected
 and previous Kit views remain identical on one routine accepted fixture, so the
 fail-closed corrections stay confined to input that was already broken.

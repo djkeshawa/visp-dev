@@ -134,6 +134,14 @@ export async function buildCompatibility() {
     });
   }
 
+  // A pair can be superseded on the registry while its proof stays valid.
+  // Evidence-eligible is therefore NOT the same as recommended: once a newer
+  // pair is published, recommending the older one can actively harm a user
+  // (here, by contending for the `visp` binary), so recommendation is withheld
+  // until the evidence pipeline is re-run against what is actually served.
+  const registryState = JSON.parse(await readFile(path.join(root, "registry-state.json"), "utf8"));
+  const superseded = registryState.supersedesEvidencedPair === true;
+
   return {
     schemaVersion: 2,
     model: "exact-pair",
@@ -141,9 +149,21 @@ export async function buildCompatibility() {
     // recommended only when the shared fail-closed evaluator accepts the exact
     // candidate, genuine packed Phase 6 report, and same-run platform reports.
     published: true,
-    supportedRelease: releaseEvidence.eligible
-      ? { kit: releaseEvidence.expectedPackages.kit.version, hyper: releaseEvidence.expectedPackages.hyper.version }
-      : null,
+    supportedRelease:
+      releaseEvidence.eligible && !superseded
+        ? { kit: releaseEvidence.expectedPackages.kit.version, hyper: releaseEvidence.expectedPackages.hyper.version }
+        : null,
+    // What the registries serve today, and why the evidenced pair is no longer
+    // the answer. Verbatim from registry-state.json so the claim has one owner.
+    registryState: {
+      observedAt: registryState.observedAt,
+      npm: registryState.npm,
+      pypi: registryState.pypi,
+      supersedesEvidencedPair: superseded,
+      reason: registryState.reason,
+      hazard: registryState.hazard,
+      provenance: registryState.provenance
+    },
     releaseEvidence: {
       eligible: releaseEvidence.eligible,
       issues: releaseEvidence.issues,

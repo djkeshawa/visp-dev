@@ -1,0 +1,19 @@
+{
+  "_comment": "Hand-maintained observation of what the registries actually serve today. This is NOT proof evidence: nothing here is generated, and nothing here asserts that a pair works. It exists because a pair can be superseded on the registry while its proof stays perfectly valid, and recommending a superseded pair can be actively harmful even when its evidence is sound. Update this file when a publish lands, then run: npm run compatibility:generate",
+  "observedAt": "2026-08-05",
+  "npm": {
+    "visp-kit": "0.4.0",
+    "visp-hyper-agent": "0.7.0",
+    "visp-dev": "0.1.0"
+  },
+  "pypi": {
+    "visp-memory": "0.4.0"
+  },
+  "supersedesEvidencedPair": true,
+  "reason": "The Phase 10 unified-surface release train (D-118, published under D-123/D-124/D-125) replaced the evidenced 0.2.3/0.4.3 pair. The evidence for that older pair remains valid and is retained; it is simply no longer the pair a user should install.",
+  "hazard": "Do not install visp-kit@0.2.3 while visp-hyper-agent@0.7.0 is present. visp-kit@0.2.3 declares the `visp` binary that visp-hyper-agent@0.7.0 now provides, so whichever installs last silently wins the name.",
+  "provenance": {
+    "renamedPairProof": "github-actions run 30769693959 (linux + macos, identical artifacts)",
+    "note": "That proof covers the published pair, but it is a different report shape than this matrix's evidence pipeline consumes. Until that pipeline is re-run, this matrix makes no support claim about the published pair."
+  }
+}

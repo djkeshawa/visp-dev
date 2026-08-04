@@ -1,6 +1,6 @@
 {
   "name": "visp-dev",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Thin public integration shell and deterministic compatibility laboratory for the Visp toolchain.",
   "private": false,
   "type": "module",
@@ -63,12 +63,13 @@
     "./machine-scope": "./src/machine-scope.mjs"
   },
   "files": [
-    "src",
-    "scripts",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
     "compatibility.json",
     "docs/adr",
-    "README.md",
-    "LICENSE",
-    "NOTICE"
+    "registry-state.json",
+    "scripts",
+    "src"
   ]
 }

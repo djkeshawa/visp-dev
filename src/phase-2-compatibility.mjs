@@ -108,10 +108,10 @@ function validateArtifact(artifact, label) {
   }
 }
 
-function validatePackage(record, kind) {
+function validatePackage(record, kind, binName) {
   const expected = PHASE_2_COMPATIBILITY_DEFINITION.pair[kind];
   const name = kind === "kit" ? "visp-kit" : "visp-hyper-agent";
-  const bin = kind === "kit" ? "visp" : "visp-hyper";
+  const bin = binName ?? defaultBinName(kind);
   exactKeys(record, ["install", "pack", "runtimeLock", "source"], `Phase 2 ${kind} package`);
   exactValue(record.source, expected, `Phase 2 ${kind} source`);
   if (!COMMIT.test(record.source.commit) || !COMMIT.test(record.source.tree)
@@ -311,9 +311,20 @@ function publicPack(pack) {
   };
 }
 
+/**
+ * The command a package installs. Kit released `visp` to Hyper in 0.4.0, so the
+ * name is a property of the *pair under test*, not of the role. Callers testing
+ * a post-rename pair must pass `binName` explicitly; the default preserves the
+ * pre-rename naming the historical phase-2/3/4/6 pins depend on.
+ */
+export function defaultBinName(kind) {
+  return kind === "kit" ? "visp" : "visp-hyper";
+}
+
 export async function packAndInstall({
   definition,
   kind,
+  binName,
   offlineCacheSource,
   offlineStoreSource,
   npmCommand,
@@ -321,6 +332,7 @@ export async function packAndInstall({
   packageManagerCommand,
   repositoryRoot,
 }) {
+  const expectedBin = binName ?? defaultBinName(kind);
   const packageRoot = await createOwnedRoot({ baseDirectory: ownedRoot });
   const packed = await packPackageTwice({
     repositoryRoot,
@@ -347,18 +359,27 @@ export async function packAndInstall({
     offlineCacheSource,
     offlineInstallLockSource: runtimeLockPath,
   });
-  const installedExecutable = path.join(
-    fixture,
-    "node_modules",
-    ".bin",
-    kind === "kit" ? "visp" : "visp-hyper",
-  );
+  const installedExecutable = path.join(fixture, "node_modules", ".bin", expectedBin);
+
+  // Fail loudly when the expected command is absent. Without this the harness
+  // spawns a nonexistent path, every invocation exits non-zero with ENOENT, and
+  // fixtures that treat "non-zero exit" as the desired outcome — a refused path
+  // traversal, an inert injection payload — record `pass` while testing
+  // nothing. A rename must break this suite honestly, not quietly bless it.
+  const installedNames = (install?.bins ?? []).map((entry) => entry.name);
+  if (!installedNames.includes(expectedBin)) {
+    throw new Error(
+      `Expected ${kind} package to install the "${expectedBin}" command, but it installed ` +
+        `${installedNames.length === 0 ? "no commands" : installedNames.map((n) => `"${n}"`).join(", ")}. ` +
+        "Pass the correct binName for the pair under test; do not run fixtures against a missing binary.",
+    );
+  }
+
   const captureBin = path.join(packageRoot.root, "capture-bin");
   await mkdir(captureBin);
-  const capturedExecutable = path.join(
-    captureBin,
-    kind === "kit" ? "visp" : "visp-hyper",
-  );
+  // The shim's filename is also the command name: anything resolving a bare
+  // command from PATH (a generated git hook, a CI workflow) depends on it.
+  const capturedExecutable = path.join(captureBin, expectedBin);
   await writeFile(
     capturedExecutable,
     [

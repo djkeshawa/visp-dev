@@ -23,6 +23,7 @@ import {
   sha256Hex
 } from "./compatibility-lab.mjs";
 import {
+  defaultBinName,
   executionEnvironment,
   packAndInstall,
   pathCommand,
@@ -98,11 +99,22 @@ async function initProject({ kitExecutable, env, root, name }) {
 
   await mkdir(project, { recursive: true });
   await runExact(await pathCommand("git"), ["init", "-q"], { cwd: project, env });
-  await runExact(
+  const init = await runExact(
     kitExecutable,
     ["init", project, "--agent", "none", "--preset", "javascript", "--strictness", "standard"],
     { cwd: project, env }
   );
+
+  // Assert the setup actually happened. Ignoring this exit code is what let a
+  // broken engine produce a suite of green fixtures: with no `.visp/` tree,
+  // every "the tool refused it" assertion is satisfied by the tool never
+  // having run.
+  if (init.exitCode !== 0) {
+    throw new Error(
+      `Fixture setup failed: "${kitExecutable} init" exited ${init.exitCode}. ` +
+        `Fixtures must not run against an uninitialised project.\n${textOf(init)}`
+    );
+  }
 
   return project;
 }
@@ -111,7 +123,7 @@ const textOf = (result) => `${result.stdout?.text ?? ""}${result.stderr?.text ??
 
 /* ------------------------------------------------------------------ hook -- */
 
-async function hookFixtures({ kitExecutable, env, root }) {
+async function hookFixtures({ kitExecutable, kitBinName, env, root }) {
   const results = [];
   const project = await initProject({ kitExecutable, env, root, name: "hook-project" });
   const hookPath = path.join(project, ".git", "hooks", "pre-commit");
@@ -127,8 +139,12 @@ async function hookFixtures({ kitExecutable, env, root }) {
         exitCode: install.exitCode ?? null,
         hookWritten: installed !== null,
         // A hook that does not mention the tool it enforces is not evidence of
-        // enforcement; it is an empty file in the right place.
-        referencesVisp: installed === null ? false : /visp/iu.test(installed)
+        // enforcement; it is an empty file in the right place. The name must be
+        // the ENGINE's: a bare /visp/ also matches visp-hyper and visp-memory,
+        // so after the rename it could not tell an enforcing hook from one that
+        // merely calls the coordinator.
+        referencesVisp:
+          installed === null ? false : new RegExp(`\\b${kitBinName}\\b`, "u").test(installed)
       }
     )
   );
@@ -173,7 +189,9 @@ async function hookFixtures({ kitExecutable, env, root }) {
       content: await readFile(path.join(workflowDirectory, name), "utf8").catch(() => "")
     }))
   );
-  const vispWorkflows = workflows.filter((entry) => /visp/iu.test(entry.content));
+  const vispWorkflows = workflows.filter((entry) =>
+    new RegExp(`\\b${kitBinName}\\b`, "u").test(entry.content)
+  );
 
   results.push(
     fixture("ci_workflow_generated", vispWorkflows.length > 0 ? "pass" : "fail", {
@@ -323,7 +341,15 @@ async function failureModeFixtures({ kitExecutable, hyperExecutable, env, root }
   );
 
   const statusPath = path.join(project, ".visp", "status.json");
-  const healthy = await readFile(statusPath, "utf8");
+  // Guarded: an unguarded read here throws past the runner, so no report is
+  // written at all and the suite's verifier never gets to judge anything.
+  const healthy = await readFile(statusPath, "utf8").catch(() => null);
+  if (healthy === null) {
+    throw new Error(
+      `Fixture setup failed: ${statusPath} does not exist, so the corruption fixtures ` +
+        "have nothing to corrupt. The engine did not initialise this project."
+    );
+  }
 
   await writeFile(statusPath, "NOT JSON AT ALL {{{\n");
 
@@ -424,6 +450,14 @@ export async function runConformanceFixtures(input) {
       throw new TypeError(`${field} must be a non-empty string`);
     }
   }
+  // Optional, but if supplied they must be real command names: a blank or
+  // non-string bin name would silently fall back to the pre-rename default and
+  // test the wrong binary, which is the failure this parameter exists to stop.
+  for (const field of ["kitBinName", "hyperBinName"]) {
+    if (input[field] !== undefined && (typeof input[field] !== "string" || input[field].length === 0)) {
+      throw new TypeError(`${field} must be a non-empty string when provided`);
+    }
+  }
   verifyRunIdentity(input.runIdentity, "Conformance fixture run identity");
 
   const owned = await createOwnedRoot();
@@ -436,22 +470,36 @@ export async function runConformanceFixtures(input) {
       ownedRoot: owned.root,
       packageManagerCommand: input.packageManagerCommand
     };
+    // Kit released `visp` to Hyper in 0.4.0, so which command each side installs
+    // is a property of the pair under test. Callers pin it; the defaults keep
+    // the pre-rename pairs this suite has historically covered working.
+    const kitBin = input.kitBinName ?? defaultBinName("kit");
+    const hyperBin = input.hyperBinName ?? defaultBinName("hyper");
     const kit = await packAndInstall({
       ...common,
       definition: { commit: input.kitCommit, tree: input.kitTree },
       kind: "kit",
+      binName: kitBin,
       repositoryRoot: input.kitRepositoryRoot
     });
     const hyper = await packAndInstall({
       ...common,
       definition: { commit: input.hyperCommit, tree: input.hyperTree },
       kind: "hyper",
+      binName: hyperBin,
       repositoryRoot: input.hyperRepositoryRoot
     });
 
     const env = executionEnvironment(kit, hyper, await pathCommand("git"));
     const workspace = await createOwnedRoot({ baseDirectory: owned.root });
-    const shared = { kitExecutable: kit.executable, env, root: workspace.root };
+    const shared = {
+      kitExecutable: kit.executable,
+      // The command name the engine actually installs, so content assertions
+      // can name it rather than matching any string starting "visp".
+      kitBinName: kitBin,
+      env,
+      root: workspace.root
+    };
     const fixtures = [
       ...(await hookFixtures(shared)),
       ...(await securityFixtures({

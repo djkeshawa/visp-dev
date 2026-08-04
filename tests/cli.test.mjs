@@ -18,7 +18,11 @@ test("the supported pair exists only when a release is evidence-eligible", async
 
   assert.equal(pair === null, matrix.supportedRelease === null);
   if (pair !== null) {
-    assert.equal(pair.id, "phase-6");
+    // Deliberately NOT asserting a specific pair id: recommendation is
+    // established by five-field identity anchoring, not by which phase happened
+    // to prove the pair. Pinning the id here would re-impose the ceiling that
+    // stopped any later pair from ever being recommended.
+    assert.match(pair.id, /^[a-z0-9-]+$/u);
     assert.match(pair.kit.commit, /^[0-9a-f]{40}$/u);
     assert.match(pair.hyper.commit, /^[0-9a-f]{40}$/u);
   }

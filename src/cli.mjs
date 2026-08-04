@@ -59,8 +59,12 @@ export function supportedPair(matrix) {
           component?.tree === identity?.tree &&
           component?.tarballSha256 === identity?.tarballSha256;
 
+        // Matched by IDENTITY, never by phase name. This used to also require
+        // `pair.id === "phase-6"`, which meant no later pair could ever be
+        // recommended however good its evidence — a hardcoded ceiling on the
+        // product's own future. The five-field anchoring below is what actually
+        // establishes that the evidence describes this pair; the id is a label.
         return (
-          pair.id === "phase-6" &&
           resolved?.kit?.version === release.kit &&
           resolved?.hyper?.version === release.hyper &&
           anchored(pair.kit, resolved.kit) &&

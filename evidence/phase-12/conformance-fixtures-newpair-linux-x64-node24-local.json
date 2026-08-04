@@ -1,0 +1,177 @@
+{
+  "environment": {
+    "architecture": "x64",
+    "node": "v24.15.0",
+    "operatingSystem": "linux"
+  },
+  "familiesCovered": [
+    "failure_mode",
+    "hook",
+    "security"
+  ],
+  "fixtures": [
+    {
+      "family": "hook",
+      "id": "ci_workflow_generated",
+      "observed": {
+        "exitCode": 0,
+        "invokesVisp": [
+          "visp-evidence.yml"
+        ],
+        "workflowsWritten": [
+          "visp-evidence.yml"
+        ]
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "command_injection_inert",
+      "observed": {
+        "canaryExecuted": false,
+        "exitCode": 0,
+        "note": "Metacharacters were treated as literal text."
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "corrupted_artifact_detected_by_doctor",
+      "observed": {
+        "detected": true,
+        "exitCode": 1
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "corrupted_artifact_detected_by_next",
+      "observed": {
+        "detected": true,
+        "exitCode": 1,
+        "note": "next refuses to advise from an unreadable status artifact.",
+        "outputIdenticalToHealthyProject": false
+      },
+      "status": "pass"
+    },
+    {
+      "family": "hook",
+      "id": "git_hook_installed",
+      "observed": {
+        "exitCode": 0,
+        "hookWritten": true,
+        "referencesVisp": true
+      },
+      "status": "pass"
+    },
+    {
+      "family": "hook",
+      "id": "git_hook_refuses_to_clobber",
+      "observed": {
+        "exitCode": 0,
+        "nativeHookPreserved": true,
+        "note": "An existing native hook is preserved or the operator is warned.",
+        "warnedBeforeReplacing": true
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "interrupted_run_recovers",
+      "observed": {
+        "corruptedExitCode": 1,
+        "corruptionNoticed": true,
+        "deletedExitCode": 1,
+        "deletionNoticed": true,
+        "note": "A missing run index is reported."
+      },
+      "status": "pass"
+    },
+    {
+      "family": "failure_mode",
+      "id": "missing_binary_reports_honestly",
+      "observed": {
+        "exitCode": 1,
+        "leakedStackTrace": false,
+        "namesTheMissingDependency": true
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "no_credential_material_packed",
+      "observed": {
+        "matches": [],
+        "patternsChecked": 7
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "package_allowlist_honoured",
+      "observed": {
+        "entryCount": 56,
+        "topLevelEntries": [
+          "CONTRIBUTING.md",
+          "LICENSE",
+          "NOTICE",
+          "README.md",
+          "SECURITY.md",
+          "TRADEMARKS.md",
+          "dist",
+          "docs",
+          "examples",
+          "package.json",
+          "schemas",
+          "scripts"
+        ],
+        "unexpectedEntries": []
+      },
+      "status": "pass"
+    },
+    {
+      "family": "security",
+      "id": "path_traversal_refused",
+      "observed": {
+        "exitCode": 1,
+        "note": "A traversal target is refused rather than inspected.",
+        "refused": true
+      },
+      "status": "pass"
+    }
+  ],
+  "note": "Fixtures run against packed, installed binaries. A fixture that observes a defect reports known_defect, never pass.",
+  "packages": {
+    "hyper": {
+      "commit": "e9a75ee62d32a6bed45e66cd3d4cda0bd2628a4c",
+      "name": "visp-hyper-agent",
+      "tarballSha256": "ac0b38c7ae70b3ecdd83b7c5b9ca13e46b51b54033b581c4cf38512cd5aa3d23",
+      "tree": "6c016e89647787605537b9815e24dda96dd37635",
+      "version": "0.7.0"
+    },
+    "kit": {
+      "commit": "a6d79f31fde8597bf87b4d2fefc3dfe1c6f38b89",
+      "name": "visp-kit",
+      "tarballSha256": "a4192d3d4eca4b2fb64501cdd99eb37e089d3865ec4cdf965b6441dbe4a7d911",
+      "tree": "180c66716df1edc8f7960daa8c180a84ebc3918b",
+      "version": "0.4.0"
+    }
+  },
+  "reportSha256": "0e5f2a64890e5e1f580b4630309c20395d0c53ebe0906c25202b6d976cabde96",
+  "runIdentity": {
+    "provider": "local",
+    "runAttempt": "1",
+    "runId": "p12-fixtures-local"
+  },
+  "schemaVersion": "visp.conformance-fixtures.v2",
+  "summary": {
+    "failed": 0,
+    "failedIds": [],
+    "knownDefectIds": [],
+    "knownDefects": 0,
+    "passed": 11,
+    "ran": 11,
+    "required": 11
+  }
+}
+

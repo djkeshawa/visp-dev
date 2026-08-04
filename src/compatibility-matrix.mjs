@@ -197,16 +197,21 @@ export async function materializeRuntimeInstallLock({
     })) {
     throw new Error("Runtime lock template does not match its closed sentinel contract");
   }
+  // A package may legitimately declare more than one command: visp-hyper-agent
+  // 0.7.0 ships `visp` plus the `visp-hyper` alias it kept for continuity.
+  // Requiring exactly one was an assumption from the single-binary era, and it
+  // rejected a real published package rather than describing it.
   if (!packageIdentity
     || typeof packageIdentity.name !== "string"
     || typeof packageIdentity.version !== "string"
     || !Array.isArray(packageIdentity.declaredBins)
-    || packageIdentity.declaredBins.length !== 1) {
+    || packageIdentity.declaredBins.length === 0) {
     throw new Error("Packed package identity cannot materialize the runtime lock");
   }
-  const [bin] = packageIdentity.declaredBins;
-  if (typeof bin.name !== "string" || typeof bin.path !== "string") {
-    throw new Error("Packed package bin identity cannot materialize the runtime lock");
+  for (const declared of packageIdentity.declaredBins) {
+    if (typeof declared?.name !== "string" || typeof declared?.path !== "string") {
+      throw new Error("Packed package bin identity cannot materialize the runtime lock");
+    }
   }
   const tarballBytes = await readFile(tarballPath);
   const localIntegrity = `sha512-${createHash("sha512").update(tarballBytes).digest("base64")}`;
@@ -215,7 +220,13 @@ export async function materializeRuntimeInstallLock({
     [packageIdentity.name]: "file:__VISP_LOCAL_TARBALL__",
   };
   template.packages[`node_modules/${packageIdentity.name}`] = {
-    bin: { [bin.name]: bin.path },
+    // Every declared command is recorded, sorted, so the lock describes the
+    // package as published rather than a one-command projection of it.
+    bin: Object.fromEntries(
+      [...packageIdentity.declaredBins]
+        .sort((left, right) => (left.name < right.name ? -1 : left.name > right.name ? 1 : 0))
+        .map((declared) => [declared.name, declared.path])
+    ),
     dependencies: structuredClone(local.dependencies),
     integrity: localIntegrity,
     resolved: "file:__VISP_LOCAL_TARBALL__",

@@ -68,6 +68,10 @@ async function main() {
     kitTree: options.kitTree,
     hyperCommit: options.hyperCommit,
     hyperTree: options.hyperTree,
+    // Which command each side installs. Omit for a pre-rename pair; pass
+    // --kit-bin visp-kit --hyper-bin visp for Kit >= 0.4.0 with Hyper >= 0.7.0.
+    kitBinName: options.kitBin,
+    hyperBinName: options.hyperBin,
     runIdentity: {
       provider: options.runProvider,
       runId: options.runId,

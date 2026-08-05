@@ -159,7 +159,33 @@ export async function collectEnvironment(projectPath) {
     detectTool("visp"),
     detectTool("visp-hyper")
   ]);
-  const kit = kitRenamed ?? kitLegacy;
+
+  // The `visp` fallback is only Kit on a PRE-RENAME machine.
+  //
+  // This used to read `kitRenamed ?? kitLegacy`, which was right until D-118
+  // moved Kit to `visp-kit` and gave `visp` to Hyper. After that, a machine
+  // with only the coordinator installed made the fallback find Hyper and report
+  // its version as Kit's — doctor announcing an engine that is not there, and
+  // then computing every recommendation from that invented fact. Doctor's whole
+  // job is saying what is installed, so inventing a product is worse than
+  // saying nothing: the user stops looking for the real problem.
+  //
+  // Dropping the fallback outright would be the other kind of wrong. Users on
+  // Kit 0.2.3 still have a `visp` that genuinely IS Kit, and they are exactly
+  // the people who need doctor to work.
+  //
+  // Neither binary names itself in `--version` (both print a bare number), so
+  // identity comes from the one unambiguous name in the pair: `visp-hyper` is
+  // Hyper and nothing else. Hyper ships both binaries from one package, so a
+  // `visp` reporting the same version as `visp-hyper` IS that dispatcher.
+  //
+  // Residual edge, stated rather than hidden: a legacy Kit whose version string
+  // happened to equal the installed Hyper's would be read as Hyper and reported
+  // absent. That errs toward under-reporting — doctor would advise installing
+  // something already present, which is harmless — rather than toward the
+  // failure being fixed here, which asserts a product exists when it does not.
+  const legacyIsHyperDispatcher = kitLegacy !== null && hyper !== null && kitLegacy === hyper;
+  const kit = kitRenamed ?? (legacyIsHyperDispatcher ? null : kitLegacy);
 
   const insideWorkTree = await runProcess("git", ["rev-parse", "--is-inside-work-tree"], {
     cwd: projectPath,

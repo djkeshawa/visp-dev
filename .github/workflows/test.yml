@@ -124,14 +124,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: djkeshawa/visp-kit
-          ref: eb70bce84568e9237690be1eea61355bbff23157
+          ref: dc8545471cfb4e10be4a0225c53e82f034b39ac8
           path: engines/visp-kit
 
       - name: Check out exact D-107 Hyper
         uses: actions/checkout@v4
         with:
           repository: djkeshawa/visp-hyper-agent
-          ref: 3538457ae51f79245358321668c1f3566c5eac74
+          ref: e3c68b557e83948c159ae30741a91324b1f38e87
           path: engines/visp-hyper-agent
 
       - name: Set up Node.js 24
@@ -148,10 +148,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C engines/visp-kit rev-parse HEAD)" = eb70bce84568e9237690be1eea61355bbff23157
-          test "$(git -C engines/visp-kit rev-parse 'HEAD^{tree}')" = c1cef391194a20a57704bfaa6ed36c7f1b163756
-          test "$(git -C engines/visp-hyper-agent rev-parse HEAD)" = 3538457ae51f79245358321668c1f3566c5eac74
-          test "$(git -C engines/visp-hyper-agent rev-parse 'HEAD^{tree}')" = 55ca7ea10865630119f792eb227c9634e0fee8f9
+          test "$(git -C engines/visp-kit rev-parse HEAD)" = dc8545471cfb4e10be4a0225c53e82f034b39ac8
+          test "$(git -C engines/visp-kit rev-parse 'HEAD^{tree}')" = e2d0926b03d504bdcf872a047f1bcc57c89bbe76
+          test "$(git -C engines/visp-hyper-agent rev-parse HEAD)" = e3c68b557e83948c159ae30741a91324b1f38e87
+          test "$(git -C engines/visp-hyper-agent rev-parse 'HEAD^{tree}')" = 8f8526cf98cb0fc717ae7d4c6525fa05b38621bc
           test "$(node -p 'process.platform')" = "${{ matrix.platform }}"
           test "$(node -p 'process.arch')" = "${{ matrix.architecture }}"
           test "$(node -p 'process.versions.node.split(`.`)[0]')" = 24
@@ -183,10 +183,11 @@ jobs:
             --offline-store "$RUNNER_TEMP/visp-store" \
             --offline-cache "$RUNNER_TEMP/visp-cache" \
             --package-manager pnpm --npm npm \
-            --kit-commit eb70bce84568e9237690be1eea61355bbff23157 \
-            --kit-tree c1cef391194a20a57704bfaa6ed36c7f1b163756 \
-            --hyper-commit 3538457ae51f79245358321668c1f3566c5eac74 \
-            --hyper-tree 55ca7ea10865630119f792eb227c9634e0fee8f9 \
+            --kit-bin visp-kit --hyper-bin visp \
+            --kit-commit dc8545471cfb4e10be4a0225c53e82f034b39ac8 \
+            --kit-tree e2d0926b03d504bdcf872a047f1bcc57c89bbe76 \
+            --hyper-commit e3c68b557e83948c159ae30741a91324b1f38e87 \
+            --hyper-tree 8f8526cf98cb0fc717ae7d4c6525fa05b38621bc \
             --run-provider github-actions \
             --run-id "$GITHUB_RUN_ID" \
             --run-attempt "$GITHUB_RUN_ATTEMPT" \

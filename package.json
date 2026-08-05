@@ -1,6 +1,6 @@
 {
   "name": "visp-dev",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Thin public integration shell and deterministic compatibility laboratory for the Visp toolchain.",
   "private": false,
   "type": "module",

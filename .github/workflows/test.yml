@@ -89,11 +89,28 @@ jobs:
       - name: Confirm nothing was published by this run
         shell: bash
         run: |
-          # A build must never be able to publish. This is a cheap standing
-          # assertion that the freeze recorded in docs/release-process.md still
-          # holds in CI.
-          if [ "$(node -p "require('./package.json').private === true")" != "true" ]; then
-            echo "package.json is no longer marked private; publication is gated."
+          # A build must never be able to publish. That intent is unchanged.
+          #
+          # The old implementation asserted `package.json` was `private: true`,
+          # which stopped being a statement about CI the moment visp-dev was
+          # deliberately published (0.1.0). It then failed every run for four
+          # commits, including two releases, while asserting something nobody
+          # intended any more — a guard that is red for a reason unrelated to
+          # the risk it guards teaches people to ignore it.
+          #
+          # Assert the property that actually matters: THIS WORKFLOW cannot
+          # publish. It carries no publish step and no registry credential,
+          # which holds whether or not the package is private.
+          if grep -REn '^[^#]*(npm|pnpm|yarn)[[:space:]]+publish' .github/workflows/ ; then
+            echo "A workflow contains a publish step; releases are a deliberate human action."
+            exit 1
+          fi
+          # Matches credential USE via the workflow secrets context, not the
+          # bare word. Two earlier versions of this check matched themselves:
+          # first the grep pattern, then a comment quoting an example. The
+          # pattern is deliberately not written out in prose here.
+          if grep -REn 'secrets\.[A-Z_]*(TOKEN|PASSWORD|KEY)' .github/workflows/ ; then
+            echo "A workflow references a registry credential; CI must not be able to publish."
             exit 1
           fi
 

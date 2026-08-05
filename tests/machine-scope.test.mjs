@@ -6,11 +6,22 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, chmod } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import process from "node:process";
 import test from "node:test";
 
 import { runSetup } from "../src/machine-scope.mjs";
 
+// A stand-in binary the platform will actually execute. A POSIX shell script
+// is not executable on Windows — chmod is a no-op there and there is no
+// shebang support — so these five tests failed on every Windows run since they
+// were written. Writing a .cmd instead exercises the real Windows resolution
+// path (runProcess tries PATHEXT variants) rather than skipping the question.
 async function fakeBinary(dir, name, version) {
+  if (process.platform === "win32") {
+    const file = join(dir, `${name}.cmd`);
+    await writeFile(file, `@echo off\r\necho ${version}\r\n`, "utf8");
+    return;
+  }
   const file = join(dir, name);
   await writeFile(file, `#!/bin/sh\necho "${version}"\n`, "utf8");
   await chmod(file, 0o755);

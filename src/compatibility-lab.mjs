@@ -138,7 +138,7 @@ export async function runProcess(command, args, options = {}) {
   assertPlainRecord(options, "options");
   rejectUnknownKeys(
     options,
-    new Set(["cwd", "env", "timeoutMs", "maxOutputBytes", "killGraceMs", "finalizationMs", "forbiddenOutputFragments", "stdin"]),
+    new Set(["cwd", "env", "timeoutMs", "maxOutputBytes", "killGraceMs", "finalizationMs", "forbiddenOutputFragments", "stdin", "windowsVerbatimArguments"]),
     "option",
   );
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
@@ -158,6 +158,10 @@ export async function runProcess(command, args, options = {}) {
   if (stdin !== undefined && typeof stdin !== "string" && !Buffer.isBuffer(stdin)) {
     throw new TypeError("stdin must be a string or Buffer");
   }
+
+  // Resolved BEFORE the executor, which cannot await. On non-win32 this is the
+  // identity, so the POSIX path is byte-for-byte unchanged.
+  const spawnPlan = await resolveSpawn(command, args);
 
   return new Promise((resolve) => {
     const stdout = makeOutputCollector(maxOutputBytes, forbiddenOutputFragments);
@@ -205,13 +209,14 @@ export async function runProcess(command, args, options = {}) {
     };
 
     try {
-      child = spawn(command, args, {
+      child = spawn(spawnPlan.file, spawnPlan.args, {
         cwd: options.cwd,
         env: options.env,
         detached: useProcessGroup,
         shell: false,
         stdio: [stdin === undefined ? "ignore" : "pipe", "pipe", "pipe"],
         windowsHide: true,
+        ...(spawnPlan.verbatim ? { windowsVerbatimArguments: true } : {}),
       });
     } catch (error) {
       const rawMessage = String(error.message);
@@ -497,8 +502,13 @@ export async function snapshotCommit({ repositoryRoot, commit, destination }) {
  * rather than an unported path resolver.
  *
  * PATHEXT is the platform's own answer to which suffixes are executable, so it
- * is read rather than hardcoded. The bare name stays first: an extensionless
- * file on PATH is still valid, and Git for Windows ships one for some tools.
+ * is read rather than hardcoded.
+ *
+ * The extensionless name is deliberately NOT probed on win32. `access(X_OK)`
+ * is a no-op there, so an extensionless file — npm ships one, a POSIX sh
+ * script — reports executable and is then handed to CreateProcess, which
+ * cannot run it. Probing extensions only is what visp-hyper-agent's resolver
+ * already does. Batch suffixes come last so a real .exe wins.
  */
 function executableCandidates(command) {
   if (process.platform !== "win32") return [command];
@@ -507,8 +517,44 @@ function executableCandidates(command) {
     .split(";")
     .map((entry) => entry.trim())
     .filter((entry) => entry.length > 0);
+  const batch = (extension) => /^\.(bat|cmd)$/iu.test(extension);
 
-  return [command, ...extensions.map((extension) => `${command}${extension}`)];
+  return [
+    ...extensions.filter((extension) => !batch(extension)),
+    ...extensions.filter(batch)
+  ].map((extension) => `${command}${extension}`);
+}
+
+/** cmd.exe quoting: each token quoted individually, embedded quotes doubled. */
+function quoteForCmd(value) {
+  return `"${String(value).replace(/"/gu, '""')}"`;
+}
+
+/**
+ * Resolve a command for THIS platform, and say how it must be spawned.
+ *
+ * Two Windows facts make this necessary, and neither is visible on Linux:
+ *   1. libuv's PATH search tries only `.com` and `.exe` — it does not read
+ *      PATHEXT. `spawn("npm")` therefore ENOENTs on a machine where npm is
+ *      correctly installed, because npm ships `npm.cmd`, never `npm.exe`.
+ *   2. Node refuses to spawn `.cmd`/`.bat` with `shell:false` (the
+ *      CVE-2024-27980 mitigation), so a resolved batch shim must go through
+ *      cmd.exe with windowsVerbatimArguments rather than be spawned directly.
+ *
+ * Every npm global install on Windows — visp-kit, visp, visp-hyper,
+ * visp-memory — is a `.cmd` shim, so without this `doctor` and `setup` report
+ * a fully provisioned machine as empty.
+ */
+async function resolveSpawn(command, args) {
+  if (process.platform !== "win32") return { file: command, args, verbatim: false };
+
+  const resolved = await findExecutable(command);
+  if (resolved === null) return { file: command, args, verbatim: false };
+  if (!/\.(bat|cmd)$/iu.test(resolved)) return { file: resolved, args, verbatim: false };
+
+  const comSpec = process.env.ComSpec ?? "cmd.exe";
+  const line = [resolved, ...args].map(quoteForCmd).join(" ");
+  return { file: comSpec, args: ["/d", "/s", "/c", `"${line}"`], verbatim: true };
 }
 
 async function findExecutable(command) {

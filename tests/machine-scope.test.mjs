@@ -11,11 +11,19 @@ import test from "node:test";
 
 import { runSetup } from "../src/machine-scope.mjs";
 
-// A stand-in binary the platform will actually execute. A POSIX shell script
-// is not executable on Windows — chmod is a no-op there and there is no
-// shebang support — so these five tests failed on every Windows run since they
-// were written. Writing a .cmd instead exercises the real Windows resolution
-// path (runProcess tries PATHEXT variants) rather than skipping the question.
+// A stand-in binary the platform will actually execute.
+//
+// CORRECTION. An earlier version of this comment — and the commit that
+// introduced it — claimed runProcess "already resolves PATHEXT variants
+// correctly". It did not: runProcess spawned the bare name and never called
+// findExecutable/executableCandidates, which exist in the same file but are
+// used only by other helpers. I inferred the call from the function existing
+// rather than checking the call graph, and asserted it as fact.
+//
+// The real Windows failure was ENOENT, not an inexecutable fixture: libuv's
+// PATH search tries only .com and .exe and does not read PATHEXT, so a .cmd
+// is invisible to spawn. runProcess now resolves explicitly and routes batch
+// shims through cmd.exe, which is what makes this .cmd fixture meaningful.
 async function fakeBinary(dir, name, version) {
   if (process.platform === "win32") {
     const file = join(dir, `${name}.cmd`);

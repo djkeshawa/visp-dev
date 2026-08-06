@@ -83,7 +83,7 @@ export function supportedPair(matrix) {
  * matrix, so directing anyone at them would hand them the defective build this
  * product exists to prevent.
  */
-export function installability(matrix) {
+export function installability(matrix, environment = undefined) {
   const release = matrix.supportedRelease;
   const pair = supportedPair(matrix);
 
@@ -109,6 +109,16 @@ export function installability(matrix) {
     // the recovery section and still did not know what to run. Withholding a
     // support claim is honest; withholding the command is just unhelpful.
     const install = `npm install -g visp-kit@${npm["visp-kit"]} visp-hyper-agent@${npm["visp-hyper-agent"]}`;
+    // Do not recommend installing what is already installed.
+    //
+    // A weak-model evaluation followed this advice, ran `npm list -g`, and
+    // found the exact versions already present. An instruction that changes
+    // nothing reads as "the tool does not know what is on my machine", which
+    // is worse than saying nothing — and this command's entire job is to know.
+    const alreadyServing =
+      environment !== undefined &&
+      environment.kit === npm["visp-kit"] &&
+      environment.hyper === npm["visp-hyper-agent"];
     return {
       installable: false,
       reason:
@@ -117,7 +127,10 @@ export function installability(matrix) {
         `This matrix has not re-run its evidence pipeline against that pair, so it makes ` +
         `no support claim about it — and it will not recommend the older pair it did prove.`,
       guidance: [
-        `To install what npm currently serves: ${install}`,
+        alreadyServing
+          ? `You already have that pair installed (visp-kit@${npm["visp-kit"]}, ` +
+            `visp-hyper-agent@${npm["visp-hyper-agent"]}); nothing needs installing.`
+          : `To install what npm currently serves: ${install}`,
         "This matrix makes no support claim about that pair; it is what the README recommends.",
         registry.hazard ?? "Do not install the superseded pair alongside the current one."
       ].join(" ")
@@ -132,6 +145,25 @@ export function installability(matrix) {
         : "No supported release is published. The only Visp versions on npm are deprecated and predate this compatibility matrix, so installing from the registry would obtain a build that is not supported.",
     guidance: "Build Kit and Hyper from source at the pinned commits below, or wait for a release."
   };
+}
+
+/**
+ * The Node versions the matrix knows about, as a readable suffix.
+ *
+ * `Node: v24.15.0 — no supported pair` named the problem and withheld every
+ * fact that would let someone act on it. A weak-model evaluation stopped
+ * there: it could not tell whether its Node was too new, too old, or simply
+ * not the reason. Listing what the matrix does require turns a dead end into a
+ * comparison the reader can make themselves.
+ *
+ * Returns "" when there is nothing to add, so the caller's sentence stays
+ * grammatical either way.
+ */
+export function supportedNodeRanges(matrix) {
+  if (!Array.isArray(matrix.pairs)) return "";
+  const ranges = [...new Set(matrix.pairs.map((pair) => pair.node).filter(Boolean))];
+  if (ranges.length === 0) return "";
+  return ` (the pairs in this matrix require ${ranges.join(" or ")})`;
 }
 
 export function releaseInstallRecovery(install, environment) {
@@ -209,7 +241,7 @@ export async function doctor(projectPath) {
   const matrix = await readCompatibility();
   const pair = supportedPair(matrix);
   const environment = await collectEnvironment(projectPath);
-  const install = installability(matrix);
+  const install = installability(matrix, environment);
   const checks = [];
   const recovery = [];
 
@@ -218,7 +250,13 @@ export async function doctor(projectPath) {
     name: "Node",
     value: environment.node,
     status: nodeOk === null ? "unknown" : nodeOk ? "ok" : "failed",
-    detail: pair === null ? "no supported pair" : `requires ${pair.node}`
+    detail:
+      pair === null
+        ? // "no supported pair" told the reader nothing they could act on. Name
+          // the versions the matrix does know about, so they can see whether
+          // their Node is the problem or merely unmentioned.
+          `no supported pair${supportedNodeRanges(matrix)}`
+        : `requires ${pair.node}`
   });
   if (nodeOk === false) recovery.push(`Install Node ${pair.node}, then re-run visp-dev doctor.`);
 

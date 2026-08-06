@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 import process from "node:process";
 
+import { readFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import {
   doctor,
   formatDoctor,
@@ -16,6 +20,7 @@ Usage:
   visp-dev doctor   [--project <path>] [--json]
   visp-dev init     [--project <path>] [--json]
   visp-dev versions [--project <path>] [--json]
+  visp-dev --version
 
 visp-dev reports state and tells you the exact next command. It decides no
 gate and computes no evidence; Visp Kit owns all of that.
@@ -43,6 +48,16 @@ try {
 
   if (command === undefined || command === "--help" || command === "-h") {
     process.stdout.write(USAGE);
+    process.exit(0);
+  }
+
+  // Every sibling answers --version, and visp-dev's own doctor reports the
+  // versions of the others — so being the one binary that cannot state its own
+  // was a gap a weak-model evaluation hit immediately.
+  if (command === "--version" || command === "-v") {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const manifest = JSON.parse(await readFile(join(here, "..", "package.json"), "utf8"));
+    process.stdout.write(`visp-dev ${manifest.version}\n`);
     process.exit(0);
   }
 

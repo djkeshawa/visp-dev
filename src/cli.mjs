@@ -409,6 +409,15 @@ function noReleaseReason(report) {
 export function formatDoctor(report) {
   const release = report.supportedRelease ?? null;
   const lines = [
+    // Say which question this answers.
+    //
+    // Three commands reported on one machine within a minute and disagreed:
+    // `visp setup` said complete, `visp doctor` said FAIL, this said blocked.
+    // A weak-model evaluation called it "unresolvable without knowing which
+    // tool is authoritative". They were never in conflict — they answer
+    // different questions — but none of them said so, which is what made the
+    // disagreement look like a contradiction.
+    "scope: machine and package compatibility (visp doctor covers the project)",
     `visp-dev doctor: ${report.status}`,
     `supported release: ${release === null ? noReleaseReason(report) : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
     ""

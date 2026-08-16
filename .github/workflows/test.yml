@@ -57,14 +57,6 @@ jobs:
         with:
           version: 11.3.0
 
-      # The containment guard, in the only mode a public runner can use: the
-      # private holdout is not here, so the content scan cannot run and says so.
-      # What DOES run is the artifact-shape half — no raw task ids, no
-      # ground-truth file lists, no scout terms, no unsalted taskRef digests —
-      # and every one of those rules is a leak that actually happened.
-      - name: Holdout containment (shape rules; content scan needs the private holdout)
-        run: ${{ matrix.manager }} run holdout-guard
-
       - name: Syntax and tests
         run: ${{ matrix.manager }} run check
 

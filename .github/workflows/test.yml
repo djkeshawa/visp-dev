@@ -2,7 +2,12 @@ name: Test
 
 on:
   push:
+    # `develop` is the default branch; `main` keeps the pre-publication history.
+    # Listing only `main` meant no push to the branch everything actually lands
+    # on ran this workflow, so `develop` had no CI state to read at all — and the
+    # merge gate is written around reading the run on `develop`, not the PR run.
     branches:
+      - develop
       - main
   pull_request:
 
@@ -28,6 +33,46 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      # `tests/maintenance/seams.test.mjs` compares this repository's siblings
+      # against each other, and it FAILS rather than skips when one is absent —
+      # a seam test that passed because it could not find the thing it was
+      # comparing would reinstate the blind spot it exists to close. This job
+      # checked out visp-dev alone, so all seven seam tests failed on every leg
+      # and the whole matrix had been structurally red since the seams landed.
+      # It was the only failure: run 31294054385 shows `fail 7`, all of them
+      # "Seam tests require <sibling>".
+      #
+      # `engines/<name>` is the vendored location `candidatePathsFor` already
+      # supports and README.md already calls "the CI shape". Wiring it up is
+      # completing that design, not inventing one.
+      #
+      # No `ref:`, so each sibling is its default branch — the tip, which is what
+      # makes this seam catch real drift. A pin would freeze the comparison and
+      # leave the very defect class these tests were written for undetected. The
+      # frozen identities belong to `platform-evidence` below, which is a
+      # different job answering a different question.
+      #
+      # Full depth is not needed: the seams read files, never history.
+      - name: Vendor visp-kit for the seam tests
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          path: engines/visp-kit
+
+      - name: Vendor visp-hyper-agent for the seam tests
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          path: engines/visp-hyper-agent
+
+      # The directory is `llm-memory` and the repository is `visp-memory`; the
+      # seam tests and the preflight both know it by the directory name.
+      - name: Vendor visp-memory for the seam tests
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-memory
+          path: engines/llm-memory
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -124,6 +169,24 @@ jobs:
             exit 1
           fi
 
+  # THE SHAs BELOW ARE FROZEN ON PURPOSE. DO NOT REFRESH THEM TO THE CURRENT TIPS.
+  #
+  # This job did not die with the evaluation machinery — it drives
+  # `scripts/compatibility/fixtures.mjs`, which is compatibility, not evaluation,
+  # and is still a live npm script. It produces the D-107 conformance fixture for
+  # ONE exact pair, and under visp-kit ADR 0007 a pair's identity IS its commit,
+  # tree and tarball hash; a version string does not identify a build here. Moving
+  # the pins forward would not update the evidence, it would silently retarget it
+  # and leave `compatibility.json` describing a pair nothing measured.
+  #
+  # That the pins predate recent merges is the expected state of frozen evidence,
+  # not drift to be corrected. The drift is MEASURED, advisorily, by the
+  # `evidence-currency` job below. New evidence for a newer pair is produced by
+  # re-running the pipeline against that pair and recording it — not by editing
+  # these literals.
+  #
+  # Both legs pass today (run 31294054385), so the refs still resolve on the
+  # public repositories.
   platform-evidence:
     name: D-107 evidence on ${{ matrix.label }}
     runs-on: ${{ matrix.os }}

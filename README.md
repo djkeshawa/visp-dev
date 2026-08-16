@@ -177,8 +177,11 @@ reinstate the blind spot it exists to close.
 
 Siblings vendored at `visp-dev/engines/visp-kit`,
 `visp-dev/engines/visp-hyper-agent` and `visp-dev/engines/llm-memory` are
-accepted too; that is the CI shape. A sibling is recognised by its manifest —
-`package.json` for the Node products, `pyproject.toml` for llm-memory.
+accepted too, and that is what CI does: every leg of the test matrix checks the
+three out at their default branches before running `check`, so the seams are
+compared against the tips rather than against a pin that could not drift. A
+sibling is recognised by its manifest — `package.json` for the Node products,
+`pyproject.toml` for llm-memory.
 
 All three are named in one place, `REQUIRED_SIBLINGS` in the workspace-layout
 preflight, which is also the only thing that turns a sibling's name into a path.

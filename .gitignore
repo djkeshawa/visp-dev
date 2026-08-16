@@ -2,6 +2,11 @@ node_modules/
 .compatibility-lab/
 pnpm-lock.yaml
 
+# Siblings vendored for the seam tests — the layout CI builds and README.md
+# documents. They are other repositories' checkouts, so committing one would
+# nest a repository inside this one; the seams read whatever is there.
+engines/
+
 # The salt for holdout taskRef digests. NEVER commit this: with it, every
 # taskRef in a report resolves back to a commit in a public repository, which
 # is exactly what the unsalted scheme did by accident.

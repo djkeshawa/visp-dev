@@ -122,34 +122,100 @@ test("SEAM: Kit's contract names the command Kit actually installs", () => {
 });
 
 // ---------------------------------------------------------------------------
-// SEAM 2 — Hyper's peer range vs the Kit it is built against.
-// Phase 12 defect: Hyper declared ">=0.2.3 <0.5.0" while Kit moved to 0.5.0.
-// Nothing in either repo compared the two, so it would have shipped an unmet
-// peer dependency to every user installing the pair.
+// SEAM 2 — the version range between Kit and Hyper, which must not exist.
+//
+// This seam used to compare Hyper's `peerDependencies: { "visp-kit": ... }`
+// against Kit's version: Phase 12 shipped ">=0.2.3 <0.5.0" while Kit moved to
+// 0.5.0, and nothing in either repository compared the two.
+//
+// visp-kit ADR 0007 (Accepted, 2026-08-15) then retired the range itself rather
+// than correcting its bounds. The dependency was `optional: true`, so npm never
+// enforced it; Hyper spawns the `visp-kit` binary instead of importing it; the
+// compatibility matrix pins commit, tree and tarball hash and deliberately
+// records NO version strings to range over; and the range's own floor,
+// visp-kit@0.2.3, is the one build `registryState.hazard` forbids, because it
+// still declares the `visp` binary Hyper owns. A narrower range would have been
+// the same unmeasured claim with better bounds. visp-hyper-agent deleted both
+// blocks in 7c0d300.
+//
+// So the old assertion had become one that could only fail: it demanded a
+// contract the products deliberately no longer have. The seam is still real,
+// but it inverted. What must be compared across the repositories now is that
+// NEITHER publishes a semver range for the other — ADR 0007 asks explicitly
+// that the absence read as a decision rather than as an omission a future
+// maintainer helpfully fills in, and a reinstated range is exactly the drift
+// this catches. The ADR's own status is read here too: if Kit ever supersedes
+// it, this seam must be re-derived from whatever replaced it rather than
+// quietly enforcing a retired rule.
 // ---------------------------------------------------------------------------
 
-test("SEAM: Hyper's peer range admits the Kit version in this workspace", () => {
-  const hyper = manifest("visp-hyper-agent");
-  const kit = manifest("visp-kit");
-  const range = hyper.peerDependencies?.["visp-kit"];
-  assert.ok(range, "visp-hyper-agent must declare a visp-kit peer dependency");
+/** Every dependency field of `pkg` that names `dependency`, with its range. */
+function declaredRangesFor(pkg, dependency) {
+  const fields = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
+  return fields
+    .filter((field) => Object.hasOwn(pkg[field] ?? {}, dependency))
+    .map((field) => `${field}: "${pkg[field][dependency]}"`);
+}
 
-  const upper = extract(/<\s*(\d+)\.(\d+)\.(\d+)/u, range, "the upper bound of Hyper's peer range");
-  const lower = extract(/>=\s*(\d+)\.(\d+)\.(\d+)/u, range, "the lower bound of Hyper's peer range");
-  const kitVersion = parseVersion(kit.version);
-
-  const below = (v, M, m) => v.major < Number(M) || (v.major === Number(M) && v.minor < Number(m));
-  const atLeast = (v, M, m) =>
-    v.major > Number(M) || (v.major === Number(M) && v.minor >= Number(m));
-
-  assert.ok(
-    below(kitVersion, upper[1], upper[2]),
-    `Hyper's peer range ${range} excludes visp-kit@${kit.version}, the Kit it is built against. ` +
-      "Installing the pair would report an unmet peer dependency."
+test("SEAM: neither Kit nor Hyper publishes a version range for the other", () => {
+  const adr = source("visp-kit", "docs/adr/0007-pair-compatibility-is-pinned-not-ranged.md");
+  const status = extract(/^-\s*\*\*Status:\*\*\s*(\S+)/mu, adr, "the status of Kit ADR 0007")[1];
+  assert.equal(
+    status,
+    "Accepted",
+    `Kit ADR 0007 is "${status}", not Accepted. The rule this seam enforces has moved, so re-derive ` +
+      "the seam from whatever supersedes it rather than deleting the test."
   );
+
+  assert.deepEqual(
+    declaredRangesFor(manifest("visp-hyper-agent"), "visp-kit"),
+    [],
+    "visp-hyper-agent declares a visp-kit version range again. ADR 0007 deleted it rather than " +
+      "narrowing it: npm cannot enforce it, Hyper spawns the binary instead of importing it, and " +
+      "the matrix records no version strings for a range to mean anything against."
+  );
+  assert.deepEqual(
+    declaredRangesFor(manifest("visp-kit"), "visp-hyper-agent"),
+    [],
+    "visp-kit declares a visp-hyper-agent version range. Kit publishes no supported semver range " +
+      "for Hyper (ADR 0007 rule 1); compatibility is the pinned pair in visp-dev's matrix."
+  );
+});
+
+test("SEAM: Hyper's refusals send the reader to the pinned pair, not to a version bump", () => {
+  // The runtime check ADR 0007 put in the deleted range's place. Asserting the
+  // absence alone would be half the contract: a reader who hits a negotiation
+  // refusal used to go looking for a Kit version that satisfied the peer range,
+  // and there is none to find. Every refusal now has to say so and name a
+  // command that answers the question instead.
+  const guidance = extract(
+    /PINNED_PAIR_GUIDANCE\s*=\s*([\s\S]*?);\n/u,
+    source("visp-hyper-agent", "src/kit/workflow-action-protocol.ts"),
+    "Hyper's pinned-pair guidance"
+  )[1];
+
+  assert.match(
+    guidance,
+    /pinned by commit and artifact hash/u,
+    "Hyper's negotiation refusals must state the pinned-pair model that replaced the peer range."
+  );
+
+  // And the command it sends the reader to has to be one visp-dev provides.
+  // Hyper naming a visp-dev command that does not exist is the same seam defect
+  // in the other direction, and only this repository can see both halves.
+  const named = extract(/`visp-dev ([a-z]+)`/u, guidance, "the visp-dev command Hyper points at")[1];
+  const devCommands = [
+    ...extract(
+      /const run = \{([^}]*)\}\[command\]/u,
+      readFileSync(join(devRoot, "scripts/visp-dev.mjs"), "utf8"),
+      "visp-dev's command table"
+    )[1].matchAll(/[a-z]+/gu)
+  ].map(([command]) => command);
+
   assert.ok(
-    atLeast(kitVersion, lower[1], lower[2]),
-    `Hyper's peer range ${range} starts above visp-kit@${kit.version}.`
+    devCommands.includes(named),
+    `Hyper's guidance tells the reader to run \`visp-dev ${named}\`, which visp-dev does not ` +
+      `provide; it offers ${JSON.stringify(devCommands)}.`
   );
 });
 

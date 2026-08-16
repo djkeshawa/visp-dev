@@ -1,0 +1,29 @@
+node_modules/
+.compatibility-lab/
+pnpm-lock.yaml
+
+# The salt for holdout taskRef digests. NEVER commit this: with it, every
+# taskRef in a report resolves back to a commit in a public repository, which
+# is exactly what the unsalted scheme did by accident.
+.holdout-digest-salt
+
+# Every report this laboratory writes. Reports used to be committed under
+# `evidence/`, and re-verifying a checked-in artifact was a gate. That whole
+# directory was deleted and nothing replaced it, so a report is now a local
+# build output with no reviewer and no second reader.
+reports/
+
+# The scratch corpus: a BUILD ARTIFACT, like dist/. Regenerate it with
+# `pnpm scratch:build` and check it with `pnpm scratch:verify`; what is
+# committed is the generator, its config and its tests. Committing it would
+# start it hardening into a fourth precious asset, and its task texts are
+# commit messages from repositories whose ground truth lives in `planning`.
+.scratch/
+
+# Runtime state from a local visp-memory, not a fixture and not evidence.
+# `.visp-memory/data/memories.db` was swept into a Phase 12 commit by accident:
+# an empty schema, every table zero rows, referenced by nothing in the tree and
+# absent from package.json's `files`. It surfaced when the holdout guard stopped
+# selecting files by extension and started reading the bytes — a public
+# repository has no business shipping a memory database, empty or not.
+.visp-memory/

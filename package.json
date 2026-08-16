@@ -1,0 +1,76 @@
+{
+  "name": "visp-dev",
+  "version": "0.4.0",
+  "description": "Thin public integration shell and deterministic compatibility laboratory for the Visp toolchain.",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djkeshawa/visp-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/djkeshawa/visp-dev/issues"
+  },
+  "homepage": "https://github.com/djkeshawa/visp-dev#readme",
+  "keywords": [
+    "ai",
+    "compatibility",
+    "developer-tools",
+    "local-first",
+    "visp"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.3.0",
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "test:coverage": "node --test --experimental-test-coverage \"tests/**/*.test.mjs\"",
+    "pretest": "node scripts/maintenance/workspace-layout.mjs",
+    "check": "npm run maintenance:syntax && npm test",
+    "maintenance:syntax": "node scripts/maintenance/syntax.mjs",
+    "maintenance:sbom": "node scripts/maintenance/sbom.mjs",
+    "maintenance:sbom:check": "node scripts/maintenance/sbom.mjs --check",
+    "compatibility:lab": "node scripts/compatibility/lab.mjs",
+    "compatibility:matrix": "node scripts/compatibility/matrix.mjs",
+    "compatibility:matrix:verify": "node scripts/compatibility/matrix.mjs --verify",
+    "compatibility:risk-profiles": "node scripts/compatibility/risk-profiles.mjs",
+    "compatibility:risk-profiles:verify": "node scripts/compatibility/risk-profiles.mjs --verify",
+    "compatibility:mixed-generation": "node scripts/compatibility/mixed-generation.mjs",
+    "compatibility:mixed-generation:verify": "node scripts/compatibility/mixed-generation.mjs --verify",
+    "compatibility:additive-fixes": "node scripts/compatibility/additive-fixes.mjs",
+    "compatibility:additive-fixes:verify": "node scripts/compatibility/additive-fixes.mjs --verify",
+    "compatibility:published-pair": "node scripts/compatibility/published-pair.mjs",
+    "compatibility:published-pair:verify": "node scripts/compatibility/published-pair.mjs --verify",
+    "compatibility:host-assets": "node scripts/compatibility/host-assets.mjs",
+    "compatibility:fixtures": "node scripts/compatibility/fixtures.mjs",
+    "compatibility:fixtures:verify": "node scripts/compatibility/fixtures.mjs --verify",
+    "compatibility:golden-path": "node scripts/compatibility/golden-path.mjs",
+    "compatibility:golden-path:verify": "node scripts/compatibility/golden-path.mjs --verify",
+    "compatibility:divergence": "node scripts/compatibility/divergence.mjs",
+    "compatibility:divergence:verify": "node scripts/compatibility/divergence.mjs --verify",
+    "compatibility:currency": "node scripts/compatibility/currency.mjs",
+    "compatibility:release-candidate": "node scripts/compatibility/release-candidate.mjs",
+    "compatibility:cross-generation": "node scripts/compatibility/cross-generation-probe.mjs",
+    "removed:evaluation-and-holdout": "echo 'The evaluation/holdout machinery was removed on the owner instruction, 2026-08-16. A new evaluation approach will be written from scratch when the owner directs it.' && exit 1"
+  },
+  "bin": {
+    "visp-dev": "scripts/visp-dev.mjs"
+  },
+  "exports": {
+    "./machine-scope": "./src/cli/machine-scope.mjs"
+  },
+  "files": [
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "compatibility.json",
+    "docs/adr",
+    "registry-state.json",
+    "scripts/visp-dev.mjs",
+    "src/cli",
+    "src/platform",
+    "src/toolchain"
+  ]
+}

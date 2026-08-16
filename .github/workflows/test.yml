@@ -1,0 +1,280 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }} via ${{ matrix.manager }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Do not stop the other legs on the first failure: an OS-specific or
+      # version-specific break is exactly what this matrix exists to surface,
+      # and cancelling hides whether the failure is universal or local.
+      fail-fast: false
+      matrix:
+        # The engines floor and the current LTS, across the three platforms the
+        # compatibility evidence claims. Path handling and line endings are the
+        # usual differences, and both are load-bearing for this repository.
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [22, 24]
+        # Both managers are exercised because the compatibility harness shells
+        # out to them, and their offline and lockfile behaviour differs.
+        manager: [npm, pnpm]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # This repository declares no dependencies, so there is nothing to install
+      # and nothing to cache. Verifying that stays true is itself worthwhile: a
+      # dependency appearing here would change what the published artifact
+      # carries.
+      - name: Verify the dependency surface is still empty
+        shell: bash
+        run: |
+          deps=$(node -p "Object.keys(require('./package.json').dependencies || {}).length")
+          if [ "$deps" != "0" ]; then
+            echo "visp-dev declared $deps runtime dependencies; it is meant to have none."
+            exit 1
+          fi
+
+      # Installed on every leg, not just the pnpm ones. The matrix varies which
+      # manager *invokes* the suite, but the compatibility-lab fixtures shell out
+      # to pnpm regardless — it is a test dependency, not the thing under test.
+      # Gating it on the manager made every npm leg fail for want of a tool that
+      # leg was never given.
+      - name: Enable pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+
+      # The containment guard, in the only mode a public runner can use: the
+      # private holdout is not here, so the content scan cannot run and says so.
+      # What DOES run is the artifact-shape half — no raw task ids, no
+      # ground-truth file lists, no scout terms, no unsalted taskRef digests —
+      # and every one of those rules is a leak that actually happened.
+      - name: Holdout containment (shape rules; content scan needs the private holdout)
+        run: ${{ matrix.manager }} run holdout-guard
+
+      - name: Syntax and tests
+        run: ${{ matrix.manager }} run check
+
+      # A clean environment is part of the claim: the harness must not depend on
+      # ambient npm or pnpm configuration that happens to exist on a maintainer's
+      # machine. Running with a scratch HOME is the cheapest way to prove it.
+      - name: Tests in a clean user environment
+        shell: bash
+        env:
+          HOME: ${{ runner.temp }}/clean-home
+          USERPROFILE: ${{ runner.temp }}/clean-home
+        run: |
+          mkdir -p "$HOME"
+          ${{ matrix.manager }} run check
+
+      - name: Windows spawn diagnostic
+        if: runner.os == 'Windows'
+        shell: bash
+        continue-on-error: true
+        run: |
+          # The cheapest decisive test of why Windows reported a fully
+          # provisioned machine as empty. libuv's PATH search tries only .com
+          # and .exe — it does not read PATHEXT — while npm's global installs
+          # on Windows are .cmd shims. Recorded rather than asserted, so the
+          # claim rests on observation instead of argument.
+          node -e "
+            const { spawn } = require('node:child_process');
+            const probe = (name) => new Promise((r) => {
+              const c = spawn(name, ['--version']);
+              c.on('error', (e) => r(name + ' -> ' + e.code));
+              c.on('exit', (code) => r(name + ' -> exit ' + code));
+            });
+            (async () => {
+              for (const n of ['git', 'node', 'npm']) console.log(await probe(n));
+            })();
+          "
+          where npm || true
+          where git || true
+
+      - name: Confirm nothing was published by this run
+        shell: bash
+        run: |
+          # A build must never be able to publish. That intent is unchanged.
+          #
+          # The old implementation asserted `package.json` was `private: true`,
+          # which stopped being a statement about CI the moment visp-dev was
+          # deliberately published (0.1.0). It then failed every run for four
+          # commits, including two releases, while asserting something nobody
+          # intended any more — a guard that is red for a reason unrelated to
+          # the risk it guards teaches people to ignore it.
+          #
+          # Assert the property that actually matters: THIS WORKFLOW cannot
+          # publish. It carries no publish step and no registry credential,
+          # which holds whether or not the package is private.
+          if grep -REn '^[^#]*(npm|pnpm|yarn)[[:space:]]+publish' .github/workflows/ ; then
+            echo "A workflow contains a publish step; releases are a deliberate human action."
+            exit 1
+          fi
+          # Matches credential USE via the workflow secrets context, not the
+          # bare word. Two earlier versions of this check matched themselves:
+          # first the grep pattern, then a comment quoting an example. The
+          # pattern is deliberately not written out in prose here.
+          if grep -REn 'secrets\.[A-Z_]*(TOKEN|PASSWORD|KEY)' .github/workflows/ ; then
+            echo "A workflow references a registry credential; CI must not be able to publish."
+            exit 1
+          fi
+
+  platform-evidence:
+    name: D-107 evidence on ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: linux-x64
+            os: ubuntu-latest
+            platform: linux
+            architecture: x64
+            filename: conformance-fixtures-linux-x64-node24.json
+            artifact: conformance-fixtures-ubuntu-latest
+          - label: darwin-arm64
+            os: macos-15
+            platform: darwin
+            architecture: arm64
+            filename: conformance-fixtures-darwin-arm64-node24.json
+            artifact: conformance-fixtures-macos-latest
+    steps:
+      - name: Check out Visp Dev
+        uses: actions/checkout@v4
+
+      - name: Check out exact D-107 Kit
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          ref: dc8545471cfb4e10be4a0225c53e82f034b39ac8
+          path: engines/visp-kit
+
+      - name: Check out exact D-107 Hyper
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          ref: e3c68b557e83948c159ae30741a91324b1f38e87
+          path: engines/visp-hyper-agent
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable pnpm 11.3.0
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+
+      - name: Assert exact source and runner identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C engines/visp-kit rev-parse HEAD)" = dc8545471cfb4e10be4a0225c53e82f034b39ac8
+          test "$(git -C engines/visp-kit rev-parse 'HEAD^{tree}')" = e2d0926b03d504bdcf872a047f1bcc57c89bbe76
+          test "$(git -C engines/visp-hyper-agent rev-parse HEAD)" = e3c68b557e83948c159ae30741a91324b1f38e87
+          test "$(git -C engines/visp-hyper-agent rev-parse 'HEAD^{tree}')" = 8f8526cf98cb0fc717ae7d4c6525fa05b38621bc
+          test "$(node -p 'process.platform')" = "${{ matrix.platform }}"
+          test "$(node -p 'process.arch')" = "${{ matrix.architecture }}"
+          test "$(node -p 'process.versions.node.split(`.`)[0]')" = 24
+
+      - name: Build hermetic package inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/visp-store" "$RUNNER_TEMP/visp-cache"
+          for repo in visp-kit visp-hyper-agent; do
+            work="$RUNNER_TEMP/fetch-$repo"
+            mkdir -p "$work"
+            cp "engines/$repo/package.json" "engines/$repo/pnpm-lock.yaml" "$work/"
+            (cd "$work" && pnpm fetch --store-dir "$RUNNER_TEMP/visp-store")
+          done
+          find "$RUNNER_TEMP/visp-store" -type l -delete
+          build="$RUNNER_TEMP/cache-build"
+          mkdir -p "$build"
+          echo '{"name":"c","version":"1.0.0","private":true}' > "$build/package.json"
+          (cd "$build" && npm install commander@^12.1.0 zod@^3.25.76 --cache "$RUNNER_TEMP/visp-cache" --no-audit --no-fund)
+
+      - name: Produce exact platform report
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/compatibility/fixtures.mjs \
+            --kit-repository engines/visp-kit \
+            --hyper-repository engines/visp-hyper-agent \
+            --offline-store "$RUNNER_TEMP/visp-store" \
+            --offline-cache "$RUNNER_TEMP/visp-cache" \
+            --package-manager pnpm --npm npm \
+            --kit-bin visp-kit --hyper-bin visp \
+            --kit-commit dc8545471cfb4e10be4a0225c53e82f034b39ac8 \
+            --kit-tree e2d0926b03d504bdcf872a047f1bcc57c89bbe76 \
+            --hyper-commit e3c68b557e83948c159ae30741a91324b1f38e87 \
+            --hyper-tree 8f8526cf98cb0fc717ae7d4c6525fa05b38621bc \
+            --run-provider github-actions \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --output "reports/${{ matrix.filename }}"
+
+      - name: Upload exact Linux member
+        if: matrix.platform == 'linux'
+        id: linux-upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: reports/conformance-fixtures-linux-x64-node24.json
+          if-no-files-found: error
+
+      - name: Upload exact macOS member
+        if: matrix.platform == 'darwin'
+        id: macos-upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: reports/conformance-fixtures-darwin-arm64-node24.json
+          if-no-files-found: error
+
+  evidence-currency:
+    name: Advisory evidence currency
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Check out Visp Dev
+        uses: actions/checkout@v4
+
+      - name: Check out current Kit
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-kit
+          path: engines/visp-kit
+          fetch-depth: 0
+
+      - name: Check out current Hyper
+        uses: actions/checkout@v4
+        with:
+          repository: djkeshawa/visp-hyper-agent
+          path: engines/visp-hyper-agent
+          fetch-depth: 0
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Measure drift from the frozen evidence identities
+        run: |
+          node scripts/compatibility/currency.mjs \
+            --kit-repository engines/visp-kit \
+            --hyper-repository engines/visp-hyper-agent

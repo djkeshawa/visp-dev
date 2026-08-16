@@ -1,0 +1,180 @@
+{
+  "deprecated": [
+    {
+      "name": "visp-kit",
+      "reason": "Predates the enforcement-hole fixes.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "visp-hyper-agent",
+      "reason": "Superseded and unsupported.",
+      "version": "0.2.0"
+    },
+    {
+      "name": "visp-hyper-agent",
+      "reason": "Documents an install path pointing at an unrelated third-party package.",
+      "version": "0.3.0"
+    }
+  ],
+  "environment": {
+    "architecture": "x64",
+    "node": "v24.15.0",
+    "operatingSystem": "linux"
+  },
+  "generatedFrom": "HAND-MAINTAINED. This file used to be generated from the committed reports under evidence/ and checked by `compatibility:check`. That directory was deleted and the generator with it, so nothing recomputes this file from anything. It is edited by hand and guarded only by the shape and consistency assertions in tests/. src/cli/installability.mjs ships it and reads it, so an edit here changes what the published CLI tells a user.",
+  "model": "exact-pair",
+  "note": "Compatibility is pinned by commit and artifact hash, never by a version range. The same version string can carry different content, and on this project it already does. This file is hand-maintained and test-guarded; no generator recomputes it.",
+  "pairs": [
+    {
+      "evidence": "evidence/phase-2-packed-linux-x64-node24.json",
+      "evidenceSha256": "e34a3e4f02b060a0b4ce1d896f44c73d720a39391a2294319365af589ac1d5a0",
+      "hyper": {
+        "commit": "98b65d05a10766cb66b1caa9cb7ae3c5c589137d",
+        "tarballSha256": "95e91eac9b3bab510cf801d67815ddd961022d008176dd4780e490843349701a",
+        "tree": "34bb04ed2454e389f7aca7bea76fd05ab81f264c",
+        "version": null
+      },
+      "id": "phase-2",
+      "kit": {
+        "commit": "3dbc9184e8ee4bb7d1599aa825bfd2ed57b384d8",
+        "tarballSha256": "5be534dad6fc6e76ca803bf3dcd7316bd6ebe3cd91053e4b3993c6bf2b0798a5",
+        "tree": "6b5a45bed9f97007490f553c0d6d3af81be8ae2e",
+        "version": null
+      },
+      "negotiated": "3.1",
+      "node": ">=22",
+      "schemaHash": "sha256:41ffa28fcd4476ea1812ff307df67a7ab7edb5b2cf4d6c11955d34d4aad74d4d",
+      "workflowActionProtocols": [
+        "2.0",
+        "3.0",
+        "3.1",
+        "3.2"
+      ]
+    },
+    {
+      "evidence": "evidence/phase-3-packed-linux-x64-node24.json",
+      "evidenceSha256": "29f027f0ee1efdf0147a90fff4ed25ae763a6ccd65cba409f5afb3a4fd67dd83",
+      "hyper": {
+        "commit": "cda0c6ce43abc6a69f4a436026d482e95ed74a2c",
+        "tarballSha256": "5a917a5111e0178c9e712655a366e7536bc5f5873c3c6800c261423e3829d43d",
+        "tree": "9694a2d7e36215ee95336ade735f1a5426698187",
+        "version": null
+      },
+      "id": "phase-3",
+      "kit": {
+        "commit": "d92364e8b3fd9d38771bcfe1df18fb9434a8ad4e",
+        "tarballSha256": "6ab0a137018095685088d688dea889147a763bd4d2b8601ada2f9e29b6bc1f8d",
+        "tree": "6aa999a59ad7bd3b77f6b85bc07fabd6575d9f95",
+        "version": null
+      },
+      "negotiated": "3.2",
+      "node": ">=22",
+      "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+      "workflowActionProtocols": [
+        "2.0",
+        "3.0",
+        "3.1",
+        "3.2"
+      ]
+    },
+    {
+      "evidence": "evidence/phase-4-pair-linux-x64-node24.json",
+      "evidenceSha256": "593f49385b22e3775a328cd83e87f159595cde6174c07006de9f43414ded3252",
+      "hyper": {
+        "commit": "61858199d90bffafb062bde61453f5def6357efa",
+        "tarballSha256": "0046ca392bbd08f58b0ebb8c0156710bfa94a79e3c4be8ba5aaf18fd4c19bd55",
+        "tree": "a7be744b06510443fe97a06b6aa5c214b1bad0f1",
+        "version": null
+      },
+      "id": "phase-4",
+      "kit": {
+        "commit": "3a8901b9b9fe788a0be98f247c75f9715db24723",
+        "tarballSha256": "d8df0c8c468ac98375c78c8f12d4df35846cfcf3e6dabf505051c6a5d2df49f9",
+        "tree": "74740a41b227ec73561e4adf09dd53bf02c2eff7",
+        "version": null
+      },
+      "negotiated": "3.2",
+      "node": ">=22",
+      "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+      "workflowActionProtocols": [
+        "2.0",
+        "3.0",
+        "3.1",
+        "3.2"
+      ]
+    },
+    {
+      "evidence": "evidence/phase-6-pair-linux-x64-node24.json",
+      "evidenceSha256": "ac37ea8bfc205628f9c01e819637c4ecf57f72c1457eafcc18ef43ff25e1f4e7",
+      "hyper": {
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+        "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+        "version": null
+      },
+      "id": "phase-6",
+      "kit": {
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+        "version": null
+      },
+      "negotiated": "3.2",
+      "node": ">=22",
+      "schemaHash": "sha256:77dcaba51ef8e1a78064680077f8bcc48c081d8025596c6cc8df9ea7873d68e9",
+      "workflowActionProtocols": [
+        "2.0",
+        "3.0",
+        "3.1",
+        "3.2"
+      ]
+    }
+  ],
+  "published": true,
+  "registryState": {
+    "hazard": "Do not install visp-kit@0.2.3 while visp-hyper-agent@0.8.0 is present. visp-kit@0.2.3 declares the `visp` binary that visp-hyper-agent now provides, so whichever installs last silently wins the name.",
+    "npm": {
+      "visp-dev": "0.3.0",
+      "visp-hyper-agent": "0.8.0",
+      "visp-kit": "0.5.0"
+    },
+    "observedAt": "2026-08-05",
+    "provenance": {
+      "note": "NO evidence exists yet for the CURRENTLY SERVED pair 0.5.0/0.8.0. The Phase 12 runs covered 0.4.0/0.7.0, which the fixes have now superseded, and they were Linux-only and local. A recommendation requires one green CI run over BOTH platforms against identical artifacts of the served pair, plus an owner review of that run.",
+      "phase12Local": "conformance 11/11, golden path 6/6, cross-generation 4/4 \u2014 Linux only, local, against 0.4.0/0.7.0",
+      "renamedPairProof": "github-actions run 30769693959 (linux + macos) covered 0.4.0/0.7.0"
+    },
+    "pypi": {
+      "visp-memory": "0.4.1"
+    },
+    "reason": "The Phase 10 unified-surface train (D-118, D-123/D-124/D-125) replaced the evidenced 0.2.3/0.4.3 pair, and the Phase 12 fixes (D-129) superseded it again with 0.5.0/0.8.0. The evidence for the older pair remains valid and is retained; it is simply no longer the pair a user should install.",
+    "supersedesEvidencedPair": true
+  },
+  "releaseEvidence": {
+    "eligible": true,
+    "issues": [],
+    "platformRunIdentity": {
+      "provider": "github-actions",
+      "runAttempt": "1",
+      "runId": "30686678616"
+    },
+    "resolvedPackages": {
+      "hyper": {
+        "commit": "3538457ae51f79245358321668c1f3566c5eac74",
+        "name": "visp-hyper-agent",
+        "tarballSha256": "27ce00657b98b8303119122fe5851300059a21581ff5a4ab7f0cc4c3a08a89e2",
+        "tree": "55ca7ea10865630119f792eb227c9634e0fee8f9",
+        "version": "0.4.3"
+      },
+      "kit": {
+        "commit": "eb70bce84568e9237690be1eea61355bbff23157",
+        "name": "visp-kit",
+        "tarballSha256": "1261d18eee28f7f196ab94d5099b54a3f66c36c74dfd1fab83bbba86f1f7e538",
+        "tree": "c1cef391194a20a57704bfaa6ed36c7f1b163756",
+        "version": "0.2.3"
+      }
+    }
+  },
+  "schemaVersion": 2,
+  "supportedRelease": null
+}

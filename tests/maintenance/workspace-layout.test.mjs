@@ -26,7 +26,7 @@
 import assert from "node:assert/strict";
 import { execFile as execFileCallback } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import process from "node:process";
@@ -318,6 +318,47 @@ test("the predicted failure count is read from the seam file, not written down",
   );
 });
 
+test("the banner still prints when the checkout is reached through a symlink", async () => {
+  // Node realpaths the entry module before deriving `import.meta.url`, but
+  // `process.argv[1]` is the path the caller typed. The script decided whether
+  // it had been invoked directly by comparing those two as strings, so reaching
+  // it through a symlink made them disagree: it exited zero having printed
+  // NOTHING. The one message written to be read before anything else, silently
+  // absent, with no signal it had been skipped — and "exits zero" would still
+  // have been true, so the neighbouring test could not see it.
+  //
+  // macOS puts $TMPDIR under /var, which is a symlink to /private/var, so every
+  // macOS leg of the test matrix hit this the first run that reached the check.
+  // The symlink here is explicit rather than inherited from the temp directory,
+  // because on Linux it would not be.
+  const { workspace, devRoot } = await loneClone();
+  try {
+    await plantPreflight(devRoot);
+
+    const linked = path.join(workspace, "reached-through-a-symlink");
+    // "junction" so this runs on Windows too, where a directory symlink needs
+    // privileges a runner does not have. POSIX ignores the type.
+    await symlink(devRoot, linked, "junction");
+
+    const { stdout } = await execFile(
+      process.execPath,
+      [path.join(linked, "scripts", "maintenance", "workspace-layout.mjs")],
+      { cwd: linked }
+    );
+
+    assert.match(
+      stdout,
+      /CANNOT REACH A FULL PASS/u,
+      "the preflight printed nothing when reached through a symlink"
+    );
+    for (const name of REQUIRED_SIBLINGS) {
+      assert.match(stdout, new RegExp(`MISSING\\s+${name}`, "u"));
+    }
+  } finally {
+    await rm(workspace, { recursive: true, force: true });
+  }
+});
+
 test("the README states the layout the suite requires", async () => {
   // The banner tells you once you have already run the suite. The README has to
   // tell you before you clone, and it has to name the same directories — a
@@ -363,21 +404,30 @@ test("the preflight prints and exits zero, so the rest of the suite still runs",
   );
 });
 
+/**
+ * Copy the preflight and the seam file into a fixture clone, and return the
+ * path the script would be invoked by. The seam file goes too: the banner
+ * counts its predicted failures from that file rather than from a literal.
+ */
+async function plantPreflight(devRoot) {
+  await mkdir(path.join(devRoot, "scripts", "maintenance"), { recursive: true });
+  await mkdir(path.join(devRoot, path.dirname(SEAM_TEST_FILE)), { recursive: true });
+  for (const relative of ["scripts/maintenance/workspace-layout.mjs", SEAM_TEST_FILE]) {
+    await writeFile(
+      path.join(devRoot, relative),
+      await readFile(path.join(repositoryRoot, relative), "utf8")
+    );
+  }
+  return path.join(devRoot, "scripts", "maintenance", "workspace-layout.mjs");
+}
+
 test("in a lone clone the real script prints the loud banner and still exits zero", async () => {
   // QE's checkout, end to end, as a process. The banner text is covered above
   // at the function level; what this adds is that the SCRIPT reaches it — the
   // unsatisfied path had never been executed, only called.
   const { workspace, devRoot } = await loneClone();
   try {
-    await mkdir(path.join(devRoot, "scripts", "maintenance"), { recursive: true });
-    await mkdir(path.join(devRoot, path.dirname(SEAM_TEST_FILE)), { recursive: true });
-    const script = path.join(devRoot, "scripts", "maintenance", "workspace-layout.mjs");
-    for (const relative of ["scripts/maintenance/workspace-layout.mjs", SEAM_TEST_FILE]) {
-      await writeFile(
-        path.join(devRoot, relative),
-        await readFile(path.join(repositoryRoot, relative), "utf8")
-      );
-    }
+    const script = await plantPreflight(devRoot);
 
     const { stdout } = await execFile(process.execPath, [script], { cwd: devRoot });
 

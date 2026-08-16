@@ -20,7 +20,7 @@
  * the suite at all. The seam tests still fail; this only makes sure the reason
  * is the first thing on screen rather than the last thing inferred.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -187,9 +187,33 @@ export function layoutBanner(layout, { seamTestCount = null } = {}) {
   return lines.join("\n");
 }
 
+/**
+ * Both sides through the filesystem's own answer, not through string equality.
+ *
+ * Node realpaths the entry module before deriving `import.meta.url`, but
+ * `process.argv[1]` is the path the caller typed. Reach this script through a
+ * symlink and the two disagree, `invokedDirectly` is false, and the script
+ * exits zero having printed NOTHING — the one message written to be read before
+ * anything else, silently absent, with no signal that it was skipped.
+ *
+ * That is not hypothetical. macOS puts `$TMPDIR` under `/var`, which is a
+ * symlink to `/private/var`, so every macOS leg of the test matrix hit it the
+ * first time the workflow was able to reach this check.
+ *
+ * `realpathSync` throws on a path that does not exist; falling back to
+ * `path.resolve` keeps the old answer rather than crashing an import.
+ */
+function canonicalPath(value) {
+  try {
+    return realpathSync(value);
+  } catch {
+    return path.resolve(value);
+  }
+}
+
 const invokedDirectly =
   process.argv[1] !== undefined &&
-  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+  canonicalPath(process.argv[1]) === canonicalPath(fileURLToPath(import.meta.url));
 
 if (invokedDirectly) {
   const devRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");

@@ -29,6 +29,17 @@ function executable(name) {
   return process.platform === "win32" ? `${name}.cmd` : name;
 }
 
+/**
+ * Windows resolves `visp-kit` through PATHEXT, so the extension comes back in
+ * whatever case PATHEXT declares — `.CMD` against a `.cmd` on disk — and drive
+ * letters vary too. The filesystem treats those as one path; the assertion has
+ * to as well, or it fails for a reason that has nothing to do with resolution.
+ */
+function assertSamePath(actual, expected, message) {
+  const normalize = (value) => (process.platform === "win32" ? value.toLowerCase() : value);
+  assert.equal(normalize(actual), normalize(expected), message);
+}
+
 async function fakeBinary(dir, name, version) {
   if (process.platform === "win32") {
     await writeFile(join(dir, `${name}.cmd`), `@echo off\r\necho ${version}\r\n`, "utf8");
@@ -199,8 +210,8 @@ test("each reported version carries the path it was read from", async () => {
 
   const { resolved } = await environmentOn(shims, stale);
 
-  assert.equal(resolved.kit.path, join(shims, executable("visp-kit")));
-  assert.equal(
+  assertSamePath(resolved.kit.path, join(shims, executable("visp-kit")));
+  assertSamePath(
     resolved.hyper.path,
     join(shims, executable("visp")),
     "the path must name the file that printed the version, so the two cannot describe " +

@@ -146,6 +146,11 @@ test("doctor answers the Node question on the matrix this repository ships", asy
   // The unit tests above use a hand-built matrix. This one drives the real
   // file, because the defect was reported against the real file — and against a
   // Node that clears its floor, which every supported runtime does.
+  //
+  // It asserts nothing about the OVERALL verdict, which depends on whether this
+  // machine has Visp installed: a CI runner has none, and `blocked` is the right
+  // answer there. Only the Node row is a fact about the matrix rather than about
+  // the machine; `doctorReport` above covers the verdict deterministically.
   const report = await doctor(process.cwd());
   const node = report.checks.find((check) => check.name === "Node");
 
@@ -155,7 +160,11 @@ test("doctor answers the Node question on the matrix this repository ships", asy
     `Node ${process.version} reported as "${node.status}" against the shipped matrix, whose ` +
       "floor this repository's own engines field also requires"
   );
-  assert.notEqual(report.status, "blocked", "a machine with a usable Node must not be blocked by it");
+  assert.deepEqual(
+    report.recovery.filter((line) => line.startsWith("Install Node")),
+    [],
+    "a Node that clears the floor must not produce an instruction to install another one"
+  );
   assert.ok(report.statusReason.length > 0, "the verdict must say what it means");
 });
 

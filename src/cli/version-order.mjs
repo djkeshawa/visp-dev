@@ -82,16 +82,30 @@ export function compareVersions(left, right) {
 }
 
 /**
+ * A requirement that is one floor and nothing else, end to end: `>=22`,
+ * `>= 22.5.0`, `v22`, `22`, `>=22.0.0-rc.1`.
+ *
+ * The anchor at the end is the whole point. Matching only the start accepted
+ * `>=22 <25` and `>=22 || >=24`, and the comparison below then read the first
+ * version-shaped token and answered on `>=22` alone — a ceiling silently
+ * discarded, a union silently narrowed.
+ */
+const SINGLE_FLOOR = /^(?:>=\s*)?v?\d+(?:\.\d+)*(?:-[0-9A-Za-z.-]+)?$/u;
+
+/**
  * Whether `version` clears the floor `requirement` states.
  *
  * The matrix only ever expresses a floor, written `>=22` or bare. Anything else
- * — a ceiling, a caret, a union — returns null rather than being read as a
- * floor, because reading `<25` as "at least 25" would approve exactly the
- * machines it excludes. An unrecognised requirement is unknown, not satisfied.
+ * returns null rather than being read as a floor: a ceiling, because reading
+ * `<25` as "at least 25" would approve exactly the machines it excludes; a
+ * caret; and any requirement carrying more than one clause, because honouring
+ * the first clause of `>=22 <25` approves those same machines by dropping the
+ * second. The requirement must be a single floor from end to end. An
+ * unrecognised requirement is unknown, not satisfied.
  */
 export function satisfiesFloor(version, requirement) {
   const text = `${requirement ?? ""}`.trim();
-  if (!/^(?:>=\s*)?v?\d/u.test(text)) return null;
+  if (!SINGLE_FLOOR.test(text)) return null;
 
   const order = compareVersions(version, text);
   return order === null ? null : order >= 0;

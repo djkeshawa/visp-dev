@@ -185,25 +185,6 @@ export function matrixNodeFloor(matrix) {
       );
 }
 
-/**
- * The Node versions the matrix knows about, as a readable suffix.
- *
- * `Node: v24.15.0 — no supported pair` named the problem and withheld every
- * fact that would let someone act on it. A weak-model evaluation stopped
- * there: it could not tell whether its Node was too new, too old, or simply
- * not the reason. Listing what the matrix does require turns a dead end into a
- * comparison the reader can make themselves.
- *
- * Returns "" when there is nothing to add, so the caller's sentence stays
- * grammatical either way.
- */
-export function supportedNodeRanges(matrix) {
-  if (!Array.isArray(matrix.pairs)) return "";
-  const ranges = [...new Set(matrix.pairs.map((pair) => pair.node).filter(Boolean))];
-  if (ranges.length === 0) return "";
-  return ` (the pairs in this matrix require ${ranges.join(" or ")})`;
-}
-
 export function releaseInstallRecovery(install, environment) {
   const missingSupportedBinary = environment.kit === null || environment.hyper === null;
 

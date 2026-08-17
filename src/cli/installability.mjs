@@ -9,6 +9,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { compareVersions, isNewerThan } from "./version-order.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 export async function readCompatibility() {
@@ -89,17 +91,6 @@ export function installability(matrix, environment = undefined) {
     // tell you "the exact next command". Two independent evaluators followed
     // the recovery section and still did not know what to run. Withholding a
     // support claim is honest; withholding the command is just unhelpful.
-    const install = `npm install -g visp-kit@${npm["visp-kit"]} visp-hyper-agent@${npm["visp-hyper-agent"]}`;
-    // Do not recommend installing what is already installed.
-    //
-    // A weak-model evaluation followed this advice, ran `npm list -g`, and
-    // found the exact versions already present. An instruction that changes
-    // nothing reads as "the tool does not know what is on my machine", which
-    // is worse than saying nothing — and this command's entire job is to know.
-    const alreadyServing =
-      environment !== undefined &&
-      environment.kit === npm["visp-kit"] &&
-      environment.hyper === npm["visp-hyper-agent"];
     return {
       installable: false,
       reason:
@@ -108,10 +99,7 @@ export function installability(matrix, environment = undefined) {
         `This matrix has not re-run its evidence pipeline against that pair, so it makes ` +
         `no support claim about it — and it will not recommend the older pair it did prove.`,
       guidance: [
-        alreadyServing
-          ? `You already have that pair installed (visp-kit@${npm["visp-kit"]}, ` +
-            `visp-hyper-agent@${npm["visp-hyper-agent"]}); nothing needs installing.`
-          : `To install what npm currently serves: ${install}`,
+        supersededAction(npm, environment),
         "This matrix makes no support claim about that pair; it is what the README recommends.",
         registry.hazard ?? "Do not install the superseded pair alongside the current one."
       ].join(" ")
@@ -126,6 +114,75 @@ export function installability(matrix, environment = undefined) {
         : "No supported release is published. The only Visp versions on npm are deprecated and predate this compatibility matrix, so installing from the registry would obtain a build that is not supported.",
     guidance: "Build Kit and Hyper from source at the pinned commits below, or wait for a release."
   };
+}
+
+const REGISTRY_PACKAGES = Object.freeze(["visp-kit", "visp-hyper-agent"]);
+
+/** The installed version of each package the registry serves, or null. */
+function installedPair(environment) {
+  return {
+    "visp-kit": environment?.kit ?? null,
+    "visp-hyper-agent": environment?.hyper ?? null
+  };
+}
+
+/**
+ * What to do about a pair the registry has moved past — the one line a reader
+ * acts on, and the one the verdict above has to agree with.
+ *
+ * `visp-dev --help` promises the exact next command, so every branch here names
+ * an action. Which action depends on what is already installed, and getting
+ * that wrong has cost readers twice:
+ *
+ *   - Recommending versions already present read as "this tool does not know
+ *     what is on my machine", which is the one thing it exists to know.
+ *   - LC-111 defect 3: on a machine running 0.6.0 and 0.9.0 it printed `npm
+ *     install -g visp-kit@0.5.0 visp-hyper-agent@0.8.0`. The verdict was "this
+ *     matrix makes no support claim about what you have" and the advice was
+ *     "downgrade to something it makes no support claim about either" — a
+ *     recovery contradicting its own verdict, at the cost of a working install.
+ */
+function supersededAction(npm, environment) {
+  const installed = installedPair(environment);
+  const served = REGISTRY_PACKAGES.map((name) => `${name}@${npm[name]}`);
+
+  if (environment !== undefined && REGISTRY_PACKAGES.every((name) => installed[name] === npm[name])) {
+    return `You already have that pair installed (${served.join(", ")}); nothing needs installing.`;
+  }
+
+  const ahead = REGISTRY_PACKAGES.filter((name) => isNewerThan(installed[name], npm[name]));
+
+  if (ahead.length > 0) {
+    const running = ahead.map((name) => `${name}@${installed[name]}`).join(" and ");
+    return (
+      `You are running ${running}, newer than what npm serves (${served.join(", ")}); ` +
+      `installing the registry pair would downgrade ${ahead.length > 1 ? "them" : "it"}, so this ` +
+      `matrix does not ask you to. Run visp-dev versions to see the pairs it does hold evidence for.`
+    );
+  }
+
+  return `To install what npm currently serves: npm install -g ${served.join(" ")}`;
+}
+
+/**
+ * The lowest Node version any pair in this matrix requires.
+ *
+ * Doctor needs a Node requirement whether or not a pair is recommended for
+ * install: those are two different questions, and answering the Node one only
+ * when the other happened to succeed is what made a perfectly good Node 26
+ * report as `[unknown]` (LC-111 defect 1). Returns null only when the matrix
+ * states no requirement at all.
+ */
+export function matrixNodeFloor(matrix) {
+  const floors = Array.isArray(matrix.pairs)
+    ? matrix.pairs.map((pair) => pair.node).filter(Boolean)
+    : [];
+
+  return floors.length === 0
+    ? null
+    : floors.reduce((lowest, candidate) =>
+        (compareVersions(candidate, lowest) ?? 0) < 0 ? candidate : lowest
+      );
 }
 
 /**

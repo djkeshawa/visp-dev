@@ -14,6 +14,19 @@ test("versions keeps every pair pinned by commit and names a release only when o
     assert.match(pair.hyper, /^[0-9a-f]{40}$/u);
   }
 
+  // LC-95: the two surfaces that report installed versions must report them
+  // the same way. `versions` printing a bare number while `doctor` prints the
+  // resolved path is how a reader ends up comparing two different machines.
+  const text = formatVersions(result);
+  for (const [version, filePath] of [
+    [result.installed.kit, result.installed.kitPath],
+    [result.installed.hyper, result.installed.hyperPath]
+  ]) {
+    if (version === null) continue;
+    assert.ok(filePath, `${version} was reported without the file it was read from`);
+    assert.ok(text.includes(filePath), `formatVersions dropped the resolved path ${filePath}`);
+  }
+
   // Once the evidenced pair is superseded on the registry, `versions` must not
   // print a supported release at all — printing the older one is the failure
   // mode this guards.

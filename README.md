@@ -41,6 +41,12 @@ node scripts/visp-dev.mjs init       # the exact steps for this project
 more than it sounds: `visp-kit@0.1.0` predates the fixes that close four
 policy-bypass holes.
 
+Every version `doctor` and `versions` print carries **the path it was read
+from**, and both resolve Kit and Hyper the same way your shell does. A machine
+can hold two installations of one product — a global npm install and a newer
+local one — and a compatibility verdict is only worth anything if it describes
+the one you are actually running.
+
 A version number is how you obtain Visp; it is not what carries the proof. Every
 claim here pins **commits and tarball hashes**. See [Limitations](#limitations).
 
@@ -70,6 +76,12 @@ none.
 - **Older published versions are deprecated.** `visp-kit@0.1.0` and
   `visp-hyper-agent@0.2.0`/`0.3.0` predate the current matrix. `doctor` fails if
   it finds one.
+- **`doctor` will usually say `unknown`, and that is not a refusal.** Pairs are
+  pinned by commit and a binary on PATH does not report one, so an installed
+  pair this matrix has not re-proven is *unknown to this matrix* rather than
+  unsupported. Absence still reports `blocked` and a deprecated build still
+  reports `failed` — those are the verdicts that mean something on your machine
+  is wrong. Expect `ok` only once a pair is recommended again.
 - **Compatibility is exact-pair only.** No version range is supported, because a
   version string is not an identity — `visp-hyper-agent@0.3.0` on npm and
   `0.3.0` in this workspace share 21 files of which 20 differ.

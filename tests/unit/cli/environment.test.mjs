@@ -19,10 +19,26 @@
 import assert from "node:assert/strict";
 import { chmod, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import test from "node:test";
 
-import { collectEnvironment } from "../../../src/cli/environment.mjs";
+import { collectEnvironment, detectTool, pathIndexOf } from "../../../src/cli/environment.mjs";
+
+/** The on-disk filename PATH resolution will find for `name` on this platform. */
+function executable(name) {
+  return process.platform === "win32" ? `${name}.cmd` : name;
+}
+
+/**
+ * Windows resolves `visp-kit` through PATHEXT, so the extension comes back in
+ * whatever case PATHEXT declares — `.CMD` against a `.cmd` on disk — and drive
+ * letters vary too. The filesystem treats those as one path; the assertion has
+ * to as well, or it fails for a reason that has nothing to do with resolution.
+ */
+function assertSamePath(actual, expected, message) {
+  const normalize = (value) => (process.platform === "win32" ? value.toLowerCase() : value);
+  assert.equal(normalize(actual), normalize(expected), message);
+}
 
 async function fakeBinary(dir, name, version) {
   if (process.platform === "win32") {
@@ -31,6 +47,17 @@ async function fakeBinary(dir, name, version) {
   }
   const file = join(dir, name);
   await writeFile(file, `#!/bin/sh\necho "${version}"\n`, "utf8");
+  await chmod(file, 0o755);
+}
+
+/** On PATH, executable, and unable to report a version. */
+async function brokenBinary(dir, name) {
+  if (process.platform === "win32") {
+    await writeFile(join(dir, `${name}.cmd`), "@echo off\r\nexit /b 1\r\n", "utf8");
+    return;
+  }
+  const file = join(dir, name);
+  await writeFile(file, "#!/bin/sh\nexit 1\n", "utf8");
   await chmod(file, 0o755);
 }
 
@@ -43,11 +70,23 @@ async function machine(versions) {
   return binDir;
 }
 
-async function environmentOn(binDir) {
+/** `collectEnvironment` seeing exactly `binDirs`, in that PATH order. */
+async function environmentOn(...binDirs) {
   const original = process.env.PATH;
-  process.env.PATH = binDir;
+  process.env.PATH = binDirs.join(delimiter);
   try {
     return await collectEnvironment(await mkdtemp(join(tmpdir(), "visp-dev-proj-")));
+  } finally {
+    process.env.PATH = original;
+  }
+}
+
+/** What a user's shell would run for `name` on this PATH, read the same way. */
+async function shellRuns(name, ...binDirs) {
+  const original = process.env.PATH;
+  process.env.PATH = binDirs.join(delimiter);
+  try {
+    return await detectTool(name);
   } finally {
     process.env.PATH = original;
   }
@@ -128,4 +167,104 @@ test("Kit alone is reported without inventing Hyper", async () => {
 
   assert.equal(environment.kit, "0.5.0");
   assert.equal(environment.hyper, null);
+});
+
+// ---------------------------------------------------------------------------
+// LC-95 — the version reported must be the version the shell runs.
+//
+// In battleground round two, `visp --version` printed 0.9.0 and `visp-dev
+// doctor` reported Hyper 0.8.0 in the same shell. Kit resolved from PATH; Hyper
+// was probed only under `visp-hyper`, which the round's shims did not provide,
+// so it fell through to a stale global install. Two products, two resolution
+// strategies, one wrong answer — and a compatibility verdict about an
+// installation nobody is using is worth nothing.
+// ---------------------------------------------------------------------------
+
+test("the reported version is the one the binary on PATH prints", async () => {
+  // The reported machine, rebuilt: a first PATH entry carrying the current pair
+  // as `visp-kit` and the `visp` dispatcher, and a later entry carrying an
+  // older global install that still answers to `visp-hyper`.
+  const shims = await machine({ "visp-kit": "0.6.0", visp: "0.9.0" });
+  const stale = await machine({ "visp-hyper": "0.8.0", "visp-kit": "0.5.0" });
+
+  const environment = await environmentOn(shims, stale);
+
+  assert.equal(
+    environment.hyper,
+    await shellRuns("visp", shims, stale),
+    "doctor reported a Hyper version the user's shell does not run. That is the whole defect: " +
+      "every compatibility statement below it describes an installation nobody is using."
+  );
+  assert.equal(environment.hyper, "0.9.0");
+  assert.equal(
+    environment.kit,
+    await shellRuns("visp-kit", shims, stale),
+    "Kit must be resolved by the same rule, not merely happen to be right"
+  );
+  assert.equal(environment.kit, "0.6.0");
+});
+
+test("each reported version carries the path it was read from", async () => {
+  const shims = await machine({ "visp-kit": "0.6.0", visp: "0.9.0" });
+  const stale = await machine({ "visp-hyper": "0.8.0" });
+
+  const { resolved } = await environmentOn(shims, stale);
+
+  assertSamePath(resolved.kit.path, join(shims, executable("visp-kit")));
+  assertSamePath(
+    resolved.hyper.path,
+    join(shims, executable("visp")),
+    "the path must name the file that printed the version, so the two cannot describe " +
+      "different installations"
+  );
+});
+
+test("a second installation of the same product is named, not silently dropped", async () => {
+  // Picking a winner is not enough. The user still has two Hypers on PATH, and
+  // the point of the ticket is that the mismatch is visible rather than inferred.
+  const shims = await machine({ "visp-kit": "0.6.0", visp: "0.9.0" });
+  const stale = await machine({ "visp-hyper": "0.8.0" });
+
+  const { resolved } = await environmentOn(shims, stale);
+
+  assert.equal(resolved.hyper.conflict, true, "two Hyper versions on PATH must register as a conflict");
+  assert.deepEqual(
+    resolved.hyper.candidates.map((candidate) => `${candidate.command} ${candidate.version}`),
+    ["visp 0.9.0", "visp-hyper 0.8.0"],
+    "both installations must be reported, in the order PATH would reach them"
+  );
+  assert.equal(resolved.kit.conflict, false, "one Kit on PATH is not a conflict");
+});
+
+test("PATH order decides, exactly as the shell decides", async () => {
+  // The same two directories, swapped. Nothing about the machine changed except
+  // which entry comes first, and the answer has to follow it.
+  const newer = await machine({ visp: "0.9.0", "visp-kit": "0.6.0" });
+  const older = await machine({ "visp-hyper": "0.8.0", "visp-kit": "0.5.0" });
+
+  assert.equal((await environmentOn(newer, older)).hyper, "0.9.0");
+  assert.equal((await environmentOn(older, newer)).hyper, "0.8.0");
+  assert.equal((await environmentOn(newer, older)).kit, "0.6.0");
+  assert.equal((await environmentOn(older, newer)).kit, "0.5.0");
+});
+
+test("a binary outside every PATH entry loses to one inside", () => {
+  // pathIndexOf is what orders the candidates, so its fallback has to lose
+  // rather than win by sorting first.
+  const path = process.env.PATH ?? "";
+  assert.ok(pathIndexOf(join("/nowhere", "visp"), path) > 0);
+  assert.equal(pathIndexOf(join("/first", "visp"), ["/first", "/second"].join(delimiter)), 0);
+  assert.equal(pathIndexOf(join("/second", "visp"), ["/first", "/second"].join(delimiter)), 1);
+});
+
+test("nothing is reported for a name that is on PATH but cannot run", async () => {
+  // findExecutable answering is not the same as the binary answering. A file
+  // that exits non-zero must not be reported as an installed version.
+  const binDir = await mkdtemp(join(tmpdir(), "visp-dev-broken-"));
+  await brokenBinary(binDir, "visp-kit");
+
+  const environment = await environmentOn(binDir);
+
+  assert.equal(environment.kit, null);
+  assert.equal(environment.resolved.kit.candidates.length, 0);
 });

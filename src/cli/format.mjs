@@ -26,13 +26,19 @@ export function formatDoctor(report) {
     // different questions — but none of them said so, which is what made the
     // disagreement look like a contradiction.
     "scope: machine and package compatibility (visp doctor covers the project)",
-    `visp-dev doctor: ${report.status}`,
+    // The verdict and what it means on one line. "blocked" alone read as a
+    // refusal whatever produced it, which is how "the matrix has no evidence
+    // about your versions" and "nothing is installed" became the same sentence.
+    `visp-dev doctor: ${report.status}${report.statusReason ? ` — ${report.statusReason}` : ""}`,
     `supported release: ${release === null ? noReleaseReason(report) : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
     ""
   ];
 
   for (const check of report.checks) {
-    lines.push(`  [${check.status}] ${check.name}: ${check.value}`);
+    // The resolved path belongs next to the version it was read from: on a
+    // machine carrying two installations of one product, the version alone
+    // leaves the reader inferring which one answered (LC-95).
+    lines.push(`  [${check.status}] ${check.name}: ${check.value}${check.path ? `  (${check.path})` : ""}`);
     if (check.detail) lines.push(`        ${check.detail}`);
   }
 
@@ -56,14 +62,20 @@ export function formatInit(result) {
   return lines.join("\n").trimEnd();
 }
 
+/** A version with the file that printed it, so the two cannot drift apart. */
+function installedLine(version, filePath) {
+  if (version === null || version === undefined) return "not found on PATH";
+  return filePath ? `${version}  (${filePath})` : version;
+}
+
 export function formatVersions(result) {
   const release = result.supportedRelease;
   const lines = [
     `visp-dev`,
     `  published release: ${result.published ? "yes" : "none"}`,
     `  supported release: ${release === null ? noReleaseReason(result) : `visp-kit@${release.kit} + visp-hyper-agent@${release.hyper}`}`,
-    `  installed kit:     ${result.installed.kit ?? "not installed"}`,
-    `  installed hyper:   ${result.installed.hyper ?? "not installed"}`,
+    `  installed kit:     ${installedLine(result.installed.kit, result.installed.kitPath)}`,
+    `  installed hyper:   ${installedLine(result.installed.hyper, result.installed.hyperPath)}`,
     `  node:              ${result.installed.node}`,
     "",
     "  supported pairs (pinned by commit, never by version range):"

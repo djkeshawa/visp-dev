@@ -11,7 +11,16 @@ export async function versions(projectPath) {
     published: matrix.published,
     registryState: matrix.registryState ?? null,
     supportedRelease: pair === null ? null : matrix.supportedRelease,
-    installed: { kit: environment.kit, hyper: environment.hyper, node: environment.node },
+    // The resolved path travels with the version here too. `versions` and
+    // `doctor` read the same machine, so one of them printing a bare number
+    // would reintroduce exactly the ambiguity LC-95 removed from the other.
+    installed: {
+      kit: environment.kit,
+      kitPath: environment.resolved.kit.path,
+      hyper: environment.hyper,
+      hyperPath: environment.resolved.hyper.path,
+      node: environment.node
+    },
     supported: pair,
     // Every pair is pinned by commit, never by a version range: a range would
     // let a different build answer to the same name.

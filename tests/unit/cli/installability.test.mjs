@@ -15,6 +15,7 @@ import test from "node:test";
 import {
   deprecatedInstallRecovery,
   installability,
+  matrixNodeFloor,
   readCompatibility,
   releaseInstallRecovery,
   supportedNodeRanges,
@@ -208,6 +209,51 @@ test("still names the install command when the versions differ", () => {
 test("still names the install command when nothing is installed at all", () => {
   const guidance = installability(supersededMatrix, { kit: null, hyper: null }).guidance;
   assert.ok(/npm install -g/u.test(guidance), guidance);
+});
+
+test("does not tell a user running a newer pair to install an older one", () => {
+  // LC-111 defect 3. The verdict is "this matrix makes no support claim about
+  // what you have"; the advice was "downgrade to something it makes no support
+  // claim about either". A recovery that contradicts its own verdict and costs
+  // the reader a working installation is worse than no recovery.
+  const guidance = installability(supersededMatrix, {
+    kit: "0.6.0",
+    hyper: "0.9.0"
+  }).guidance;
+
+  assert.ok(
+    !/npm install -g/u.test(guidance),
+    `Recovery told a user running a newer pair to install an older one:\n${guidance}`
+  );
+  assert.match(guidance, /downgrade/u, "it must say why it is not naming an install command");
+  assert.match(guidance, /visp-kit@0\.6\.0/u, "it must name what the user actually has");
+  // And it must still withhold the support claim rather than trade one
+  // omission for another.
+  assert.match(guidance, /no support claim/iu);
+  assert.match(guidance, /Do not mix the pairs/u);
+});
+
+test("a single package ahead of the registry is enough to withhold the downgrade", () => {
+  // The mixed machine: Hyper newer, Kit older. Naming the pair install would
+  // still downgrade Hyper, so the command is withheld and the state described.
+  const guidance = installability(supersededMatrix, {
+    kit: "0.2.3",
+    hyper: "0.9.0"
+  }).guidance;
+
+  assert.ok(!/npm install -g/u.test(guidance), guidance);
+  assert.match(guidance, /visp-hyper-agent@0\.9\.0/u);
+});
+
+test("the lowest Node floor in the matrix is the one doctor can rely on", () => {
+  assert.equal(matrixNodeFloor(supersededMatrix), ">=22");
+  assert.equal(
+    matrixNodeFloor({ pairs: [{ node: ">=24" }, { node: ">=22" }, { node: ">=26" }] }),
+    ">=22",
+    "a pair requiring less is still a pair this matrix knows about"
+  );
+  assert.equal(matrixNodeFloor({ pairs: [] }), null);
+  assert.equal(matrixNodeFloor({}), null);
 });
 
 test("names the Node versions the matrix requires", () => {

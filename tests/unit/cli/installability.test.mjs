@@ -18,7 +18,6 @@ import {
   matrixNodeFloor,
   readCompatibility,
   releaseInstallRecovery,
-  supportedNodeRanges,
   supportedPair
 } from "../../../src/cli/installability.mjs";
 
@@ -254,13 +253,4 @@ test("the lowest Node floor in the matrix is the one doctor can rely on", () => 
   );
   assert.equal(matrixNodeFloor({ pairs: [] }), null);
   assert.equal(matrixNodeFloor({}), null);
-});
-
-test("names the Node versions the matrix requires", () => {
-  assert.equal(supportedNodeRanges(supersededMatrix), " (the pairs in this matrix require >=22)");
-});
-
-test("says nothing rather than something empty when there are no pairs", () => {
-  assert.equal(supportedNodeRanges({ pairs: [] }), "");
-  assert.equal(supportedNodeRanges({}), "");
 });

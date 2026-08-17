@@ -72,6 +72,35 @@ test("a requirement that is not a floor is unknown rather than assumed", () => {
   assert.equal(satisfiesFloor("not a version", ">=22"), null);
 });
 
+test("a requirement with more than one clause is unknown, not just its first clause", () => {
+  // The comment above satisfiesFloor promised a ceiling and a union were
+  // unknown, and they were — until one arrived attached to a floor. `>=22 <25`
+  // matched the "starts with a floor" test and then answered on `>=22`, so
+  // v26.7.0 was approved against a range that excludes it. A union did the
+  // same. Honouring the first clause of a compound range is the same wrong
+  // answer as reading `<25` as a floor, arrived at by a longer route.
+  assert.equal(satisfiesFloor("v26.7.0", ">=22 <25"), null);
+  assert.equal(satisfiesFloor("v26.7.0", ">=22 || >=24"), null);
+  assert.equal(satisfiesFloor("v26.7.0", "22 || 24"), null);
+  assert.equal(satisfiesFloor("v26.7.0", "^22"), null);
+  // The machine the ceiling admits is unknown too. Refusing to answer is the
+  // honest verdict for a range this module does not implement; the alternative
+  // is being right by luck for half the inputs.
+  assert.equal(satisfiesFloor("v23.0.0", ">=22 <25"), null);
+});
+
+test("tightening the grammar did not cost the floors the matrix really writes", () => {
+  // The end anchor that rejects a compound range could just as easily reject a
+  // legitimate floor. These are the shapes `compatibility.json` and the pair
+  // rows use, plus the pre-release floor that carries the widest character set.
+  // A bare major still answers in both directions, not just "not null".
+  assert.equal(satisfiesFloor("v26.7.0", "24"), true);
+  assert.equal(satisfiesFloor("v22.0.0", "24"), false);
+  assert.equal(satisfiesFloor("v26.7.0", ">=22.0.0-rc.1"), true);
+  assert.equal(satisfiesFloor("v22.0.0-rc.1", ">=22.0.0-rc.1"), true);
+  assert.equal(satisfiesFloor("v22.0.0-alpha.1", ">=22.0.0-rc.1"), false);
+});
+
 test("a bare floor and an explicit one mean the same thing", () => {
   assert.equal(satisfiesFloor("v26.7.0", "22"), true);
   assert.equal(satisfiesFloor("v26.7.0", ">= 22"), true);

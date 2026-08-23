@@ -18,8 +18,10 @@ import {
   matrixNodeFloor,
   readCompatibility,
   releaseInstallRecovery,
-  supportedPair
+  supportedPair,
+  unreadableNodeRequirements
 } from "../../../src/cli/installability.mjs";
+import { satisfiesFloor } from "../../../src/cli/version-order.mjs";
 
 test("the supported pair exists only when a release is evidence-eligible", async () => {
   const matrix = await readCompatibility();
@@ -253,4 +255,92 @@ test("the lowest Node floor in the matrix is the one doctor can rely on", () => 
   );
   assert.equal(matrixNodeFloor({ pairs: [] }), null);
   assert.equal(matrixNodeFloor({}), null);
+});
+
+test("the shapes the live matrix really writes are all still ranked", () => {
+  // The filter that rejects a compound range could just as easily reject a
+  // legitimate floor and quietly turn every Node row into "no requirement".
+  assert.equal(matrixNodeFloor({ pairs: [{ node: "24" }, { node: "22" }] }), "22");
+  assert.equal(matrixNodeFloor({ pairs: [{ node: ">= 24" }, { node: ">=26" }] }), ">= 24");
+  assert.equal(matrixNodeFloor({ pairs: [{ node: "v24" }, { node: "v22" }] }), "v22");
+  assert.equal(
+    matrixNodeFloor({ pairs: [{ node: ">=22.5.0" }, { node: ">=22.1.0" }] }),
+    ">=22.1.0",
+    "the minor decides, exactly as it does in satisfiesFloor"
+  );
+  assert.equal(
+    matrixNodeFloor({ pairs: [{ node: ">=22.0.0-rc.1" }, { node: ">=22.0.0" }] }),
+    ">=22.0.0-rc.1",
+    "an rc ranks below the release it precedes"
+  );
+});
+
+test("a requirement that is not a floor is never ranked as one", () => {
+  // LC-132. matrixNodeFloor compared requirement STRINGS, and the comparison
+  // reads the first version-shaped token anywhere in the string. `<25` scored
+  // as 25, so a matrix stating one ceiling and one floor handed doctor the
+  // ceiling and doctor printed "every pair in this matrix requires Node <25" —
+  // a sentence the matrix does not say, about a bound it inverts.
+  for (const unreadable of ["<25", "^22", "~22", ">22", ">=22 <25", ">=22 || >=24", "lts"]) {
+    assert.equal(
+      matrixNodeFloor({ pairs: [{ node: unreadable }, { node: ">=26" }] }),
+      null,
+      `${unreadable} was read as a floor and ranked against >=26`
+    );
+  }
+});
+
+test("one unreadable requirement makes the floor unknown, not the readable subset", () => {
+  // Ranking only the pairs that parse fixes the sentence and breaks the
+  // quantifier instead. doctor prints "EVERY pair in this matrix requires Node
+  // X" and fails the row below it, so on this matrix a subset answer of ">=26"
+  // tells a working Node 24 machine to upgrade — while the pair that was
+  // dropped, ">=22 <25", is precisely the one that supports Node 24. Unknown is
+  // the answer that is true about every pair.
+  const partlyReadable = { pairs: [{ node: ">=26" }, { node: ">=22 <25" }] };
+
+  assert.equal(matrixNodeFloor(partlyReadable), null);
+  assert.deepEqual(unreadableNodeRequirements(partlyReadable), [">=22 <25"]);
+});
+
+test("a matrix stating no floor anyone can read reports what it does state", () => {
+  // The distinction doctor's wording turns on: nothing stated is not the same
+  // as something stated that this tool will not guess at. Saying "no Node
+  // requirement" about a matrix of `<25` withholds the one fact a reader on
+  // Node 26 could act on.
+  for (const nodes of [["<25"], ["^22"], [">=22 || >=24"], ["lts"], ["<25", "^22", "lts"]]) {
+    const matrix = { pairs: nodes.map((node) => ({ node })) };
+
+    assert.equal(matrixNodeFloor(matrix), null, `${nodes.join(", ")} contains no floor`);
+    assert.deepEqual(unreadableNodeRequirements(matrix), nodes);
+  }
+});
+
+test("a matrix that truly states nothing is distinguishable from one that does", () => {
+  for (const matrix of [
+    { pairs: [] },
+    {},
+    { pairs: [{ id: "no-node-key" }] },
+    { pairs: [{ node: null }, { node: "" }, { node: "   " }] },
+    { pairs: [{ node: ">=22" }] }
+  ]) {
+    assert.deepEqual(
+      unreadableNodeRequirements(matrix),
+      [],
+      `${JSON.stringify(matrix)} states nothing unreadable`
+    );
+  }
+  assert.equal(matrixNodeFloor({ pairs: [{ node: null }, { node: "" }] }), null);
+});
+
+test("the floor doctor reports is one the same matrix would accept a machine against", () => {
+  // The contract between the two functions, asserted rather than assumed:
+  // whatever matrixNodeFloor hands doctor, satisfiesFloor must be able to
+  // answer about. A requirement that ranks but cannot be judged is the
+  // [unknown] row this ticket exists to remove.
+  const floor = matrixNodeFloor({ pairs: [{ node: ">=26" }, { node: ">=28" }] });
+
+  assert.equal(floor, ">=26");
+  assert.equal(satisfiesFloor("v26.7.0", floor), true);
+  assert.equal(satisfiesFloor("v24.15.0", floor), false);
 });

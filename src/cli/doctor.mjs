@@ -11,7 +11,8 @@ import {
   matrixNodeFloor,
   readCompatibility,
   releaseInstallRecovery,
-  supportedPair
+  supportedPair,
+  unreadableNodeRequirements
 } from "./installability.mjs";
 import { satisfiesFloor } from "./version-order.mjs";
 
@@ -53,6 +54,23 @@ export function overallStatus(checks) {
  * requirement its Node plainly cleared, printed as if it were the reason for a
  * refusal that was really about Kit and Hyper.
  */
+/**
+ * Why there is no floor to judge against — which is two different situations.
+ *
+ * A matrix that asks nothing and a matrix asking something this tool cannot
+ * read both leave the row `unknown`, but only one of them is "no requirement".
+ * Telling a user on Node 26 that a matrix of `<25` states no Node requirement
+ * withholds the only fact they could have acted on, so the values are named.
+ */
+function noFloorDetail(matrix) {
+  const unreadable = unreadableNodeRequirements(matrix);
+
+  return unreadable.length === 0
+    ? "this matrix states no Node requirement"
+    : `this matrix states Node requirements this tool cannot read as a floor ` +
+      `(${unreadable.join(", ")}), so it will not guess one; check them by hand`;
+}
+
 export function nodeCheck(matrix, pair, nodeVersion) {
   const requirement = pair?.node ?? matrixNodeFloor(matrix);
   const satisfied = requirement === null ? null : satisfiesFloor(nodeVersion, requirement);
@@ -63,7 +81,7 @@ export function nodeCheck(matrix, pair, nodeVersion) {
     status: satisfied === null ? "unknown" : satisfied ? "ok" : "failed",
     detail:
       requirement === null
-        ? "this matrix states no Node requirement"
+        ? noFloorDetail(matrix)
         : pair === null
           ? `every pair in this matrix requires Node ${requirement}; whether any pair is ` +
             `recommended for install is a separate question, answered below`

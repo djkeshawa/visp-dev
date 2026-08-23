@@ -9,7 +9,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { compareVersions, isNewerThan } from "./version-order.mjs";
+import { compareVersions, isFloorRequirement, isNewerThan } from "./version-order.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -170,19 +170,55 @@ function supersededAction(npm, environment) {
  * Doctor needs a Node requirement whether or not a pair is recommended for
  * install: those are two different questions, and answering the Node one only
  * when the other happened to succeed is what made a perfectly good Node 26
- * report as `[unknown]` (LC-111 defect 1). Returns null only when the matrix
- * states no requirement at all.
+ * report as `[unknown]` (LC-111 defect 1).
+ *
+ * LC-132: the winner is handed to doctor and printed verbatim as "EVERY pair in
+ * this matrix requires Node X", so the answer is either about every pair or it
+ * is not given. The comparison ranked requirement strings through a scanner
+ * that takes the first version-shaped token anywhere in one, which turns `<25`
+ * into 25, `^22` into 22 and `>=22 || >=24` into 22 — so a matrix of `<25` and
+ * `>=26` announced `requires Node <25`, a ceiling presented as a floor with the
+ * one real floor discarded.
+ *
+ * Ranking only the readable subset would fix that sentence and break the
+ * quantifier instead: `>=26` alongside `>=22 <25` would report `requires Node
+ * >=26` and tell a working Node 24 machine to upgrade, when the pair that was
+ * dropped is the one that supports it. So a single unreadable requirement makes
+ * the floor unknown, exactly as it makes `satisfiesFloor` unknown. Use
+ * `unreadableNodeRequirements` to say which, rather than reporting the absence
+ * of a requirement the matrix plainly states.
  */
 export function matrixNodeFloor(matrix) {
-  const floors = Array.isArray(matrix.pairs)
-    ? matrix.pairs.map((pair) => pair.node).filter(Boolean)
-    : [];
+  const requirements = nodeRequirements(matrix);
 
-  return floors.length === 0
-    ? null
-    : floors.reduce((lowest, candidate) =>
-        (compareVersions(candidate, lowest) ?? 0) < 0 ? candidate : lowest
-      );
+  if (requirements.length === 0) return null;
+  if (!requirements.every(isFloorRequirement)) return null;
+
+  // Every requirement parses, so the comparison is never null.
+  return requirements.reduce((lowest, candidate) =>
+    compareVersions(candidate, lowest) < 0 ? candidate : lowest
+  );
+}
+
+/** Every Node requirement in the matrix, as written. */
+function nodeRequirements(matrix) {
+  return Array.isArray(matrix.pairs)
+    ? matrix.pairs.map((pair) => pair.node).filter((node) => `${node ?? ""}`.trim() !== "")
+    : [];
+}
+
+/**
+ * The Node requirements this matrix states that cannot be read as a floor.
+ *
+ * The reason `matrixNodeFloor` returned null, in the reader's own terms. Empty
+ * means the matrix really states nothing; non-empty means it states something
+ * this tool will not guess at, and a reader who is told which values those are
+ * can act on them. "No requirement" and "a requirement I cannot read" are the
+ * same distinction as `unknown` versus `blocked`, and collapsing them tells a
+ * user on Node 26 that a matrix of `<25` asks nothing of them.
+ */
+export function unreadableNodeRequirements(matrix) {
+  return nodeRequirements(matrix).filter((node) => !isFloorRequirement(node));
 }
 
 export function releaseInstallRecovery(install, environment) {

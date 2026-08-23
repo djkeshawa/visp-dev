@@ -68,12 +68,16 @@ const CONFORMANCE = "maintenance";
  * Each entry is a claim that the file belongs where it sits. `seams` compares
  * SIBLING REPOSITORIES against each other and has no local source at all;
  * `hostile-paths` drives the published binary end to end; `documentation`
- * checks prose. Anything not listed here must live under `tests/unit/` and
- * mirror its module, so a stray test file cannot accumulate unnoticed.
+ * checks prose; `compatibility/currency` spawns the currency ENTRYPOINT to
+ * prove `--advisory` reaches `process.exitCode`, which is a process fact no
+ * unit test of the module can observe. Anything not listed here must live
+ * under `tests/unit/` and mirror its module, so a stray test file cannot
+ * accumulate unnoticed.
  */
 const DECLARED_OUTSIDE_UNIT = new Set([
   "tests/integration/cli/argv.test.mjs",
   "tests/integration/cli/hostile-paths.test.mjs",
+  "tests/integration/compatibility/currency.test.mjs",
   "tests/integration/compatibility/lab.test.mjs",
   "tests/maintenance/documentation.test.mjs",
   "tests/maintenance/naming.test.mjs",

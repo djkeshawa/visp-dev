@@ -20,6 +20,7 @@
  * the suite at all. The seam tests still fail; this only makes sure the reason
  * is the first thing on screen rather than the last thing inferred.
  */
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
@@ -102,15 +103,69 @@ export function locateProduct(name, devRoot) {
   return null;
 }
 
+/**
+ * The short commit a sibling is checked out at, or `null`.
+ *
+ * LC-76: CI checks the three siblings out at their DEFAULT BRANCH TIPS, with no
+ * `ref:`. That is the correct semantic for a seam product — a pin would freeze
+ * the comparison and defeat the drift detection the seams exist for — but it
+ * means a push to visp-kit can turn this repository's matrix red with no
+ * visp-dev change, and nothing in the failure says which repository moved.
+ * Recording the revision here is what lets the reader tell.
+ *
+ * Null on any failure: an `engines/` copy vendored by a tarball or a fixture is
+ * a legitimate sibling with no git history, and a preflight that crashed over a
+ * missing `.git` would block a run it exists to explain.
+ *
+ * THE OWN-REPOSITORY CHECK IS THE WHOLE POINT. `git -C` walks UP the directory
+ * tree, so a vendored `engines/visp-kit` carrying no `.git` of its own resolves
+ * against visp-dev's repository and answers with visp-dev's HEAD. The banner
+ * would then print `visp-kit@<visp-dev's commit>` and invite the reader to
+ * blame a sibling for this repository's own change — the exact misdiagnosis
+ * this revision exists to prevent, delivered with more confidence than before.
+ *
+ * The check is the presence of `.git`, not a comparison against
+ * `rev-parse --show-toplevel`. That comparison was the first attempt and it
+ * failed every Windows leg: git answers with forward slashes and a long path,
+ * `mkdtemp` hands back backslashes, and the two never matched however they were
+ * canonicalised — so a real sibling checkout reported NO revision, which is the
+ * failure this function exists to avoid, arrived at from the other side.
+ * Asking whether the directory carries its own `.git` is the actual question,
+ * costs no subprocess when the answer is no, and has no path-shape opinion at
+ * all. A worktree or submodule carries `.git` as a FILE, which is still its own
+ * repository and still answers for itself, so `existsSync` is the right probe
+ * rather than a directory test.
+ */
+export function revisionOf(root) {
+  if (!existsSync(path.join(root, ".git"))) return null;
+
+  try {
+    return execFileSync("git", ["-C", root, "rev-parse", "--short", "HEAD"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 export function workspaceLayout(devRoot) {
   const found = [];
   const missing = [];
   for (const name of REQUIRED_SIBLINGS) {
     const root = locateProduct(name, devRoot);
     if (root === null) missing.push({ name, looked: candidatePathsFor(name, devRoot) });
-    else found.push({ name, root });
+    else found.push({ name, root, revision: revisionOf(root) });
   }
   return { devRoot, found, missing, satisfied: missing.length === 0 };
+}
+
+/** `visp-kit@1a2b3c4`, or the bare name when the checkout has no git history. */
+function describeSibling(entry) {
+  // Absent and null both mean "no revision to name": `layoutBanner` is exported
+  // and gets hand-built layouts, and `(undefined)` in the banner would be worse
+  // than saying nothing.
+  return entry.revision ? `${entry.name}@${entry.revision}` : entry.name;
 }
 
 /**
@@ -139,8 +194,17 @@ const RULE = "=".repeat(78);
 
 export function layoutBanner(layout, { seamTestCount = null } = {}) {
   if (layout.satisfied) {
-    const names = layout.found.map((entry) => entry.name).join(", ");
-    return `workspace layout: ${names} found; the seam tests have something to compare.`;
+    const names = layout.found.map(describeSibling).join(", ");
+    const line = `workspace layout: ${names} found; the seam tests have something to compare.`;
+
+    // Only claim the revisions when some were printed. A tarball-vendored
+    // sibling has no history to name, and a banner pointing at "those exact
+    // revisions" while naming none is the kind of sentence a reader stops
+    // believing the second time they check it.
+    return layout.found.every((entry) => !entry.revision)
+      ? line
+      : `${line}\nseam comparisons are against the revisions named above: a seam failure may be a ` +
+        "sibling's commit rather than this repository's.";
   }
 
   const width = Math.max(...REQUIRED_SIBLINGS.map((name) => name.length));
@@ -161,7 +225,9 @@ export function layoutBanner(layout, { seamTestCount = null } = {}) {
     for (const candidate of entry.looked) lines.push(`             ${candidate}`);
   }
   for (const entry of layout.found) {
-    lines.push(`  found    ${entry.name.padEnd(width)}  ${entry.root}`);
+    const revision = entry.revision ? `  (${entry.revision})` : "";
+
+    lines.push(`  found    ${entry.name.padEnd(width)}  ${entry.root}${revision}`);
   }
   lines.push(
     "",

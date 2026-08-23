@@ -69,7 +69,10 @@ function extract(pattern, text, what) {
   if (match === null) {
     throw new Error(
       `Could not extract ${what}. The source shape changed, so this seam is no longer being checked — ` +
-        "fix the extraction rather than deleting the test."
+        "fix the extraction rather than deleting the test. The source read is a SIBLING's, checked " +
+        "out at its default-branch tip, so the commit that changed the shape may not be in this " +
+        "repository at all: the preflight banner at the top of this run names each sibling and the " +
+        "revision it was compared against."
     );
   }
   return match;

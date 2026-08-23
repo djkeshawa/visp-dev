@@ -200,16 +200,26 @@ three siblings out at their tips with no `ref:` — 36 checkouts per run — a p
 to `visp-kit`, `visp-hyper-agent` or `visp-memory` can turn this repository's
 matrix red with no change to this repository at all. A rename of
 `visp-kit/docs/adr/0007-*.md`, which one seam reads by path, is enough. That
-non-hermetic CI is deliberate and both reviewers agreed it should stay: pinning
-the siblings would freeze the comparison and remove the drift detection the
-seams exist for. **How to tell:** only the tests that read a sibling can fail
-this way — `tests/maintenance/seams.test.mjs` and
-`tests/integration/compatibility/currency.test.mjs` — so if every failure is in
-those and nothing else in the run failed, look at the siblings before looking
-at the diff. The preflight banner at the top of every run names each sibling
-and the short revision it was compared against; compare those against the last
-green run. The failure mode is benign in one direction — an absent sibling
-fails rather than skips — so the risk is a false red, never a false green.
+non-hermetic CI is deliberate and stays: pinning the siblings would freeze the
+comparison and remove the drift detection the seams exist for.
+
+**How to tell.** Only three suites read a sibling, so only three can fail this
+way:
+
+- `tests/maintenance/seams.test.mjs` compares sibling sources against each
+  other. An absent sibling fails rather than skips.
+- `tests/integration/compatibility/currency.test.mjs` drives the currency
+  entrypoint against real checkouts. An absent sibling skips; one too shallow to
+  reach the frozen pins asserts that an unmeasurable run still fails.
+- `tests/maintenance/workspace-layout.test.mjs` asserts the preflight's verdict
+  matches the checkout it is in, so it reads which siblings are present.
+
+If every failure is in those and nothing else in the run failed, look at the
+siblings before looking at the diff. The preflight banner at the top of every
+run names each sibling and the short revision it was compared against; compare
+those against the last green run. The failure mode is benign in one direction —
+an absent sibling fails rather than skips — so the risk is a false red, never a
+false green.
 
 All three are named in one place, `REQUIRED_SIBLINGS` in the workspace-layout
 preflight, which is also the only thing that turns a sibling's name into a path.

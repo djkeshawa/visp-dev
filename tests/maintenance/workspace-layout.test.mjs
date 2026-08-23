@@ -478,24 +478,55 @@ test("in a lone clone the real script prints the loud banner and still exits zer
 // a red matrix can be traced to the repository whose commit caused it.
 // ---------------------------------------------------------------------------
 
-test("a sibling with no history of its own reports no revision, not this repository's", async () => {
-  // `git -C` walks UP the tree. A vendored engines/<name> with no .git of its
-  // own sits INSIDE visp-dev, so an unguarded rev-parse answers with visp-dev's
-  // HEAD — and the banner then blames a sibling for this repository's own
-  // commit, with more confidence than saying nothing would have carried.
-  const vendored = path.join(repositoryRoot, "engines", "visp-kit");
+test("a sibling with no history of its own reports no revision, not the enclosing repository's", async () => {
+  // `git -C` walks UP the tree, so a vendored engines/<name> carrying no .git
+  // of its own answers with the ENCLOSING repository's HEAD — and the banner
+  // then blames a sibling for that repository's own commit, with more
+  // confidence than saying nothing would have carried.
+  //
+  // BUILT IN A TEMP DIRECTORY, NOT IN THIS CHECKOUT. An earlier version of this
+  // test planted `engines/visp-kit` in the real tree and removed it in a
+  // `finally`. Both halves were wrong, and CI proved it: the `test` job vendors
+  // REAL actions/checkout clones into engines/ (test.yml), so the planted
+  // directory already had a .git and `revisionOf` rightly returned its HEAD —
+  // twelve red legs, on a branch whose whole purpose is removing a red check.
+  // Worse, the cleanup deleted all three vendored siblings, and `run check`
+  // runs twice per leg, so the second run would have found no siblings and the
+  // seam tests would have failed BY DESIGN. A fixture must never reach outside
+  // its own temp directory.
+  const workspace = await mkdtemp(path.join(tmpdir(), "visp-dev-vendored-"));
 
-  await mkdir(vendored, { recursive: true });
   try {
+    await execFile("git", ["-C", workspace, "init", "--quiet"]);
+    await execFile("git", ["-C", workspace, "config", "user.name", "Visp Test"]);
+    await execFile("git", ["-C", workspace, "config", "user.email", "visp-test@example.invalid"]);
+    await writeFile(path.join(workspace, "package.json"), "{}");
+    await execFile("git", ["-C", workspace, "add", "package.json"]);
+    await execFile("git", ["-C", workspace, "commit", "--quiet", "-m", "enclosing repository"]);
+
+    const vendored = path.join(workspace, "engines", "visp-kit");
+    await mkdir(vendored, { recursive: true });
     await writeFile(path.join(vendored, "package.json"), "{}");
 
+    const { stdout: enclosing } = await execFile("git", ["-C", workspace, "rev-parse", "--short", "HEAD"]);
+    const { stdout: walkedUp } = await execFile("git", ["-C", vendored, "rev-parse", "--short", "HEAD"]);
+
+    // The bug, demonstrated rather than described: raw git answers about the
+    // enclosing repository from inside a directory that is not one. Without
+    // this the test could pass for the wrong reason — a `revisionOf` that
+    // always returned null would satisfy the assertion below on its own.
+    assert.equal(
+      walkedUp.trim(),
+      enclosing.trim(),
+      "the walk-up this guard exists to block did not happen, so the guard is untested here"
+    );
     assert.equal(
       revisionOf(vendored),
       null,
-      "a directory inside this repository is not a sibling checkout with its own revision"
+      "a directory inside another repository is not a sibling checkout with its own revision"
     );
   } finally {
-    await rm(path.join(repositoryRoot, "engines"), { recursive: true, force: true });
+    await rm(workspace, { recursive: true, force: true });
   }
 });
 

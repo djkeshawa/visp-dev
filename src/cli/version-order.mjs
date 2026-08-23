@@ -93,6 +93,21 @@ export function compareVersions(left, right) {
 const SINGLE_FLOOR = /^(?:>=\s*)?v?\d+(?:\.\d+)*(?:-[0-9A-Za-z.-]+)?$/u;
 
 /**
+ * Whether `requirement` is a requirement this module can read as a floor.
+ *
+ * Exported because it is the gate in front of `parseVersion`, and every caller
+ * needs the same one. `parseVersion` is deliberately tolerant — it takes the
+ * first version-shaped token anywhere in a string — so anything that hands it a
+ * requirement without checking the whole string first gets an answer about a
+ * fragment: `<25` reads as 25, `^22` as 22, `>=22 || >=24` as 22. That is a
+ * silent truncation, not an approximation, and the caller cannot tell it
+ * happened. Ask here first; treat false as unknown.
+ */
+export function isFloorRequirement(requirement) {
+  return SINGLE_FLOOR.test(`${requirement ?? ""}`.trim());
+}
+
+/**
  * Whether `version` clears the floor `requirement` states.
  *
  * The matrix only ever expresses a floor, written `>=22` or bare. Anything else
@@ -104,10 +119,9 @@ const SINGLE_FLOOR = /^(?:>=\s*)?v?\d+(?:\.\d+)*(?:-[0-9A-Za-z.-]+)?$/u;
  * unrecognised requirement is unknown, not satisfied.
  */
 export function satisfiesFloor(version, requirement) {
-  const text = `${requirement ?? ""}`.trim();
-  if (!SINGLE_FLOOR.test(text)) return null;
+  if (!isFloorRequirement(requirement)) return null;
 
-  const order = compareVersions(version, text);
+  const order = compareVersions(version, requirement);
   return order === null ? null : order >= 0;
 }
 

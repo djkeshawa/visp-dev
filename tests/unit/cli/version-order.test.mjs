@@ -12,6 +12,7 @@ import test from "node:test";
 
 import {
   compareVersions,
+  isFloorRequirement,
   isNewerThan,
   parseVersion,
   satisfiesFloor
@@ -99,6 +100,32 @@ test("tightening the grammar did not cost the floors the matrix really writes", 
   assert.equal(satisfiesFloor("v26.7.0", ">=22.0.0-rc.1"), true);
   assert.equal(satisfiesFloor("v22.0.0-rc.1", ">=22.0.0-rc.1"), true);
   assert.equal(satisfiesFloor("v22.0.0-alpha.1", ">=22.0.0-rc.1"), false);
+});
+
+test("the floor grammar is one predicate, and every caller asks the same one", () => {
+  // LC-132. The grammar existed only inside satisfiesFloor, so matrixNodeFloor
+  // ranked requirement strings with no shape check at all and read `<25` as 25.
+  // Exporting the predicate is what stops the next caller copying the regex and
+  // drifting from it, so it is asserted here rather than left implicit.
+  for (const floor of ["22", "v22", ">=22", ">= 22", ">=22.5.0", ">=22.0.0-rc.1", "  >=24  "]) {
+    assert.equal(isFloorRequirement(floor), true, `${floor} is a floor`);
+  }
+  for (const other of ["<25", "^22", "~22", ">22", ">=22 <25", ">=22 || >=24", "lts", "", null, undefined]) {
+    assert.equal(isFloorRequirement(other), false, `${other} is not a floor`);
+  }
+});
+
+test("satisfiesFloor answers exactly where the predicate says it can", () => {
+  // The two must not drift: anything the predicate accepts gets a boolean, and
+  // anything it rejects gets null. A gap either way is a truncated guess or a
+  // floor the matrix legitimately writes going unread.
+  for (const requirement of ["22", "v22", ">=22", ">= 22", "<25", "^22", ">=22 || >=24", "lts"]) {
+    assert.equal(
+      satisfiesFloor("v26.7.0", requirement) === null,
+      !isFloorRequirement(requirement),
+      `satisfiesFloor and isFloorRequirement disagree about ${requirement}`
+    );
+  }
 });
 
 test("a bare floor and an explicit one mean the same thing", () => {

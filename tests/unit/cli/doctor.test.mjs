@@ -119,6 +119,48 @@ test("Node is unknown only when the matrix states no requirement", () => {
   assert.match(check.detail, /no Node requirement/u);
 });
 
+// ---------------------------------------------------------------------------
+// LC-132 — the Node row must not state a requirement the matrix does not.
+// ---------------------------------------------------------------------------
+
+test("a matrix requirement this tool cannot read is never printed as the floor", () => {
+  // The floor was picked by comparing requirement strings, and the comparison
+  // reads the first version-shaped token in one. `<25` scored as 25 and won, so
+  // doctor announced `every pair in this matrix requires Node <25` — a ceiling
+  // printed as a floor, with the matrix's only real floor thrown away.
+  const check = nodeCheck({ pairs: [{ node: "<25" }, { node: ">=26" }] }, null, "v26.7.0");
+
+  assert.equal(check.status, "unknown");
+  assert.equal(check.requirement, null);
+  assert.doesNotMatch(check.detail, /requires Node <25/u);
+});
+
+test("an unreadable requirement is reported as unreadable, not as absent", () => {
+  // `unknown` is right; "this matrix states no Node requirement" is not, and it
+  // withholds the one fact a reader could act on. The raw values are named.
+  const check = nodeCheck({ pairs: [{ node: "<25" }, { node: "^22" }] }, null, "v26.7.0");
+
+  assert.equal(check.status, "unknown");
+  assert.doesNotMatch(check.detail, /states no Node requirement/u);
+  assert.match(check.detail, /cannot read/u);
+  assert.match(check.detail, /<25/u, "the reader must be told which requirements those were");
+  assert.match(check.detail, /\^22/u);
+});
+
+test("a pair the floor calculation cannot read never fails a machine that pair supports", () => {
+  // The regression that ranking only the readable pairs would have introduced.
+  // `>=22 <25` is unreadable and `>=26` is not, so a subset answer reports
+  // `requires Node >=26`, fails the row and pushes `Install Node >=26` — at a
+  // Node 24 machine that the discarded pair explicitly supports. Telling a
+  // working machine to change is worse than saying nothing.
+  const matrix = { pairs: [{ node: ">=26" }, { node: ">=22 <25" }] };
+  const check = nodeCheck(matrix, null, "v24.15.0");
+
+  assert.notEqual(check.status, "failed", `v24.15.0 failed against ${check.requirement}`);
+  assert.equal(check.status, "unknown");
+  assert.equal(check.requirement, null, "no floor is true of every pair here");
+});
+
 test("having no evidence about an installed pair is not a refusal", () => {
   // Every installable binary reports `unverified`, because the matrix pins its
   // pairs by commit and a binary on PATH does not report one. Folding that into

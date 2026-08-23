@@ -301,10 +301,31 @@ jobs:
           path: reports/conformance-fixtures-darwin-arm64-node24.json
           if-no-files-found: error
 
+  # ADVISORY, AND NOW GENUINELY GREEN. This job measures how far the frozen
+  # D-107 pins lag the engine tips. It is not a gate and must not read as one.
+  #
+  # It used to carry `continue-on-error: true`, which changes the WORKFLOW RUN's
+  # conclusion and not the JOB's. GitHub still published the job as a check run
+  # with `conclusion: failure`, so `gh pr checks` printed `fail` and exited
+  # non-zero, and every visp-dev pull request carried a red check that was never
+  # going to go green — run 31990552809, success 14 of 15, this job being the
+  # one. A permanently red check trains people to skim the list, and that is how
+  # a genuine failure gets waved through.
+  #
+  # The step now absorbs the verdict with `--advisory` and publishes it where a
+  # human reads it: a `::warning::` annotation on the pull request and the run
+  # summary. The drift is still measured, still classified and still visible;
+  # only its ability to colour a check red is gone.
+  #
+  # The rejected alternative was moving this to a `schedule:`. It answers a
+  # question about the world rather than about the diff, which argues for it —
+  # but the pins it measures against live in THIS repository, so the pull
+  # request that re-pins them (LC-75) is exactly the one whose result matters,
+  # and a scheduled job would report it hours later where nobody is looking.
+  # Trading a check nobody trusts for a check nobody sees is not an improvement.
   evidence-currency:
     name: Advisory evidence currency
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Check out Visp Dev
         uses: actions/checkout@v4
@@ -328,8 +349,26 @@ jobs:
         with:
           node-version: 24
 
+      # `shell: bash` is load-bearing, not decoration. The DEFAULT shell for a
+      # `run:` step is `bash -e {0}` with NO pipefail, so the pipe below would
+      # report tee's status and a crash in the script would pass as green —
+      # `--advisory` would have quietly become the `|| true` this deliberately
+      # avoids. Naming the shell gets `-eo pipefail`, so the verdict is absorbed
+      # and a failed measurement is still a failed step.
       - name: Measure drift from the frozen evidence identities
+        shell: bash
         run: |
           node scripts/compatibility/currency.mjs \
             --kit-repository engines/visp-kit \
-            --hyper-repository engines/visp-hyper-agent
+            --hyper-repository engines/visp-hyper-agent \
+            --advisory | tee evidence-currency.txt
+          {
+            echo '### Advisory evidence currency'
+            echo
+            echo 'Measured, not gated. The frozen D-107 pins are frozen on purpose;'
+            echo 'this says how far the engine tips have moved past them.'
+            echo
+            echo '```'
+            sed '/^::/d' evidence-currency.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

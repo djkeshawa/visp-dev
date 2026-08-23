@@ -42,6 +42,7 @@ import {
   layoutBanner,
   locateProduct,
   manifestFileFor,
+  revisionOf,
   workspaceLayout
 } from "../../scripts/maintenance/workspace-layout.mjs";
 
@@ -102,9 +103,36 @@ test("only the seam tests depend on a sibling, which is what the banner promises
 
   assert.deepEqual(
     importers,
-    ["maintenance/seams.test.mjs", "maintenance/workspace-layout.test.mjs"],
+    [
+      // Sibling-OPTIONAL, and that is the condition of it being on this list.
+      // It drives the currency entrypoint against a real checkout, so it needs
+      // the locator — but an absent sibling makes it SKIP, not fail, because
+      // the banner promises a lone clone that the seam tests fail "for this
+      // reason and no other". Adding a file here that fails without a sibling
+      // makes that sentence false.
+      "integration/compatibility/currency.test.mjs",
+      "maintenance/seams.test.mjs",
+      "maintenance/workspace-layout.test.mjs"
+    ],
     "a new test file that resolves a sibling must either be sibling-optional or the banner must stop " +
       "claiming the seam tests are the only ones that need one"
+  );
+});
+
+test("the sibling-optional importer really is optional, so the banner stays true", () => {
+  // The list above is a promise, and a comment is not a check. A lone clone
+  // must see this file skip rather than fail, so it must reach for `t.skip`
+  // on the absent-sibling path rather than throwing the way the seams do.
+  const optional = readFileSync(
+    path.join(repositoryRoot, "tests", "integration", "compatibility", "currency.test.mjs"),
+    "utf8"
+  );
+
+  assert.match(optional, /t\.skip\(/u, "an absent sibling must skip this suite, not fail it");
+  assert.doesNotMatch(
+    withoutComments(optional),
+    /throw new Error\([^)]*needs \$\{name\}/u,
+    "this file must not adopt the seam tests' fail-rather-than-skip rule"
   );
 });
 
@@ -443,4 +471,77 @@ test("in a lone clone the real script prints the loud banner and still exits zer
   } finally {
     await rm(workspace, { recursive: true, force: true });
   }
+});
+
+// ---------------------------------------------------------------------------
+// LC-76 — the banner names the revision each sibling was compared against, so
+// a red matrix can be traced to the repository whose commit caused it.
+// ---------------------------------------------------------------------------
+
+test("a sibling with no history of its own reports no revision, not this repository's", async () => {
+  // `git -C` walks UP the tree. A vendored engines/<name> with no .git of its
+  // own sits INSIDE visp-dev, so an unguarded rev-parse answers with visp-dev's
+  // HEAD — and the banner then blames a sibling for this repository's own
+  // commit, with more confidence than saying nothing would have carried.
+  const vendored = path.join(repositoryRoot, "engines", "visp-kit");
+
+  await mkdir(vendored, { recursive: true });
+  try {
+    await writeFile(path.join(vendored, "package.json"), "{}");
+
+    assert.equal(
+      revisionOf(vendored),
+      null,
+      "a directory inside this repository is not a sibling checkout with its own revision"
+    );
+  } finally {
+    await rm(path.join(repositoryRoot, "engines"), { recursive: true, force: true });
+  }
+});
+
+test("a real sibling checkout reports its own short commit", async () => {
+  // The converse, against a repository the test builds, so it holds in a lone
+  // clone: every test in this file must pass without siblings present.
+  const workspace = await mkdtemp(path.join(tmpdir(), "visp-dev-sibling-"));
+
+  try {
+    await execFile("git", ["-C", workspace, "init", "--quiet"]);
+    await execFile("git", ["-C", workspace, "config", "user.name", "Visp Test"]);
+    await execFile("git", ["-C", workspace, "config", "user.email", "visp-test@example.invalid"]);
+    await writeFile(path.join(workspace, "package.json"), "{}");
+    await execFile("git", ["-C", workspace, "add", "package.json"]);
+    await execFile("git", ["-C", workspace, "commit", "--quiet", "-m", "sibling"]);
+
+    const { stdout } = await execFile("git", ["-C", workspace, "rev-parse", "--short", "HEAD"]);
+
+    assert.equal(revisionOf(workspace), stdout.trim());
+  } finally {
+    await rm(workspace, { recursive: true, force: true });
+  }
+});
+
+test("the satisfied banner claims revisions only when it has printed some", async () => {
+  const withRevisions = layoutBanner({
+    satisfied: true,
+    found: [
+      { name: "visp-kit", root: "/w/visp-kit", revision: "1a2b3c4" },
+      { name: "visp-hyper-agent", root: "/w/visp-hyper-agent", revision: null }
+    ],
+    missing: []
+  });
+
+  assert.match(withRevisions, /visp-kit@1a2b3c4/u);
+  assert.match(withRevisions, /visp-hyper-agent(?!@)/u, "a sibling with no history is named bare");
+  assert.match(withRevisions, /may be a sibling's commit rather than this repository's/u);
+
+  // A tarball-vendored workspace has no revisions to name, and a banner that
+  // pointed at "the revisions named above" while naming none is a sentence a
+  // reader stops believing the second time they check it.
+  const withoutRevisions = layoutBanner({
+    satisfied: true,
+    found: [{ name: "visp-kit", root: "/w/visp-kit", revision: null }],
+    missing: []
+  });
+
+  assert.doesNotMatch(withoutRevisions, /revisions named above/u);
 });

@@ -144,6 +144,31 @@ export async function measureEvidenceCurrency(input) {
   return createEvidenceCurrencyReport({ evidence: input.evidenceName, repositories });
 }
 
+/**
+ * What a risk level means, as a sentence.
+ *
+ * One definition because it is stated in two places — the report summary, and
+ * the per-repository annotation LC-76 publishes on the pull request. They were
+ * briefly the same string: every annotation carried the SUMMARY verdict, which
+ * is the worst risk across all repositories, so a repository at `material` was
+ * announced as having moved the wire schema. A reader would have concluded the
+ * wrong repository broke the contract.
+ */
+export function evidenceCurrencyVerdict(risk) {
+  switch (risk) {
+    case "current":
+      return "The evidence describes the checked-out repositories exactly.";
+    case "inert":
+      return "The repositories moved, but only in paths that cannot change integrator-observable behaviour.";
+    case "material":
+      return "The repositories moved in paths that can change behaviour. Re-run the pair before relying on this evidence.";
+    case "invalidating":
+      return "The repositories moved in the wire schema or integration surface. This evidence no longer describes them.";
+    default:
+      return "The repositories moved in paths this tool does not classify. Review the diff before relying on this evidence.";
+  }
+}
+
 export function createEvidenceCurrencyReport(input) {
   const worst = ["invalidating", "material", "unclassified", "inert", "current"].find((risk) =>
     input.repositories.some((repository) => repository.risk === risk)
@@ -157,22 +182,98 @@ export function createEvidenceCurrencyReport(input) {
       current: input.repositories.every((repository) => repository.risk === "current"),
       risk: worst ?? "current",
       // Stated as a sentence because this is the line a human reads first.
-      verdict:
-        worst === "current"
-          ? "The evidence describes the checked-out repositories exactly."
-          : worst === "inert"
-            ? "The repositories moved, but only in paths that cannot change integrator-observable behaviour."
-            : worst === "material"
-              ? "The repositories moved in paths that can change behaviour. Re-run the pair before relying on this evidence."
-              : worst === "invalidating"
-                ? "The repositories moved in the wire schema or integration surface. This evidence no longer describes them."
-                : "The repositories moved in paths this tool does not classify. Review the diff before relying on this evidence."
+      verdict: evidenceCurrencyVerdict(worst)
     }
   };
 
   report.reportSha256 = sha256Hex(canonicalStringify(report));
 
   return JSON.parse(canonicalStringify(report));
+}
+
+/**
+ * The report as a human reads it: the verdict, then one line per repository.
+ *
+ * Here rather than in the entrypoint because this module already owns how the
+ * measurement is stated — it composes `summary.verdict` — and because a CI job
+ * that publishes this text needs it to be the same text a developer sees
+ * locally. Two renderings of one report is how a run summary and a terminal
+ * start disagreeing about what drifted.
+ */
+export function renderEvidenceCurrency(report) {
+  const lines = [report.summary.verdict, ""];
+
+  for (const repository of report.repositories) {
+    lines.push(
+      `  ${repository.name.padEnd(18)} ${repository.commitsBehind} commits behind, ` +
+        `${repository.changedFileCount} files, risk=${repository.risk}`
+    );
+    for (const critical of repository.criticalPathsTouched) {
+      lines.push(
+        `      ${critical.prefix} (${critical.files}) — ${critical.reason} [${critical.severity}]`
+      );
+    }
+  }
+
+  return `${lines.join("\n")}\n`;
+}
+
+/** GitHub renders `%`, CR and LF in a workflow command message literally unless escaped. */
+function escapeAnnotation(text) {
+  return `${text}`.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A");
+}
+
+/**
+ * One `::warning::` per repository that has moved.
+ *
+ * LC-76. The drift has to stay visible on the pull request, and the only two
+ * ways CI can say something without failing are an annotation and the run
+ * summary. A repository at `current` risk gets none: a standing warning that is
+ * always present is read as decoration, which is the same way a standing red
+ * check is read.
+ *
+ * The sentence comes from THIS repository's risk, not from `summary.verdict`.
+ * The summary is the worst risk across the pair, so attaching it to each
+ * repository told a reader that a repository at `material` had moved the wire
+ * schema — naming the wrong repository, on the pull request, in a warning
+ * written to be believed.
+ */
+export function evidenceCurrencyAnnotations(report) {
+  return report.repositories
+    .filter((repository) => repository.risk !== "current")
+    .map((repository) => {
+      const paths = repository.criticalPathsTouched.map((entry) => entry.prefix).join(", ");
+
+      return (
+        `::warning title=Evidence currency::` +
+        escapeAnnotation(
+          `${repository.name} is ${repository.commitsBehind} commits past the pin this ` +
+            `evidence names (${repository.changedFileCount} files, risk=${repository.risk})` +
+            `${paths === "" ? "" : `, touching ${paths}`}. ` +
+            evidenceCurrencyVerdict(repository.risk)
+        )
+      );
+    });
+}
+
+/**
+ * The exit code the run should leave behind.
+ *
+ * LC-76. `continue-on-error` at the job level changes the workflow RUN's
+ * conclusion and not the JOB's, so GitHub still published this job as a check
+ * run with `conclusion: failure`, `gh pr checks` still printed `fail`, and every
+ * visp-dev pull request carried a red check that was never going to go green. A
+ * permanently red check trains people to skim the list, and that is how a real
+ * failure gets waved through.
+ *
+ * Advisory means the VERDICT does not decide the exit code — it does not mean
+ * failures are swallowed. A crash still propagates, which is the difference
+ * between this and appending `|| true` to the command.
+ */
+export function evidenceCurrencyExitCode(report, { advisory = false } = {}) {
+  if (advisory) return 0;
+
+  return report.summary.risk === "invalidating" ? 1 : 0;
 }
 
 export function verifyEvidenceCurrencyReport(report) {

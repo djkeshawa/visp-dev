@@ -533,6 +533,19 @@ test("a sibling with no history of its own reports no revision, not the enclosin
 test("a real sibling checkout reports its own short commit", async () => {
   // The converse, against a repository the test builds, so it holds in a lone
   // clone: every test in this file must pass without siblings present.
+  //
+  // THIS TEST CAUGHT A WINDOWS-ONLY DEFECT AND IS WORTH KEEPING FOR IT. The
+  // first `revisionOf` confirmed a directory owned its repository by comparing
+  // `rev-parse --show-toplevel` against the path it was given. On Windows
+  // `os.tmpdir()` hands back an 8.3 short name that `realpathSync` does not
+  // expand, while git answers with the long form and forward slashes, so the
+  // two never matched and a genuine checkout reported NO revision — the same
+  // failure from the opposite side. It passed on Linux and macOS and failed all
+  // four Windows legs, which is exactly what that leg of the matrix is for.
+  //
+  // There is no Linux reproduction: every path form realpath CAN canonicalise
+  // still matched. The trailing-separator case below is cheap breadth against
+  // the bug class, not a substitute for the Windows leg.
   const workspace = await mkdtemp(path.join(tmpdir(), "visp-dev-sibling-"));
 
   try {
@@ -546,6 +559,9 @@ test("a real sibling checkout reports its own short commit", async () => {
     const { stdout } = await execFile("git", ["-C", workspace, "rev-parse", "--short", "HEAD"]);
 
     assert.equal(revisionOf(workspace), stdout.trim());
+    // The answer must not depend on the SHAPE of the path it was handed.
+    assert.equal(revisionOf(workspace + path.sep), stdout.trim(), "a trailing separator changed the answer");
+    assert.equal(revisionOf(path.join(workspace, ".")), stdout.trim(), "a non-normalised path changed the answer");
   } finally {
     await rm(workspace, { recursive: true, force: true });
   }

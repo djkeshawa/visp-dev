@@ -117,30 +117,36 @@ export function locateProduct(name, devRoot) {
  * a legitimate sibling with no git history, and a preflight that crashed over a
  * missing `.git` would block a run it exists to explain.
  *
- * THE TOPLEVEL CHECK IS THE WHOLE POINT. `git -C` walks UP the directory tree,
- * so a vendored `engines/visp-kit` carrying no `.git` of its own resolves
+ * THE OWN-REPOSITORY CHECK IS THE WHOLE POINT. `git -C` walks UP the directory
+ * tree, so a vendored `engines/visp-kit` carrying no `.git` of its own resolves
  * against visp-dev's repository and answers with visp-dev's HEAD. The banner
  * would then print `visp-kit@<visp-dev's commit>` and invite the reader to
  * blame a sibling for this repository's own change — the exact misdiagnosis
  * this revision exists to prevent, delivered with more confidence than before.
+ *
+ * The check is the presence of `.git`, not a comparison against
+ * `rev-parse --show-toplevel`. That comparison was the first attempt and it
+ * failed every Windows leg: git answers with forward slashes and a long path,
+ * `mkdtemp` hands back backslashes, and the two never matched however they were
+ * canonicalised — so a real sibling checkout reported NO revision, which is the
+ * failure this function exists to avoid, arrived at from the other side.
+ * Asking whether the directory carries its own `.git` is the actual question,
+ * costs no subprocess when the answer is no, and has no path-shape opinion at
+ * all. A worktree or submodule carries `.git` as a FILE, which is still its own
+ * repository and still answers for itself, so `existsSync` is the right probe
+ * rather than a directory test.
  */
 export function revisionOf(root) {
-  const git = (args) => {
-    try {
-      return execFileSync("git", ["-C", root, ...args], {
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "ignore"]
-      }).trim();
-    } catch {
-      return null;
-    }
-  };
-  const toplevel = git(["rev-parse", "--show-toplevel"]);
+  if (!existsSync(path.join(root, ".git"))) return null;
 
-  if (toplevel === null) return null;
-  if (canonicalPath(toplevel) !== canonicalPath(root)) return null;
-
-  return git(["rev-parse", "--short", "HEAD"]) || null;
+  try {
+    return execFileSync("git", ["-C", root, "rev-parse", "--short", "HEAD"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim() || null;
+  } catch {
+    return null;
+  }
 }
 
 export function workspaceLayout(devRoot) {
